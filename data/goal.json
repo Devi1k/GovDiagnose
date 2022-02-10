@@ -1,0 +1,4802 @@
+[
+    {
+        "consult_id": "0",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "办理": true,
+                "外国": true,
+                "学习": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "非公务原因": true,
+                "届满": true,
+                "有效期": true
+            }
+        }
+    },
+    {
+        "consult_id": "1",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "签证页": true,
+                "护照": true,
+                "出国": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "完毕": true,
+                "探亲": true,
+                "使用": true,
+                "换发": true
+            }
+        }
+    },
+    {
+        "consult_id": "2",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "护照": true,
+                "补发": true,
+                "普通": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "就业": true,
+                "办理": true,
+                "遗失": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "3",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "签证页": true,
+                "非公务原因": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "完毕": true,
+                "换发": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "4",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "普通": true,
+                "签发": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "首次": true,
+                "办理": true,
+                "申请": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "5",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "申请": true,
+                "旅行": true,
+                "签发": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "首次": true,
+                "非公务原因": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "6",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "换发": true,
+                "护照": true,
+                "公民": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "学习": true,
+                "有效期": true,
+                "届满": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "7",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "加注": true,
+                "普通": true,
+                "办理": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "姓名": true,
+                "外国": true,
+                "公民": true,
+                "姓名加注": true
+            }
+        }
+    },
+    {
+        "consult_id": "8",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "出国": true,
+                "普通": true,
+                "换发": true,
+                "有效期": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "办理": true,
+                "探亲": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "9",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "出国": true,
+                "非公务原因": true,
+                "普通": true,
+                "不能使用": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "申请": true,
+                "损毁": true,
+                "补发": true
+            }
+        }
+    },
+    {
+        "consult_id": "10",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "办理": true,
+                "护照": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "首次": true,
+                "外国": true,
+                "普通": true,
+                "签发": true
+            }
+        }
+    },
+    {
+        "consult_id": "11",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "姓名": true,
+                "出国": true,
+                "姓名加注": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "英文": true,
+                "非公务原因": true,
+                "普通": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "12",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "护照": true,
+                "申请": true,
+                "普通": true,
+                "旅行": true
+            },
+            "implicit_inform_slots": {
+                "遗失": true,
+                "公民": true,
+                "被盗": true,
+                "补发": true
+            }
+        }
+    },
+    {
+        "consult_id": "13",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "申请": true,
+                "签发": true,
+                "护照": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "外国": true,
+                "首次": true,
+                "旅行": true
+            }
+        }
+    },
+    {
+        "consult_id": "14",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "普通": true,
+                "就业": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "首次": true,
+                "签发": true,
+                "护照": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "15",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "办理": true,
+                "公民": true,
+                "出国": true,
+                "补发": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "不能使用": true,
+                "非公务原因": true,
+                "损毁": true
+            }
+        }
+    },
+    {
+        "consult_id": "16",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "补发": true,
+                "商务活动": true,
+                "办理": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "被盗": true,
+                "公民": true,
+                "护照": true
+            }
+        }
+    },
+    {
+        "consult_id": "17",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "申请": true,
+                "出国": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "普通": true,
+                "签发": true,
+                "首次": true
+            }
+        }
+    },
+    {
+        "consult_id": "18",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "申请": true,
+                "非公务原因": true,
+                "普通": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "签发": true,
+                "定居": true,
+                "首次": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "19",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "申请": true,
+                "加注": true,
+                "普通": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "姓名": true,
+                "非标准": true,
+                "汉语": true
+            }
+        }
+    },
+    {
+        "consult_id": "20",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "首次": true,
+                "签发": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "办理": true,
+                "旅行": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "21",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "旅行": true,
+                "办理": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "签发": true,
+                "护照": true,
+                "首次": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "22",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "探亲": true,
+                "有效期": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "届满": true,
+                "非公务原因": true,
+                "换发": true
+            }
+        }
+    },
+    {
+        "consult_id": "23",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "补发": true,
+                "公民": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "普通": true,
+                "申请": true,
+                "损毁": true
+            }
+        }
+    },
+    {
+        "consult_id": "24",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "商务活动": true,
+                "普通": true,
+                "签证页": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "使用": true,
+                "换发": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "25",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "不能使用": true,
+                "就业": true,
+                "非公务原因": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "损毁": true,
+                "办理": true,
+                "补发": true
+            }
+        }
+    },
+    {
+        "consult_id": "26",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "普通": true,
+                "探亲": true,
+                "公民": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "签发": true,
+                "申请": true,
+                "办理": true,
+                "首次": true
+            }
+        }
+    },
+    {
+        "consult_id": "27",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "办理": true,
+                "加注": true,
+                "外国": true,
+                "商务活动": true
+            },
+            "implicit_inform_slots": {
+                "加注项": true,
+                "出国": true,
+                "普通": true,
+                "曾持照加注": true
+            }
+        }
+    },
+    {
+        "consult_id": "28",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "商务活动": true,
+                "有效期": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "普通": true,
+                "换发": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "29",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "护照": true,
+                "普通": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "换发": true,
+                "完毕": true,
+                "商务活动": true,
+                "签证页": true
+            }
+        }
+    },
+    {
+        "consult_id": "30",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "办理": true,
+                "曾持照": true,
+                "申请": true,
+                "加注项": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "护照": true,
+                "加注": true,
+                "曾持照加注": true
+            }
+        }
+    },
+    {
+        "consult_id": "31",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "非公务原因": true,
+                "申请": true,
+                "旅行": true
+            },
+            "implicit_inform_slots": {
+                "签证页": true,
+                "办理": true,
+                "出国": true,
+                "换发": true
+            }
+        }
+    },
+    {
+        "consult_id": "32",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "不能使用": true,
+                "商务活动": true,
+                "公民": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "损毁": true,
+                "补发": true,
+                "申请": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "33",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "出国": true,
+                "曾持照": true,
+                "就业": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "加注": true,
+                "护照": true,
+                "外国": true,
+                "曾持照加注": true
+            }
+        }
+    },
+    {
+        "consult_id": "34",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "办理": true,
+                "不能使用": true,
+                "损毁": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "补发": true,
+                "护照": true,
+                "旅行": true
+            }
+        }
+    },
+    {
+        "consult_id": "35",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "使用": true,
+                "非公务原因": true,
+                "公民": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "换发": true,
+                "签证页": true,
+                "完毕": true
+            }
+        }
+    },
+    {
+        "consult_id": "36",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "普通": true,
+                "签发": true,
+                "首次": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "护照": true,
+                "办理": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "37",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "换发": true,
+                "申请": true,
+                "定居": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "届满": true,
+                "有效期": true,
+                "普通": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "38",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "加注": true,
+                "出国": true,
+                "公民": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "曾持照加注": true,
+                "非公务原因": true,
+                "就业": true,
+                "曾持照": true
+            }
+        }
+    },
+    {
+        "consult_id": "39",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "补发": true,
+                "外国": true,
+                "申请": true,
+                "被盗": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "探亲": true,
+                "护照": true,
+                "遗失": true
+            }
+        }
+    },
+    {
+        "consult_id": "40",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "签发": true,
+                "非公务原因": true,
+                "首次": true
+            },
+            "implicit_inform_slots": {
+                "定居": true,
+                "普通": true,
+                "出国": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "41",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "商务活动": true,
+                "加注项": true,
+                "曾持照加注": true,
+                "加注": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "曾持照": true,
+                "办理": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "42",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "商务活动": true,
+                "曾持照加注": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "普通": true,
+                "出国": true,
+                "曾持照": true
+            }
+        }
+    },
+    {
+        "consult_id": "43",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "办理": true,
+                "探亲": true,
+                "普通": true,
+                "签发": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "出国": true,
+                "首次": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "44",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "汉字": true,
+                "繁体": true,
+                "公民": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "姓名加注": true,
+                "办理": true,
+                "加注": true,
+                "护照": true
+            }
+        }
+    },
+    {
+        "consult_id": "45",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "普通": true,
+                "申请": true,
+                "学习": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "出国": true,
+                "签发": true,
+                "首次": true
+            }
+        }
+    },
+    {
+        "consult_id": "46",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "姓名加注": true,
+                "学习": true,
+                "外国": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "姓名": true,
+                "多音字": true,
+                "护照": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "47",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "非公务原因": true,
+                "办理": true,
+                "定居": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "首次": true,
+                "申请": true,
+                "签发": true
+            }
+        }
+    },
+    {
+        "consult_id": "48",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "非公务原因": true,
+                "换发": true,
+                "有效期": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "届满": true,
+                "办理": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "49",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "曾持照加注": true,
+                "非公务原因": true,
+                "公民": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "加注": true,
+                "曾持照": true,
+                "护照": true
+            }
+        }
+    },
+    {
+        "consult_id": "50",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "首次": true,
+                "公民": true,
+                "探亲": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "护照": true,
+                "签发": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "51",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "加注": true,
+                "汉字": true,
+                "非公务原因": true,
+                "姓名": true
+            },
+            "implicit_inform_slots": {
+                "繁体": true,
+                "出国": true,
+                "姓名加注": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "52",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "普通": true,
+                "办理": true,
+                "非标准": true,
+                "就业": true
+            },
+            "implicit_inform_slots": {
+                "加注": true,
+                "姓名加注": true,
+                "汉语": true,
+                "发音": true
+            }
+        }
+    },
+    {
+        "consult_id": "53",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "首次": true,
+                "申请": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "签发": true,
+                "非公务原因": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "54",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "出国": true,
+                "繁体": true,
+                "加注": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "汉字": true,
+                "外国": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "55",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "申请": true,
+                "公民": true,
+                "旅行": true,
+                "有效期": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "非公务原因": true,
+                "届满": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "56",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "外国": true,
+                "办理": true,
+                "加注": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "英文": true,
+                "姓名": true,
+                "出国": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "57",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "办理": true,
+                "曾持照加注": true,
+                "非公务原因": true,
+                "加注": true
+            },
+            "implicit_inform_slots": {
+                "加注项": true,
+                "申请": true,
+                "曾持照": true,
+                "商务活动": true
+            }
+        }
+    },
+    {
+        "consult_id": "58",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "遗失": true,
+                "出国": true,
+                "被盗": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "定居": true,
+                "补发": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "59",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "办理": true,
+                "加注": true,
+                "非公务原因": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "多音字": true,
+                "姓名加注": true,
+                "定居": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "60",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "出国": true,
+                "有效期": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "外国": true,
+                "换发": true,
+                "届满": true
+            }
+        }
+    },
+    {
+        "consult_id": "61",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "护照": true,
+                "签发": true,
+                "定居": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "首次": true,
+                "办理": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "62",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "发音": true,
+                "护照": true,
+                "非标准": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "汉语": true,
+                "公民": true,
+                "姓名加注": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "63",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "曾持照": true,
+                "办理": true,
+                "申请": true,
+                "加注": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "出国": true,
+                "加注项": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "64",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "公民": true,
+                "补发": true,
+                "遗失": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "商务活动": true,
+                "外国": true,
+                "普通": true,
+                "被盗": true
+            }
+        }
+    },
+    {
+        "consult_id": "65",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "办理": true,
+                "出国": true,
+                "被盗": true,
+                "遗失": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "护照": true,
+                "普通": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "66",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "被盗": true,
+                "补发": true,
+                "申请": true,
+                "遗失": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "公民": true,
+                "外国": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "67",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "不能使用": true,
+                "补发": true,
+                "出国": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "商务活动": true,
+                "外国": true,
+                "损毁": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "68",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "普通": true,
+                "首次": true,
+                "护照": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "出国": true,
+                "签发": true,
+                "探亲": true
+            }
+        }
+    },
+    {
+        "consult_id": "69",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "护照": true,
+                "外国": true,
+                "加注": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "曾用名加注": true,
+                "办理": true,
+                "出国": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "70",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "遗失": true,
+                "护照": true,
+                "探亲": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "普通": true,
+                "公民": true,
+                "补发": true
+            }
+        }
+    },
+    {
+        "consult_id": "71",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "办理": true,
+                "签证页": true,
+                "完毕": true,
+                "换发": true
+            },
+            "implicit_inform_slots": {
+                "学习": true,
+                "外国": true,
+                "申请": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "72",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "签证页": true,
+                "申请": true,
+                "外国": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "使用": true,
+                "完毕": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "73",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "姓名": true,
+                "加注": true,
+                "姓名加注": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "发音": true,
+                "汉语": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "74",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "公民": true,
+                "办理": true,
+                "签发": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "申请": true,
+                "首次": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "75",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "普通": true,
+                "完毕": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "换发": true,
+                "外国": true,
+                "出国": true,
+                "签证页": true
+            }
+        }
+    },
+    {
+        "consult_id": "76",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "探亲": true,
+                "外国": true,
+                "曾持照": true
+            },
+            "implicit_inform_slots": {
+                "曾持照加注": true,
+                "加注": true,
+                "出国": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "77",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "就业": true,
+                "公民": true,
+                "签发": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "首次": true,
+                "办理": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "78",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "护照": true,
+                "公民": true,
+                "非公务原因": true,
+                "补发": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "不能使用": true,
+                "办理": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "79",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "出国": true,
+                "公民": true,
+                "签证页": true,
+                "完毕": true
+            },
+            "implicit_inform_slots": {
+                "探亲": true,
+                "申请": true,
+                "换发": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "80",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "出国": true,
+                "办理": true,
+                "外国": true,
+                "首次": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "签发": true,
+                "商务活动": true,
+                "护照": true
+            }
+        }
+    },
+    {
+        "consult_id": "81",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "普通": true,
+                "出国": true,
+                "使用": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "换发": true,
+                "签证页": true,
+                "护照": true,
+                "完毕": true
+            }
+        }
+    },
+    {
+        "consult_id": "82",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "首次": true,
+                "申请": true,
+                "公民": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "签发": true,
+                "探亲": true,
+                "非公务原因": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "83",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "护照": true,
+                "办理": true,
+                "补发": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "被盗": true,
+                "遗失": true,
+                "外国": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "84",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "办理": true,
+                "申请": true,
+                "普通": true,
+                "签发": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "首次": true,
+                "护照": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "85",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "签发": true,
+                "首次": true,
+                "就业": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "外国": true,
+                "普通": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "86",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "申请": true,
+                "签证页": true,
+                "外国": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "完毕": true,
+                "非公务原因": true,
+                "普通": true,
+                "探亲": true
+            }
+        }
+    },
+    {
+        "consult_id": "87",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "普通": true,
+                "外国": true,
+                "曾持照": true,
+                "旅行": true
+            },
+            "implicit_inform_slots": {
+                "曾持照加注": true,
+                "加注": true,
+                "办理": true,
+                "加注项": true
+            }
+        }
+    },
+    {
+        "consult_id": "88",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "加注": true,
+                "外国": true,
+                "曾持照加注": true,
+                "加注项": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "办理": true,
+                "曾持照": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "89",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "出国": true,
+                "申请": true,
+                "外国": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "商务活动": true,
+                "首次": true,
+                "护照": true,
+                "签发": true
+            }
+        }
+    },
+    {
+        "consult_id": "90",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "普通": true,
+                "护照": true,
+                "就业": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "曾持照加注": true,
+                "加注项": true,
+                "曾持照": true
+            }
+        }
+    },
+    {
+        "consult_id": "91",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "曾用名": true,
+                "加注": true,
+                "护照": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "申请": true,
+                "办理": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "92",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "损毁": true,
+                "补发": true,
+                "办理": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "护照": true,
+                "出国": true,
+                "不能使用": true
+            }
+        }
+    },
+    {
+        "consult_id": "93",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "不能使用": true,
+                "办理": true,
+                "补发": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "外国": true,
+                "旅行": true,
+                "损毁": true
+            }
+        }
+    },
+    {
+        "consult_id": "94",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "英文": true,
+                "就业": true,
+                "办理": true,
+                "姓名": true
+            },
+            "implicit_inform_slots": {
+                "姓名加注": true,
+                "护照": true,
+                "申请": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "95",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "发音": true,
+                "普通": true,
+                "护照": true,
+                "非标准": true
+            },
+            "implicit_inform_slots": {
+                "姓名加注": true,
+                "姓名": true,
+                "公民": true,
+                "汉语": true
+            }
+        }
+    },
+    {
+        "consult_id": "96",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "普通": true,
+                "公民": true,
+                "完毕": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "签证页": true,
+                "外国": true,
+                "出国": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "97",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "有效期": true,
+                "旅行": true,
+                "申请": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "外国": true,
+                "届满": true,
+                "换发": true
+            }
+        }
+    },
+    {
+        "consult_id": "98",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "损毁": true,
+                "不能使用": true,
+                "护照": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "申请": true,
+                "补发": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "99",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "发音": true,
+                "公民": true,
+                "姓名加注": true,
+                "加注": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "汉语": true,
+                "外国": true,
+                "姓名": true
+            }
+        }
+    },
+    {
+        "consult_id": "100",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "探亲": true,
+                "外国": true,
+                "护照": true,
+                "届满": true
+            },
+            "implicit_inform_slots": {
+                "换发": true,
+                "公民": true,
+                "有效期": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "101",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "姓名加注": true,
+                "公民": true,
+                "外国": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "繁体": true,
+                "护照": true,
+                "姓名": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "102",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "普通": true,
+                "首次": true,
+                "外国": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "签发": true,
+                "就业": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "103",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "不能使用": true,
+                "普通": true,
+                "补发": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "非公务原因": true,
+                "公民": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "104",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "补发": true,
+                "办理": true,
+                "出国": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "遗失": true,
+                "公民": true,
+                "普通": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "105",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "首次": true,
+                "公民": true,
+                "签发": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "申请": true,
+                "护照": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "106",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "就业": true,
+                "普通": true,
+                "曾持照": true,
+                "加注项": true
+            },
+            "implicit_inform_slots": {
+                "曾持照加注": true,
+                "外国": true,
+                "加注": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "107",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "旅行": true,
+                "办理": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "首次": true,
+                "签发": true,
+                "非公务原因": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "108",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "外国": true,
+                "办理": true,
+                "护照": true,
+                "加注": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "汉字": true,
+                "繁体": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "109",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "出国": true,
+                "首次": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "公民": true,
+                "探亲": true,
+                "签发": true
+            }
+        }
+    },
+    {
+        "consult_id": "110",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "办理": true,
+                "出国": true,
+                "遗失": true
+            },
+            "implicit_inform_slots": {
+                "探亲": true,
+                "申请": true,
+                "被盗": true,
+                "补发": true
+            }
+        }
+    },
+    {
+        "consult_id": "111",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "申请": true,
+                "出国": true,
+                "非公务原因": true,
+                "被盗": true
+            },
+            "implicit_inform_slots": {
+                "补发": true,
+                "护照": true,
+                "遗失": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "112",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "学习": true,
+                "普通": true,
+                "不能使用": true,
+                "补发": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "公民": true,
+                "护照": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "113",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "届满": true,
+                "办理": true,
+                "有效期": true
+            },
+            "implicit_inform_slots": {
+                "旅行": true,
+                "外国": true,
+                "换发": true,
+                "护照": true
+            }
+        }
+    },
+    {
+        "consult_id": "114",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "有效期": true,
+                "届满": true,
+                "出国": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "换发": true,
+                "办理": true,
+                "外国": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "115",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "姓名加注": true,
+                "加注": true,
+                "英文": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "办理": true,
+                "外国": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "116",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "补发": true,
+                "外国": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "护照": true,
+                "出国": true,
+                "遗失": true
+            }
+        }
+    },
+    {
+        "consult_id": "117",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "办理": true,
+                "届满": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "换发": true,
+                "有效期": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "118",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "首次": true,
+                "申请": true,
+                "外国": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "探亲": true,
+                "签发": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "119",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "外国": true,
+                "遗失": true,
+                "出国": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "公民": true,
+                "普通": true,
+                "被盗": true
+            }
+        }
+    },
+    {
+        "consult_id": "120",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "换发": true,
+                "办理": true,
+                "有效期": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "学习": true,
+                "非公务原因": true,
+                "公民": true,
+                "届满": true
+            }
+        }
+    },
+    {
+        "consult_id": "121",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "外国": true,
+                "普通": true,
+                "签发": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "公民": true,
+                "首次": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "122",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "申请": true,
+                "普通": true,
+                "首次": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "签发": true,
+                "护照": true,
+                "非公务原因": true,
+                "商务活动": true
+            }
+        }
+    },
+    {
+        "consult_id": "123",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "办理": true,
+                "出国": true,
+                "遗失": true,
+                "被盗": true
+            },
+            "implicit_inform_slots": {
+                "补发": true,
+                "外国": true,
+                "公民": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "124",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "办理": true,
+                "申请": true,
+                "出国": true,
+                "不能使用": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "定居": true,
+                "损毁": true,
+                "补发": true
+            }
+        }
+    },
+    {
+        "consult_id": "125",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "出国": true,
+                "申请": true,
+                "首次": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "探亲": true,
+                "公民": true,
+                "签发": true
+            }
+        }
+    },
+    {
+        "consult_id": "126",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "加注": true,
+                "申请": true,
+                "普通": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "多音字": true,
+                "姓名加注": true,
+                "非公务原因": true,
+                "姓名": true
+            }
+        }
+    },
+    {
+        "consult_id": "127",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "学习": true,
+                "普通": true,
+                "首次": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "出国": true,
+                "签发": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "128",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "非公务原因": true,
+                "申请": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "首次": true,
+                "普通": true,
+                "签发": true,
+                "定居": true
+            }
+        }
+    },
+    {
+        "consult_id": "129",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "换发": true,
+                "届满": true,
+                "普通": true,
+                "有效期": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "护照": true,
+                "就业": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "130",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "签证页": true,
+                "使用": true,
+                "出国": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "商务活动": true,
+                "完毕": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "131",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "有效期": true,
+                "公民": true,
+                "换发": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "商务活动": true,
+                "出国": true,
+                "护照": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "132",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "被盗": true,
+                "遗失": true,
+                "普通": true,
+                "就业": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "护照": true,
+                "申请": true,
+                "补发": true
+            }
+        }
+    },
+    {
+        "consult_id": "133",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "护照": true,
+                "换发": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "届满": true,
+                "出国": true,
+                "有效期": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "134",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "外国": true,
+                "被盗": true,
+                "公民": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "就业": true,
+                "护照": true,
+                "办理": true,
+                "遗失": true
+            }
+        }
+    },
+    {
+        "consult_id": "135",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "姓名加注": true,
+                "申请": true,
+                "护照": true,
+                "学习": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "姓名": true,
+                "非公务原因": true,
+                "繁体": true
+            }
+        }
+    },
+    {
+        "consult_id": "136",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "外国": true,
+                "办理": true,
+                "多音字": true,
+                "姓名加注": true
+            },
+            "implicit_inform_slots": {
+                "姓名": true,
+                "普通": true,
+                "出国": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "137",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "申请": true,
+                "出国": true,
+                "不能使用": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "普通": true,
+                "补发": true,
+                "损毁": true
+            }
+        }
+    },
+    {
+        "consult_id": "138",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "护照": true,
+                "有效期": true,
+                "定居": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "届满": true,
+                "非公务原因": true,
+                "换发": true
+            }
+        }
+    },
+    {
+        "consult_id": "139",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "姓名": true,
+                "加注": true,
+                "护照": true,
+                "英文": true
+            },
+            "implicit_inform_slots": {
+                "姓名加注": true,
+                "旅行": true,
+                "出国": true,
+                "外国": true
+            }
+        }
+    },
+    {
+        "consult_id": "140",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "签发": true,
+                "护照": true,
+                "出国": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "首次": true,
+                "办理": true,
+                "外国": true,
+                "学习": true
+            }
+        }
+    },
+    {
+        "consult_id": "141",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "学习": true,
+                "非公务原因": true,
+                "签发": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "首次": true,
+                "普通": true,
+                "护照": true
+            }
+        }
+    },
+    {
+        "consult_id": "142",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "申请": true,
+                "届满": true,
+                "外国": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "护照": true,
+                "换发": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "143",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "遗失": true,
+                "办理": true,
+                "护照": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "被盗": true,
+                "补发": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "144",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "签发": true,
+                "首次": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "就业": true,
+                "出国": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "145",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "学习": true,
+                "出国": true,
+                "护照": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "首次": true,
+                "签发": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "146",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "完毕": true,
+                "非公务原因": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "出国": true,
+                "使用": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "147",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "外国": true,
+                "护照": true,
+                "商务活动": true
+            },
+            "implicit_inform_slots": {
+                "曾用名加注": true,
+                "出国": true,
+                "加注": true,
+                "曾用名": true
+            }
+        }
+    },
+    {
+        "consult_id": "148",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "被盗": true,
+                "非公务原因": true,
+                "办理": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "补发": true,
+                "外国": true,
+                "遗失": true
+            }
+        }
+    },
+    {
+        "consult_id": "149",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "外国": true,
+                "普通": true,
+                "加注": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "护照": true,
+                "曾用名": true,
+                "曾用名加注": true
+            }
+        }
+    },
+    {
+        "consult_id": "150",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "姓名": true,
+                "姓名加注": true,
+                "非公务原因": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "英文": true,
+                "办理": true,
+                "定居": true,
+                "加注": true
+            }
+        }
+    },
+    {
+        "consult_id": "151",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "普通": true,
+                "补发": true,
+                "非公务原因": true,
+                "学习": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "办理": true,
+                "出国": true,
+                "不能使用": true
+            }
+        }
+    },
+    {
+        "consult_id": "152",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "办理": true,
+                "普通": true,
+                "旅行": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "使用": true,
+                "护照": true,
+                "出国": true,
+                "换发": true
+            }
+        }
+    },
+    {
+        "consult_id": "153",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "汉字": true,
+                "加注": true,
+                "外国": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "出国": true,
+                "姓名加注": true,
+                "繁体": true
+            }
+        }
+    },
+    {
+        "consult_id": "154",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "出国": true,
+                "首次": true,
+                "签发": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "普通": true,
+                "护照": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "155",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "护照": true,
+                "出国": true,
+                "届满": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "有效期": true,
+                "办理": true,
+                "换发": true
+            }
+        }
+    },
+    {
+        "consult_id": "156",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "曾持照": true,
+                "曾持照加注": true,
+                "办理": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "申请": true,
+                "护照": true,
+                "加注项": true
+            }
+        }
+    },
+    {
+        "consult_id": "157",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "不能使用": true,
+                "损毁": true,
+                "外国": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "办理": true,
+                "出国": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "158",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "繁体": true,
+                "出国": true,
+                "汉字": true,
+                "姓名加注": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "普通": true,
+                "加注": true,
+                "学习": true
+            }
+        }
+    },
+    {
+        "consult_id": "159",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "签发": true,
+                "出国": true,
+                "公民": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "首次": true,
+                "申请": true,
+                "探亲": true
+            }
+        }
+    },
+    {
+        "consult_id": "160",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "完毕": true,
+                "非公务原因": true,
+                "申请": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "使用": true,
+                "签证页": true,
+                "外国": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "161",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "签发": true,
+                "外国": true,
+                "非公务原因": true,
+                "首次": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "办理": true,
+                "商务活动": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "162",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "完毕": true,
+                "护照": true,
+                "探亲": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "换发": true,
+                "办理": true,
+                "签证页": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "163",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "届满": true,
+                "办理": true,
+                "护照": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "探亲": true,
+                "有效期": true,
+                "换发": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "164",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "被盗": true,
+                "就业": true,
+                "护照": true,
+                "补发": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "外国": true,
+                "申请": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "165",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "出国": true,
+                "届满": true,
+                "办理": true,
+                "换发": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "公民": true,
+                "有效期": true,
+                "旅行": true
+            }
+        }
+    },
+    {
+        "consult_id": "166",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "首次": true,
+                "旅行": true,
+                "申请": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "外国": true,
+                "办理": true,
+                "签发": true
+            }
+        }
+    },
+    {
+        "consult_id": "167",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "发音": true,
+                "加注": true,
+                "姓名加注": true
+            },
+            "implicit_inform_slots": {
+                "非标准": true,
+                "姓名": true,
+                "普通": true,
+                "汉语": true
+            }
+        }
+    },
+    {
+        "consult_id": "168",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "探亲": true,
+                "非公务原因": true,
+                "出国": true,
+                "届满": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "换发": true,
+                "护照": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "169",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "旅行": true,
+                "签发": true,
+                "办理": true,
+                "首次": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "公民": true,
+                "出国": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "170",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "公民": true,
+                "损毁": true,
+                "普通": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "不能使用": true,
+                "非公务原因": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "171",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "外国": true,
+                "出国": true,
+                "办理": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "加注": true,
+                "加注项": true,
+                "曾持照加注": true
+            }
+        }
+    },
+    {
+        "consult_id": "172",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "护照": true,
+                "外国": true,
+                "办理": true,
+                "曾用名加注": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "出国": true,
+                "曾用名": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "173",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "申请": true,
+                "首次": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "签发": true,
+                "定居": true,
+                "办理": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "174",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "办理": true,
+                "非公务原因": true,
+                "首次": true,
+                "签发": true
+            },
+            "implicit_inform_slots": {
+                "旅行": true,
+                "申请": true,
+                "外国": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "175",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "普通": true,
+                "签发": true,
+                "出国": true,
+                "首次": true
+            },
+            "implicit_inform_slots": {
+                "商务活动": true,
+                "办理": true,
+                "护照": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "176",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "护照": true,
+                "就业": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "首次": true,
+                "外国": true,
+                "签发": true,
+                "普通": true
+            }
+        }
+    },
+    {
+        "consult_id": "177",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "使用": true,
+                "完毕": true,
+                "出国": true,
+                "非公务原因": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "签证页": true,
+                "外国": true,
+                "换发": true
+            }
+        }
+    },
+    {
+        "consult_id": "178",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "护照": true,
+                "普通": true,
+                "非公务原因": true,
+                "商务活动": true
+            },
+            "implicit_inform_slots": {
+                "办理": true,
+                "被盗": true,
+                "补发": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "179",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "商务活动": true,
+                "签证页": true,
+                "使用": true,
+                "换发": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "非公务原因": true,
+                "普通": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "180",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "商务活动": true,
+                "签发": true,
+                "护照": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "外国": true,
+                "非公务原因": true,
+                "首次": true
+            }
+        }
+    },
+    {
+        "consult_id": "181",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "公民": true,
+                "加注": true,
+                "外国": true,
+                "发音": true
+            },
+            "implicit_inform_slots": {
+                "汉语": true,
+                "护照": true,
+                "办理": true,
+                "非标准": true
+            }
+        }
+    },
+    {
+        "consult_id": "182",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "多音字": true,
+                "公民": true,
+                "外国": true,
+                "姓名": true
+            },
+            "implicit_inform_slots": {
+                "加注": true,
+                "姓名加注": true,
+                "办理": true,
+                "出国": true
+            }
+        }
+    },
+    {
+        "consult_id": "183",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "非公务原因": true,
+                "姓名": true,
+                "护照": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "姓名加注": true,
+                "办理": true,
+                "加注": true,
+                "商务活动": true
+            }
+        }
+    },
+    {
+        "consult_id": "184",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "公民": true,
+                "护照": true,
+                "办理": true,
+                "加注": true
+            },
+            "implicit_inform_slots": {
+                "曾用名": true,
+                "旅行": true,
+                "申请": true,
+                "非公务原因": true
+            }
+        }
+    },
+    {
+        "consult_id": "185",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "护照": true,
+                "外国": true,
+                "非公务原因": true,
+                "损毁": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "补发": true,
+                "不能使用": true,
+                "就业": true
+            }
+        }
+    },
+    {
+        "consult_id": "186",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "申请": true,
+                "办理": true,
+                "出国": true,
+                "普通": true
+            },
+            "implicit_inform_slots": {
+                "签发": true,
+                "非公务原因": true,
+                "外国": true,
+                "首次": true
+            }
+        }
+    },
+    {
+        "consult_id": "187",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "使用": true,
+                "完毕": true,
+                "普通": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "换发": true,
+                "出国": true,
+                "公民": true,
+                "护照": true
+            }
+        }
+    },
+    {
+        "consult_id": "188",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "外国": true,
+                "普通": true,
+                "出国": true,
+                "届满": true
+            },
+            "implicit_inform_slots": {
+                "申请": true,
+                "换发": true,
+                "商务活动": true,
+                "公民": true
+            }
+        }
+    },
+    {
+        "consult_id": "189",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "遗失": true,
+                "出国": true,
+                "普通": true,
+                "公民": true
+            },
+            "implicit_inform_slots": {
+                "学习": true,
+                "补发": true,
+                "办理": true,
+                "被盗": true
+            }
+        }
+    },
+    {
+        "consult_id": "190",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "申请": true,
+                "普通": true,
+                "出国": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "补发": true,
+                "公民": true,
+                "外国": true,
+                "损毁": true
+            }
+        }
+    },
+    {
+        "consult_id": "191",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "换发": true,
+                "非公务原因": true,
+                "完毕": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "使用": true,
+                "护照": true,
+                "就业": true,
+                "签证页": true
+            }
+        }
+    },
+    {
+        "consult_id": "192",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "首次": true,
+                "普通": true,
+                "签发": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "出国": true,
+                "公民": true,
+                "外国": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "193",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "签发": true,
+                "普通": true,
+                "首次": true,
+                "申请": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "非公务原因": true,
+                "外国": true,
+                "办理": true
+            }
+        }
+    },
+    {
+        "consult_id": "194",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "换发护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--换发护照",
+            "explicit_inform_slots": {
+                "公民": true,
+                "定居": true,
+                "办理": true,
+                "有效期": true
+            },
+            "implicit_inform_slots": {
+                "护照": true,
+                "普通": true,
+                "换发": true,
+                "申请": true
+            }
+        }
+    },
+    {
+        "consult_id": "195",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "首次申请护照": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--首次申请护照",
+            "explicit_inform_slots": {
+                "学习": true,
+                "出国": true,
+                "非公务原因": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "公民": true,
+                "签发": true,
+                "普通": true,
+                "首次": true
+            }
+        }
+    },
+    {
+        "consult_id": "196",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照加注": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照加注",
+            "explicit_inform_slots": {
+                "办理": true,
+                "汉字": true,
+                "非公务原因": true,
+                "护照": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "加注": true,
+                "姓名": true,
+                "姓名加注": true
+            }
+        }
+    },
+    {
+        "consult_id": "197",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "损毁": true,
+                "出国": true,
+                "旅行": true,
+                "办理": true
+            },
+            "implicit_inform_slots": {
+                "外国": true,
+                "护照": true,
+                "公民": true,
+                "补发": true
+            }
+        }
+    },
+    {
+        "consult_id": "198",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "补发": true,
+                "定居": true,
+                "普通": true,
+                "外国": true
+            },
+            "implicit_inform_slots": {
+                "非公务原因": true,
+                "护照": true,
+                "办理": true,
+                "遗失": true
+            }
+        }
+    },
+    {
+        "consult_id": "199",
+        "goal": {
+            "request_slots": {
+                "service": "UNK"
+            },
+            "max_slot": {
+                "护照补发": true
+            },
+            "service_tag": "普通护照签发、换发、补发及加注--护照补发",
+            "explicit_inform_slots": {
+                "公民": true,
+                "外国": true,
+                "就业": true,
+                "出国": true
+            },
+            "implicit_inform_slots": {
+                "普通": true,
+                "被盗": true,
+                "护照": true,
+                "遗失": true
+            }
+        }
+    }
+]
