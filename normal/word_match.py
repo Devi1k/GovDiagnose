@@ -91,7 +91,7 @@ def replace_list(seg_list, word_dict, model):
         to_check = set()
         u = x
         try:
-            u = model.wv.most_similar(x, topn=15)
+            u = model.wv.most_similar(x, topn=5)
         except KeyError:
             pass
         for i, _u in enumerate(u):
@@ -106,31 +106,3 @@ def replace_list(seg_list, word_dict, model):
         new_list.add(replace_word)
     return list(new_list)
 
-
-if __name__ == '__main__':
-    jieba.initialize()
-
-    word_dict = load_dict('data/new_dict.txt')
-
-    # with open('data/question.txt', 'r') as fp:
-    #     question = fp.readline()
-    question = "我想办理网约车执照"
-    # while question:
-    question = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "", question)
-
-    # print(question)
-    start = time.time()
-    with open('data/new_dict.txt', 'r') as fp:
-        content = fp.readlines()
-        for word in content:
-            jieba.add_word(word)
-    end = time.time()
-    print(end - start)
-    seg_list = list(jieba.cut(question))
-    for i in range(len(seg_list) - 1, -1, -1):
-        if seg_list[i] in stopwords:
-            del seg_list[i]
-    print("old seg: " + "/ ".join(seg_list))
-    new_seg_list = replace_list(seg_list, word_dict)
-    print("new seg: " + "/ ".join(new_seg_list))
-    # question = input()
