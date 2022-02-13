@@ -106,7 +106,7 @@ def replace_list(seg_list, word_dict, model):
                 choice_index = int(score.index(choice))
                 check_word = list(word_dict)[choice_index]
                 check_score = compare(x, check_word, model)
-                if check_score > 0.2:
+                if check_score > 0.1:
                     replace_word = check_word
         new_list.append(replace_word)
     return new_list
