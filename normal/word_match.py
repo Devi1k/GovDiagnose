@@ -20,7 +20,7 @@ def is_digit(obj):
     return isinstance(obj, (numbers.Integral, numbers.Complex, numbers.Real))
 
 
-stopwords = [i.strip() for i in open('../data/baidu_stopwords.txt').readlines()]
+stopwords = [i.strip() for i in open('./data/baidu_stopwords.txt').readlines()]
 
 
 def load_dict(file_path):
@@ -94,16 +94,20 @@ def replace_list(seg_list, word_dict, model):
             u = model.wv.most_similar(x, topn=5)
         except KeyError:
             pass
+        to_check.append(x)
         for i, _u in enumerate(u):
             to_check.append(u[i][0])
-        to_check.append(x)
+        to_check = list(reversed(to_check))
         for k in to_check:
             score = [compare(k, y, model) for y in word_dict]
             choice = max(score)
-            if choice > max_score:
-                max_score = choice
+            if choice > 0.4:
+                # max_score = choice
                 choice_index = int(score.index(choice))
-                replace_word = list(word_dict)[choice_index]
+                check_word = list(word_dict)[choice_index]
+                check_score = compare(x, check_word, model)
+                if check_score > 0.2:
+                    replace_word = check_word
         new_list.append(replace_word)
     return new_list
 

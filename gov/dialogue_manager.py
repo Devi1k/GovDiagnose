@@ -23,12 +23,15 @@ class DialogueManager(object):
         with open('data/new_dict.txt', 'r') as fp:
             content = fp.readlines()
             for word in content:
-                jieba.add_word(word)
+                jieba.add_word(word, freq=30000)
         word_dict = load_dict('./data/new_dict.txt')
         # 取出问题
         # print(sentence)
         seg_list = list(jieba.cut(sentence))
         print(' '.join(seg_list))
+        for i in range(len(seg_list) - 1, -1, -1):
+            if seg_list[i] in self.stop_words:
+                del seg_list[i]
         explicit_inform_slots = replace_list(seg_list, word_dict, model=model)
         for i in range(len(explicit_inform_slots) - 1, -1, -1):
             if explicit_inform_slots[i] in self.stop_words:
@@ -57,7 +60,7 @@ class DialogueManager(object):
         with open('data/new_dict.txt', 'r') as fp:
             content = fp.readlines()
             for word in content:
-                jieba.add_word(word)
+                jieba.add_word(word,freq=30000)
         implicit_inform_slots = ''
         if implicit != '':
             word_dict = load_dict('./data/new_dict.txt')
