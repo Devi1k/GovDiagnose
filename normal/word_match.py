@@ -101,13 +101,12 @@ def replace_list(seg_list, word_dict, model):
         for k in to_check:
             score = [compare(k, y, model) for y in word_dict]
             choice = max(score)
-            if choice > 0.4:
-                # max_score = choice
+            if choice >= max_score and choice > 0.5:
+                max_score = choice
                 choice_index = int(score.index(choice))
-                check_word = list(word_dict)[choice_index]
-                check_score = compare(x, check_word, model)
-                if check_score > 0.1:
-                    replace_word = check_word
+                replace_word = list(word_dict)[choice_index]
+                # if check_score > 0.1:
+                #     replace_word = check_word
         new_list.append(replace_word)
     return new_list
 
@@ -115,14 +114,14 @@ def replace_list(seg_list, word_dict, model):
 if __name__ == '__main__':
     jieba.initialize()
 
-    word_dict = load_dict('../data/new_dict.txt')
+    word_dict = load_dict('data/new_dict.txt')
 
     # with open('data/question.txt', 'r') as fp:
     #     question = fp.readline()
     question = "我想办理护照"
     # while question:
     question = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "", question)
-    model = gensim.models.Word2Vec.load('../data/wb.text.model')
+    model = gensim.models.Word2Vec.load('data/wb.text.model')
     # print(question)
     start = time.time()
     with open('../data/new_dict.txt', 'r') as fp:

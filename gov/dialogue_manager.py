@@ -28,7 +28,7 @@ class DialogueManager(object):
         # 取出问题
         # print(sentence)
         seg_list = list(jieba.cut(sentence))
-        print(' '.join(seg_list))
+        # print(' '.join(seg_list))
         for i in range(len(seg_list) - 1, -1, -1):
             if seg_list[i] in self.stop_words:
                 del seg_list[i]
@@ -36,7 +36,7 @@ class DialogueManager(object):
         for i in range(len(explicit_inform_slots) - 1, -1, -1):
             if explicit_inform_slots[i] in self.stop_words:
                 del explicit_inform_slots[i]
-        print(' '.join(explicit_inform_slots))
+        # print(' '.join(explicit_inform_slots))
 
         user_action = self.state_tracker.user.initialize(explicit_inform_slots)
         # print("**************user_action•••••••••••")
@@ -67,12 +67,12 @@ class DialogueManager(object):
             # 取出问题
             # print(implicit)
             seg_list = list(jieba.cut(implicit))
-            print(' '.join(seg_list))
+            # print(' '.join(seg_list))
             implicit_inform_slots = replace_list(seg_list, word_dict, model)
             for i in range(len(implicit_inform_slots) - 1, -1, -1):
                 if implicit_inform_slots[i] in self.stop_words:
                     del implicit_inform_slots[i]
-            print(' '.join(implicit_inform_slots))
+            # print(' '.join(implicit_inform_slots))
         user_action, reward, episode_over, dialogue_status = self.state_tracker.user.next(implicit_inform_slots,
                                                                                           agent_action=agent_action,
                                                                                           turn=self.state_tracker.turn)
