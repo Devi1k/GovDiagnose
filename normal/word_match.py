@@ -84,7 +84,7 @@ def compare(s1, s2, model):
 
 
 def replace_list(seg_list, word_dict, model):
-    new_list = []
+    new_list = set()
     for x in seg_list:
         replace_word = x
         max_score = 0
@@ -101,14 +101,14 @@ def replace_list(seg_list, word_dict, model):
         for k in to_check:
             score = [compare(k, y, model) for y in word_dict]
             choice = max(score)
-            if choice >= max_score and choice > 0.5:
+            if choice >= max_score:
                 max_score = choice
                 choice_index = int(score.index(choice))
                 replace_word = list(word_dict)[choice_index]
                 # if check_score > 0.1:
                 #     replace_word = check_word
-        new_list.append(replace_word)
-    return new_list
+                new_list.add(replace_word)
+    return list(new_list)
 
 
 if __name__ == '__main__':
