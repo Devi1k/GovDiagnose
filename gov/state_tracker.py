@@ -25,7 +25,7 @@ class StateTracker(object):
                 "user_request_slots": {},
                 "agent_request_slots": {},
                 "inform_slots": {},
-                "wrong_diseases": []
+                "wrong_services": []
             }
         }
 

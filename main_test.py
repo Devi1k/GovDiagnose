@@ -21,7 +21,7 @@ async def main_logic(para, mod):
 
     while True:
         async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
-        # await websocket.send('{"type":0, "msg": "123"}')  # 测试接口
+            # await websocket.send('{"type":0, "msg": "123"}')  # 测试接口
             response = await websocket.recv()
 
             # for res in test_text:
@@ -38,40 +38,6 @@ async def main_logic(para, mod):
                 pipes_dict[conv_id] = [user_pipe, response_pipe]
                 Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
                 Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
-
-                # # 输入问题
-                # # ques = msg['content']['text'] #todo:第一次是否有问题内容
-                # ques = input("请问有什么问题：")
-                # # 默认判断True
-                # jug = ''
-                # judge = True if jug == 't' or jug == '' else False
-                # now_time = round(time.time() * 1000)
-                # # 更新会话内容
-                # user_json = {
-                #     "type": 101,
-                #     "msg": {
-                #         "message_id": "1462392551989317632",
-                #         "conv_id": "1475055770457346048",
-                #         "sender_id": "123",
-                #         "receiver_id": "435737",
-                #         "content": {
-                #             "judge": judge, "text": ques
-                #         },
-                #         "type": "text",
-                #         "status": "",
-                #         "timestamp": now_time,
-                #         "role": "visitor"
-                #     }
-                # }
-                #
-                # # user_json = json.dumps(response)
-
-
-
-
-
-
-
             else:
                 user_pipe, response_pipe = pipes_dict[conv_id]
                 user_text = msg['content']
@@ -84,42 +50,6 @@ async def main_logic(para, mod):
                     "end_flag": episode_over  会话是否结束
                 }
                 """
-
-                # recv = response_pipe[1].recv()
-                #
-                # # 没结束 继续输入
-                # if recv['end_flag'] is not True:
-                #     print("来自agent的消息:", recv['service'])
-                #     jug = input("判断正误：")
-                #     judge = True if jug == 't' or jug == '' else False
-                # # 结束关闭管道
-                # else:
-                #     user_pipe[0].close()
-                #     break
-                #
-                # # 判断错误时补充描述
-                # if judge is True:
-                #     ques = ''
-                # else:
-                #     ques = input("请再补充一些：")
-                # now_time = round(time.time() * 1000)
-                # # 更新会话内容
-                # user_json = {
-                #     "type": 101,
-                #     "msg": {
-                #         "message_id": "1462392551989317632",
-                #         "conv_id": "1475055770457346048",
-                #         "sender_id": "123",
-                #         "receiver_id": "435737",
-                #         "content": {
-                #             "judge": judge, "text": ques
-                #         },
-                #         "type": "text",
-                #         "status": "",
-                #         "timestamp": now_time,
-                #         "role": "visitor"
-                #     }
-                # }
 
 
 if __name__ == '__main__':
