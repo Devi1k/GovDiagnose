@@ -1,13 +1,13 @@
 import asyncio
-import websockets
 import json
 from multiprocessing import Pipe, Process
-from test_diagnose import slotValueRecognition
-from message_sender import messageSender
-from gov.running_steward import simulation_epoch
+
 import gensim
+import websockets
+
 from conf.config import get_config
-import time
+from gov.running_steward import simulation_epoch
+from message_sender import messageSender
 
 pipes_dict = {}
 end_flag = "END"
@@ -37,19 +37,32 @@ async def main_logic(para, mod):
                 user_pipe, response_pipe = Pipe(), Pipe()
                 pipes_dict[conv_id] = [user_pipe, response_pipe]
                 Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
-                Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
+                # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             else:
                 user_pipe, response_pipe = pipes_dict[conv_id]
                 user_text = msg['content']
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
                 user_pipe[0].send(user_text)
+                recv = response_pipe[1].recv()
                 # 从模型接收模型的消息 消息格式为
                 """
                 {
-                    "service": agent_action["inform_slots"]["service"],   service为业务名
+                    "service": agent_action["inform_slots"]["service"] or ,   service为业务名
                     "end_flag": episode_over  会话是否结束
                 }
                 """
+                # 没结束 继续输入
+                if recv['end_flag'] is not True:
+                    msg = recv['service']
+                    messageSender(conv_id, msg)
+                # 结束关闭管道
+                else:
+                    user_pipe[0].close()
+                    response_pipe[1].close()
+                    # todo: service_name
+                    service_name = recv['service']
+                    print(service_name)
+                    break
 
 
 if __name__ == '__main__':

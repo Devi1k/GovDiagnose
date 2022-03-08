@@ -1,1 +1,13 @@
-{"goal": {"request_slots": {"service": "UNK"}, "max_slot": {}, "service_tag": {}, "explicit_inform_slots": {}, "implicit_inform_slots": {}}, "user_action": {}, "agent_aciton": {}}
+{
+    "goal": {
+        "request_slots": {
+            "service": "UNK"
+        },
+        "max_slot": {},
+        "service_tag": {},
+        "explicit_inform_slots": {},
+        "implicit_inform_slots": {}
+    },
+    "user_action": {},
+    "agent_aciton": {}
+}

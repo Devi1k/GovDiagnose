@@ -1,13 +1,12 @@
 import asyncio
-import websockets
 import json
-from multiprocessing import Pipe, Process
-from test_diagnose import slotValueRecognition
-from message_sender import messageSender
-from gov.running_steward import simulation_epoch
-import gensim
-from conf.config import get_config
 import time
+from multiprocessing import Pipe, Process
+
+import gensim
+
+from conf.config import get_config
+from gov.running_steward import simulation_epoch
 
 pipes_dict = {}
 end_flag = "END"
@@ -38,10 +37,9 @@ async def main_logic(para, mod):
             pipes_dict[conv_id] = [user_pipe, response_pipe]
             Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
             # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
-
             # 输入问题
             # ques = msg['content']['text']
-            #todo:第一次是否有问题内容
+            # todo:第一次是否有问题内容
             ques = input("请问有什么问题：")
             # 默认判断True
             jug = ''
@@ -65,25 +63,12 @@ async def main_logic(para, mod):
                 }
             }
 
-
-
-
-
-
-
-
         else:
             user_pipe, response_pipe = pipes_dict[conv_id]
             user_text = msg['content']
             # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
             user_pipe[0].send(user_text)
             # 从模型接收模型的消息 消息格式为
-            """
-            {
-                "service": agent_action["inform_slots"]["service"],   service为业务名
-                "end_flag": episode_over  会话是否结束
-            }
-            """
 
             recv = response_pipe[1].recv()
 
