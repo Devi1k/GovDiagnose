@@ -1,9 +1,9 @@
 # -*-coding: utf-8 -*-
 import json
 
-from gov.user import User
 from gov.agent_rule import AgentRule
 from gov.dialogue_manager import DialogueManager
+from gov.user import User
 
 
 def simulation_epoch(pipe, parameter, model, train_mode=1):
@@ -15,7 +15,7 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
 
     episode_over = False
     receive = in_pipe.recv()
-    # todo:
+    # todo: 改为单独一个变量
     explicit = receive['text']
 
     agent_action = dialogue_manager.initialize(explicit, model, train_mode=parameter.get("train_mode"),
@@ -36,10 +36,25 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
             receive = in_pipe.recv()
         except EOFError:
             break
-        # todo:
-        judge = receive['judge']
+        # judge = receive['judge']
+        judge = bool()
         implicit = receive['text']
+        # todo: implicit的类型
 
+        if implicit is True:
+            judge = True
+            with open('./data/goal_set.json', 'r') as f:
+                goal_set = json.load(f)
+                goal_set['user_action']['user_judge'] = True
+            with open('./data/goal_set.json', 'w') as f:
+                json.dump(goal_set, f)
+            implicit = ""
+        else:
+            with open('./data/goal_set.json', 'r') as f:
+                goal_set = json.load(f)
+                goal_set['user_action']['user_judge'] = False
+            with open('./data/goal_set.json', 'w') as f:
+                json.dump(goal_set, f)
         if agent_action['action'] == 'inform' and judge is True:
             # out_pipe.send("请问还有别的问题吗")
             episode_over = True
@@ -47,19 +62,6 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
                    "end_flag": episode_over}
             out_pipe.send(msg)
             break
-        if judge is True:
-            with open('./data/goal_set.json', 'r') as f:
-                goal_set = json.load(f)
-                goal_set['user_action']['user_judge'] = True
-            with open('./data/goal_set.json', 'w') as f:
-                json.dump(goal_set, f)
-        else:
-            with open('./data/goal_set.json', 'r') as f:
-                goal_set = json.load(f)
-                goal_set['user_action']['user_judge'] = False
-            with open('./data/goal_set.json', 'w') as f:
-                json.dump(goal_set, f)
-
         reward, episode_over, dialogue_status, _agent_action = dialogue_manager.next(implicit, model,
                                                                                      save_record=True,
                                                                                      train_mode=train_mode,
@@ -73,7 +75,7 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
         elif agent_action['action'] == 'request':
             send_list = list(agent_action["request_slots"].keys())
             service = ''.join(send_list)
-            msg = {"service": service,  "end_flag": episode_over}
+            msg = {"service": service, "end_flag": episode_over}
             out_pipe.send(msg)
 
         agent_action = _agent_action

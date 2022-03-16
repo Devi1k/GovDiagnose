@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 import json
-import os
 
 import jieba
+
 import gov.dialogue_configuration as dialogue_configuration
 from gov.state_tracker import StateTracker
 from normal.word_match import replace_list, load_dict
@@ -67,6 +67,9 @@ class DialogueManager(object):
             # 取出问题
             # print(implicit)
             seg_list = list(jieba.cut(implicit))
+            for i in range(len(seg_list) - 1, -1, -1):
+                if seg_list[i] in self.stop_words:
+                    del seg_list[i]
             # print(' '.join(seg_list))
             implicit_inform_slots = replace_list(seg_list, word_dict, model)
             for i in range(len(implicit_inform_slots) - 1, -1, -1):
@@ -94,7 +97,6 @@ class DialogueManager(object):
             goal_set['agent_aciton'] = agent_action
         with open('./data/goal_set.json', 'w') as f:
             json.dump(goal_set, f, indent=4, ensure_ascii=False)
-        # todo: 何时发出去、怎么发出去
         self.state_tracker.state_updater(agent_action=agent_action)
 
         return reward, episode_over, dialogue_status, agent_action

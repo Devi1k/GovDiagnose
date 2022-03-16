@@ -22,15 +22,11 @@ async def main_logic(para, mod):
     global conv_id
     while True:
         async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
-            data = {"type": 101, "msg": {"conv_id": "1475055770457346048", "content": {
-                "judge": True, "text": '护照丢了怎么办'
-            }, }}
-            s = json.dumps(data, ensure_ascii=False)
-            await websocket.send(s)  # 测试接口
+            # data = {"type": 101, "msg": {"conv_id": "1475055770457346048", "content": {"judge": True, "text": '护照丢了怎么办'}}}
+            # s = json.dumps(data, ensure_ascii=False)
+            # await websocket.send(s)  # 测试接口
+            print('wait message')
             response = await websocket.recv()
-
-            # for res in test_text:
-            # response = res
             user_json = json.loads(response)
             msg_type = user_json['type']
             msg = user_json['msg']
@@ -45,7 +41,7 @@ async def main_logic(para, mod):
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             else:
                 if first_utterance == "":
-                    first_utterance = msg['content']  # TODO:? 是放在这里还是上面
+                    first_utterance = msg['content']
                 user_pipe, response_pipe = pipes_dict[conv_id]
                 user_text = msg['content']
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
@@ -62,7 +58,7 @@ async def main_logic(para, mod):
                 if recv['end_flag'] is not True:
                     # todo: message_sender
                     msg = recv['service']
-                    print(msg)
+                    # print(msg)
                     messageSender(conv_id, msg)
                 # 结束关闭管道
                 else:
@@ -76,6 +72,7 @@ if __name__ == '__main__':
     end_flag = "END"
     pipes_dict = {}
     first_utterance, service_name = "", ""
+    print('load model')
     model = gensim.models.Word2Vec.load('data/wb.text.model')
     config_file = './conf/settings.yaml'
     parameter = get_config(config_file)
