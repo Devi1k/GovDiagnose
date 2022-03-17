@@ -60,7 +60,6 @@ async def main_logic(para, mod):
                 """
                 # 没结束 继续输入
                 if recv['end_flag'] is not True:
-                    # todo: message_sender
                     msg = recv['service']
                     # print(msg)
                     messageSender(conv_id, msg)
@@ -73,7 +72,6 @@ async def main_logic(para, mod):
                     print("service_name: ", service_name)
                     answer = get_answer(first_utterance, service_name)
                     print(answer)
-                    # todo: 将字符串answer发给前端
                     messageSender(conv_id, answer)
                     # break
 

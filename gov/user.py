@@ -23,7 +23,6 @@ class User(object):
             "user_judge":True
 
         }
-        # TODO：goal的设置
 
         # self.goal_set = random.choice(goal_set.goal_set)
         goal = {
@@ -50,7 +49,6 @@ class User(object):
         self._init()
         self.state["action"] = "request"
         self.state["request_slots"]["service"] = dialogue_configuration.VALUE_UNKNOWN
-        # TODO：用户自然语言分词
         explicit_inform_slots = dict()
         for i in _explicit_inform_slots:
             explicit_inform_slots[i] = True
@@ -88,10 +86,8 @@ class User(object):
 
         if self.episode_over is not True:
             if agent_act_type == "request":
-                # todo: 通信交互
                 self._response_request(agent_action=agent_action)
             elif agent_act_type == "inform":
-                # todo: 通信交互
                 self._response_inform(agent_action=agent_action)
             user_action = self._assemble_user_action()
             reward = self._reward_function()

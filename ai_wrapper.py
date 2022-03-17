@@ -15,11 +15,10 @@ def get_answer(first_utterance, service_name):
         # return answer
     else:
         # --intention detection
-        # intent_path = "https://miner.picp.net/intent?text={}"
-        # intent_res = requests.get(intent_path.format(first_utterance)).json()
-        # intent_class = intent_res['data']
-        # print("intention:", intent_class)
-        intent_class = "retrieval"
+        intent_path = "https://miner.picp.net/intent?text={}"
+        intent_res = requests.get(intent_path.format(first_utterance)).json()
+        intent_class = intent_res['data']
+        print("intention:", intent_class)
 
         if intent_class == "qa":  # --QA match
             qamatch_path = "https://burninghell.xicp.net/QAMatch?serviceName={}&question={}"

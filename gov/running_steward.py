@@ -15,7 +15,6 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
 
     episode_over = False
     receive = in_pipe.recv()
-    # todo: 改为单独一个变量
     explicit = receive['text']
 
     agent_action = dialogue_manager.initialize(explicit, model, train_mode=parameter.get("train_mode"),
@@ -40,7 +39,6 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
         judge = False
         implicit = receive['text']
         # print(implicit)
-        # todo: implicit的类型
         if implicit == "是":
             judge = True
             with open('./data/goal_set.json', 'r') as f:

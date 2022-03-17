@@ -39,7 +39,6 @@ async def main_logic(para, mod):
             # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             # 输入问题
             # ques = msg['content']['text']
-            # todo:第一次是否有问题内容
             ques = input("请问有什么问题：")
             # 默认判断True
             # jug = ''
