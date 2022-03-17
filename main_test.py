@@ -65,7 +65,13 @@ async def main_logic(para, mod):
                     user_pipe[0].close()
                     response_pipe[1].close()
                     service_name = recv['service']
-                    break
+                    print("first_utterance: ", first_utterance)
+                    print("service_name: ", service_name)
+                    answer = get_answer(first_utterance, service_name)
+                    print(answer)
+                    # todo: 将字符串answer发给前端
+                    messageSender(conv_id, answer)
+                    # break
 
 
 if __name__ == '__main__':
@@ -77,9 +83,3 @@ if __name__ == '__main__':
     config_file = './conf/settings.yaml'
     parameter = get_config(config_file)
     asyncio.get_event_loop().run_until_complete(main_logic(parameter, model))
-    print("first_utterance: ", first_utterance)
-    print("service_name: ", service_name)
-    answer = get_answer(first_utterance, service_name)
-    print(answer)
-    # todo: 将字符串answer发给前端
-    messageSender(conv_id, answer)

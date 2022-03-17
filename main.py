@@ -29,7 +29,7 @@ async def main_logic(para, mod):
         msg_type = user_json['type']
         msg = user_json['msg']
         conv_id = msg['conv_id']
-        # print(user_json)
+        print(user_json)
         # 首次询问
         if conv_id not in pipes_dict:
             # print("new conv")
@@ -42,8 +42,8 @@ async def main_logic(para, mod):
             # todo:第一次是否有问题内容
             ques = input("请问有什么问题：")
             # 默认判断True
-            jug = ''
-            judge = True if jug == 't' or jug == '' else False
+            # jug = ''
+            # judge = True if jug == 't' or jug == '' else False
             now_time = round(time.time() * 1000)
             # 更新会话内容
             user_json = {
@@ -54,7 +54,7 @@ async def main_logic(para, mod):
                     "sender_id": "123",
                     "receiver_id": "435737",
                     "content": {
-                        "judge": judge, "text": ques
+                        "text": ques
                     },
                     "type": "text",
                     "status": "",
@@ -75,19 +75,18 @@ async def main_logic(para, mod):
             # 没结束 继续输入
             if recv['end_flag'] is not True:
                 print("来自agent的消息:", recv['service'])
-                jug = input("判断正误：")
-                judge = True if jug == 't' or jug == '' else False
+                ques = input("判断正误：")
+                # judge = True if jug == 't' or jug == '' else False
             # 结束关闭管道
+
             else:
                 user_pipe[0].close()
                 response_pipe[1].close()
                 break
 
             # 判断错误时补充描述
-            if judge is True:
-                ques = ''
-            else:
-                ques = input("请再补充一些：")
+            # if ques == '是':
+            #     ques = ''
             now_time = round(time.time() * 1000)
             # 更新会话内容
             user_json = {
@@ -98,7 +97,7 @@ async def main_logic(para, mod):
                     "sender_id": "123",
                     "receiver_id": "435737",
                     "content": {
-                        "judge": judge, "text": ques
+                        "text": ques
                     },
                     "type": "text",
                     "status": "",

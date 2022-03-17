@@ -39,9 +39,9 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
         # judge = receive['judge']
         judge = bool()
         implicit = receive['text']
+        # print(implicit)
         # todo: implicit的类型
-
-        if implicit is True:
+        if implicit == "是":
             judge = True
             with open('./data/goal_set.json', 'r') as f:
                 goal_set = json.load(f)
