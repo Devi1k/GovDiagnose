@@ -1,8 +1,5 @@
 # -*- coding:utf-8 -*-
 import json
-import os
-import random
-import copy
 
 import gov.dialogue_configuration as dialogue_configuration
 
@@ -123,7 +120,6 @@ class User(object):
                 self.state["action"] = "inform"
                 self.state["inform_slots"][slot] = False
                 self.dialogue_status = dialogue_configuration.DIALOGUE_STATUS_INFORM_WRONG_SLOT
-                # todo: 用户语句分词
                 for slot in self.goal["implicit_inform_slots"].keys():
                     self.state["inform_slots"][slot] = self.goal["implicit_inform_slots"][slot]
 

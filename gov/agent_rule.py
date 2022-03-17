@@ -14,7 +14,6 @@ class AgentRule(Agent):
         # self.service=service
         # self.slot_max=slot_max
 
-
     def next(self, state, turn, greedy_strategy):
         score_max = 0
         max = 0
@@ -27,7 +26,8 @@ class AgentRule(Agent):
         if state["user_action"]["user_judge"] == False:
             for i in range(len(self.slot_max)):
                 # 每次pop掉最后一个，即新增的那个
-                if self.slot_max[i] == list(state["current_slots"]["agent_request_slots"].keys())[
+                request_slots_list = list(state["current_slots"]["agent_request_slots"].keys())
+                if self.slot_max[i] == request_slots_list[
                     len(state["current_slots"]["agent_request_slots"].keys()) - 1]:
                     delete = i  # 记下位置
             state["user_action"]["inform_slots"].pop(self.slot_max[delete])
@@ -43,7 +43,8 @@ class AgentRule(Agent):
         else:
             for i in range(len(self.slot_max)):
                 for j in range(len(inform_slots)):
-                    if inform_slots[j] in self.requirement_weight[i].keys():  # 如果该事项包含的slots中有inform的slot，该事项的score就加上该slot的权重
+                    if inform_slots[j] in self.requirement_weight[
+                        i].keys():  # 如果该事项包含的slots中有inform的slot，该事项的score就加上该slot的权重
                         if state["current_slots"]["inform_slots"][inform_slots[j]] == True:
                             score[i] += self.requirement_weight[i][inform_slots[j]]
                         elif state["current_slots"]["inform_slots"][inform_slots[j]] == False:

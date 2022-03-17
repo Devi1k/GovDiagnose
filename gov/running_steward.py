@@ -37,7 +37,7 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
         except EOFError:
             break
         # judge = receive['judge']
-        judge = bool()
+        judge = False
         implicit = receive['text']
         # print(implicit)
         # todo: implicit的类型

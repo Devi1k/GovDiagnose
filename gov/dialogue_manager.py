@@ -36,6 +36,7 @@ class DialogueManager(object):
         for i in range(len(explicit_inform_slots) - 1, -1, -1):
             if explicit_inform_slots[i] in self.stop_words:
                 del explicit_inform_slots[i]
+        print(explicit_inform_slots)
         # print(' '.join(explicit_inform_slots))
 
         user_action = self.state_tracker.user.initialize(explicit_inform_slots)
@@ -72,6 +73,7 @@ class DialogueManager(object):
                     del seg_list[i]
             # print(' '.join(seg_list))
             implicit_inform_slots = replace_list(seg_list, word_dict, model)
+            print(implicit_inform_slots)
             for i in range(len(implicit_inform_slots) - 1, -1, -1):
                 if implicit_inform_slots[i] in self.stop_words:
                     del implicit_inform_slots[i]
@@ -81,6 +83,11 @@ class DialogueManager(object):
                                                                                           turn=self.state_tracker.turn)
         # print("**************user_action•••••••••••")
         # print(user_action)
+        with open('./data/goal_set.json', 'r') as f:
+            goal_set = json.load(f)
+            goal_set['user_action'] = user_action
+        with open('./data/goal_set.json', 'w') as f:
+            json.dump(goal_set, f, indent=4, ensure_ascii=False)
         self.state_tracker.state_updater(user_action=user_action)
 
         if dialogue_status == dialogue_configuration.DIALOGUE_STATUS_INFORM_WRONG_SERVICE:

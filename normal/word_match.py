@@ -1,10 +1,10 @@
+import numbers
 import re
 import time
 
+import gensim
 import jieba.analyse
 import numpy as np
-import gensim
-import numbers
 
 _similarity_smooth = lambda x, y, z, u: (x * y) + z - u
 
@@ -107,7 +107,7 @@ def replace_list(seg_list, word_dict, model):
                 replace_word = list(word_dict)[choice_index]
                 # if check_score > 0.1:
                 #     replace_word = check_word
-                new_list.add(replace_word)
+        new_list.add(replace_word)
     return list(new_list)
 
 

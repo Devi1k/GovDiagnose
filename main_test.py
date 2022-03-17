@@ -40,8 +40,12 @@ async def main_logic(para, mod):
                 Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             else:
+                print(msg.keys())
+                if 'content' not in msg.keys():
+                    first_utterance = ""
+                    continue
                 if first_utterance == "":
-                    first_utterance = msg['content']
+                    first_utterance = msg['content']['text']
                 user_pipe, response_pipe = pipes_dict[conv_id]
                 user_text = msg['content']
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
