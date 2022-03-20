@@ -141,8 +141,14 @@ class User(object):
             self.state["user_judge"] = goal_set['user_action']['user_judge']
             if self.allow_wrong_service == 1:
                 self.state["action"] = "deny"
-                self.state["inform_slots"]["service"] = agent_action["inform_slots"]["service"]
+                # 3.20 lyj 改  增145，146  删147  wrong_service加进去，用于agent计算score
+                service_name = agent_action["inform_slots"]["service"]
+                self.state["inform_slots"][service_name] = False
+                # self.state["inform_slots"]["service"] = agent_action["inform_slots"]["service"]
                 self.dialogue_status = dialogue_configuration.DIALOGUE_STATUS_INFORM_WRONG_SERVICE
+                # 3.20 lyj  用户新增信息也要加进去，同request部分
+                for slot in self.goal["implicit_inform_slots"].keys():
+                    self.state["inform_slots"][slot] = self.goal["implicit_inform_slots"][slot]
             else:
                 self.state["action"] = dialogue_configuration.CLOSE_DIALOGUE
                 self.dialogue_status = dialogue_configuration.DIALOGUE_STATUS_FAILED

@@ -8,6 +8,25 @@
         "explicit_inform_slots": {},
         "implicit_inform_slots": {}
     },
-    "user_action": {},
+    "user_action": {
+        "turn": 2,
+        "action": "deny",
+        "speaker": "user",
+        "request_slots": {
+            "service": "UNK"
+        },
+        "inform_slots": {
+            "补发": true,
+            "签发": true,
+            "普通": true,
+            "换发": true,
+            "国家": true,
+            "护照": true,
+            "加注": true,
+            "有效期": true,
+            "service": "普通护照签发、换发、补发及加注--换发护照"
+        },
+        "user_judge": false
+    },
     "agent_aciton": {}
 }
