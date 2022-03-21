@@ -23,8 +23,6 @@ def is_digit(obj):
     return isinstance(obj, (numbers.Integral, numbers.Complex, numbers.Real))
 
 
-
-
 def load_dict(file_path):
     word_dictionary = []
     with open(file_path, 'r') as fp:

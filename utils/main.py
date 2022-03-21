@@ -108,6 +108,6 @@ async def main_logic(para, mod):
 
 if __name__ == '__main__':
     model = gensim.models.Word2Vec.load('data/wb.text.model')
-    config_file = './conf/settings.yaml'
+    config_file = '../conf/settings.yaml'
     parameter = get_config(config_file)
     asyncio.get_event_loop().run_until_complete(main_logic(parameter, model))
