@@ -28,13 +28,13 @@ def get_answer(first_utterance, service_name):
             qa_path = "https://miner.picp.net/qa?context={}&question={}"
             res = requests.get(qa_path.format(context, first_utterance)).json()
             score, answer = res['score'], res['answer']
-            # print("QA: ", score, answer)
+            print("QA: ", score, answer)
             return answer
 
         elif intent_class == "infer":  # --NLI
             nli_path = "https://burninghell.xicp.net/zmytest?Service_name={}&First_utterance={}"
             nli_res = requests.get(nli_path.format(service_name, first_utterance)).text
-            # print("NLI: ", nli_res)
+            print("NLI: ", nli_res)
             return nli_res
 
         elif intent_class == "retrieval":  # --IR
@@ -44,7 +44,7 @@ def get_answer(first_utterance, service_name):
             return ir_res
 
         else:  # --diagnose
-            # print("diagnosis: ", service_name)
+            print("diagnosis: ", service_name)
             return service_name
 
 
