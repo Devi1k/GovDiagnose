@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 import json
 
-import jieba
+# import jieba
+import thulac
 
 import gov.dialogue_configuration as dialogue_configuration
 from gov.state_tracker import StateTracker
@@ -10,25 +11,30 @@ from normal.word_match import replace_list, load_dict
 
 class DialogueManager(object):
     def __init__(self, user, agent, parameter):
-        jieba.initialize()
         self.state_tracker = StateTracker(user=user, agent=agent, parameter=parameter)
         self.parameter = parameter
         self.inform_wrong_service_count = 0
         self.stop_words = [i.strip() for i in open('data/baidu_stopwords.txt').readlines()]
+        self.thu = thulac.thulac(user_dict='./data/new_dict.txt', seg_only=True)
 
     def initialize(self, sentence, model, greedy_strategy, train_mode=1, epoch_index=None):
 
         self.state_tracker.initialize()
         self.inform_wrong_service_count = 0
-        with open('data/new_dict.txt', 'r') as fp:
-            content = fp.readlines()
-            for word in content:
-                jieba.add_word(word, freq=30000)
+        # with open('data/new_dict.txt', 'r') as fp:
+        #     content = fp.readlines()
+        #     for word in content:
+        #         jieba.add_word(word, freq=30000)
         word_dict = load_dict('./data/new_dict.txt')
         # 取出问题
         # print(sentence)
-        seg_list = list(jieba.cut(sentence))
+        # seg_list = list(jieba.cut(sentence))
         # print(' '.join(seg_list))
+        # thu = thulac.thulac(user_dict='./data/new_dict.txt', seg_only=True)
+        seg = self.thu.cut(sentence)
+        seg_list = []
+        for s in seg:
+            seg_list.append(s[0])
         for i in range(len(seg_list) - 1, -1, -1):
             if seg_list[i] in self.stop_words:
                 del seg_list[i]
@@ -58,16 +64,21 @@ class DialogueManager(object):
 
     def next(self, implicit, model, save_record, train_mode, agent_action, greedy_strategy):
         # state = self.state_tracker.get_state()
-        with open('data/new_dict.txt', 'r') as fp:
-            content = fp.readlines()
-            for word in content:
-                jieba.add_word(word,freq=30000)
+        # with open('data/new_dict.txt', 'r') as fp:
+        #     content = fp.readlines()
+        #     for word in content:
+        #         jieba.add_word(word,freq=30000)
         implicit_inform_slots = ''
         if implicit != '':
             word_dict = load_dict('./data/new_dict.txt')
             # 取出问题
             # print(implicit)
-            seg_list = list(jieba.cut(implicit))
+            seg = self.thu.cut(implicit)
+            seg_list = []
+            # print(seg)
+            for s in seg:
+                seg_list.append(s[0])
+            # seg_list = list(jieba.cut(implicit))
             for i in range(len(seg_list) - 1, -1, -1):
                 if seg_list[i] in self.stop_words:
                     del seg_list[i]

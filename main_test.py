@@ -31,7 +31,7 @@ async def main_logic(para, mod):
             msg_type = user_json['type']
             msg = user_json['msg']
             conv_id = msg['conv_id']
-            print(user_json)
+            # print(user_json)
             # 首次询问
             if conv_id not in pipes_dict:
                 print("new conv")
@@ -40,7 +40,6 @@ async def main_logic(para, mod):
                 Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             else:
-                print(msg.keys())
                 if 'content' not in msg.keys():
                     first_utterance = ""
                     continue
@@ -49,7 +48,10 @@ async def main_logic(para, mod):
                 user_pipe, response_pipe = pipes_dict[conv_id]
                 user_text = msg['content']
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
-                user_pipe[0].send(user_text)
+                try:
+                    user_pipe[0].send(user_text)
+                except OSError:
+                    continue
                 recv = response_pipe[1].recv()
                 # 从模型接收模型的消息 消息格式为
                 """
@@ -71,8 +73,9 @@ async def main_logic(para, mod):
                     print("first_utterance: ", first_utterance)
                     print("service_name: ", service_name)
                     answer = get_answer(first_utterance, service_name)
-                    print(answer)
+                    # print(answer)
                     messageSender(conv_id, answer)
+                    first_utterance = ""
                     # break
 
 
