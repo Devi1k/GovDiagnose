@@ -5,10 +5,13 @@ from multiprocessing import Pipe, Process
 import gensim
 import websockets
 
-from ai_wrapper import get_answer
 from conf.config import get_config
 from gov.running_steward import simulation_epoch
-from message_sender import messageSender
+from utils.ai_wrapper import get_answer
+from utils.logger import Logger
+from utils.message_sender import messageSender
+
+log = Logger().getLogger()
 
 
 async def main_logic(para, mod):
@@ -25,16 +28,16 @@ async def main_logic(para, mod):
             # data = {"type": 101, "msg": {"conv_id": "1475055770457346048", "content": {"judge": True, "text": '护照丢了怎么办'}}}
             # s = json.dumps(data, ensure_ascii=False)
             # await websocket.send(s)  # 测试接口
-            print('wait message')
+            log.info('wait message')
             response = await websocket.recv()
             user_json = json.loads(response)
             msg_type = user_json['type']
             msg = user_json['msg']
             conv_id = msg['conv_id']
-            # print(user_json)
+            # log.info(user_json)
             # 首次询问
             if conv_id not in pipes_dict:
-                print("new conv")
+                log.info("new conv")
                 user_pipe, response_pipe = Pipe(), Pipe()
                 pipes_dict[conv_id] = [user_pipe, response_pipe]
                 Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
@@ -51,6 +54,7 @@ async def main_logic(para, mod):
                 try:
                     user_pipe[0].send(user_text)
                 except OSError:
+                    messageSender(conv_id, "会话结束")
                     continue
                 recv = response_pipe[1].recv()
                 # 从模型接收模型的消息 消息格式为
@@ -63,17 +67,18 @@ async def main_logic(para, mod):
                 # 没结束 继续输入
                 if recv['end_flag'] is not True:
                     msg = recv['service']
-                    # print(msg)
+                    # log.info(msg)
+                    msg = "您办理的业务是否涉及" + msg
                     messageSender(conv_id, msg)
                 # 结束关闭管道
                 else:
                     user_pipe[0].close()
                     response_pipe[1].close()
                     service_name = recv['service']
-                    print("first_utterance: ", first_utterance)
-                    print("service_name: ", service_name)
+                    log.info("first_utterance: ", first_utterance)
+                    log.info("service_name: ", service_name)
                     answer = get_answer(first_utterance, service_name)
-                    # print(answer)
+                    # log.info(answer)
                     messageSender(conv_id, answer)
                     first_utterance = ""
                     # break
@@ -83,7 +88,7 @@ if __name__ == '__main__':
     end_flag = "END"
     pipes_dict = {}
     first_utterance, service_name = "", ""
-    print('load model')
+    log.info('load model')
     model = gensim.models.Word2Vec.load('data/wb.text.model')
     config_file = './conf/settings.yaml'
     parameter = get_config(config_file)
