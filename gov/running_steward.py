@@ -6,11 +6,11 @@ from gov.dialogue_manager import DialogueManager
 from gov.user import User
 
 
-def simulation_epoch(pipe, parameter, model, train_mode=1):
+def simulation_epoch(pipe, parameter, model, log, train_mode=1):
     in_pipe, out_pipe = pipe
     user = User(parameter=parameter)
     agent = AgentRule(parameter=parameter)
-    dialogue_manager = DialogueManager(user=user, agent=agent, parameter=parameter)
+    dialogue_manager = DialogueManager(user=user, agent=agent, parameter=parameter, log=log)
     dialogue_manager.set_agent(agent=agent)
 
     episode_over = False

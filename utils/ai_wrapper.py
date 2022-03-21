@@ -1,11 +1,9 @@
 import requests
 
-from utils.logger import Logger
-
-log = Logger().getLogger()
 
 
-def get_answer(first_utterance, service_name):
+
+def get_answer(first_utterance, service_name, log):
     # --FAQ
     # faq_path = "https://miner.picp.net/FAQ?First_utterance={}&Service_name={}"
     # faq_res = requests.get(faq_path.format(first_utterance, service_name)).json()

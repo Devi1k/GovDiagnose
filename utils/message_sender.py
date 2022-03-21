@@ -3,12 +3,8 @@ import time
 
 import requests
 
-from utils.logger import Logger
 
-log = Logger().getLogger()
-
-
-def messageSender(conv_id, msg):
+def messageSender(conv_id, msg, log):
     # while True:
     # recv = out_pipe.recv()
     # 从模型接收模型的消息 消息格式为

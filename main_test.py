@@ -41,7 +41,7 @@ async def main_logic(para, mod):
                 clean_log(log)
                 user_pipe, response_pipe = Pipe(), Pipe()
                 pipes_dict[conv_id] = [user_pipe, response_pipe]
-                Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
+                Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod, log)).start()
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             else:
                 if 'content' not in msg.keys():
@@ -55,7 +55,7 @@ async def main_logic(para, mod):
                 try:
                     user_pipe[0].send(user_text)
                 except OSError:
-                    messageSender(conv_id, "会话结束")
+                    messageSender(conv_id, "会话结束", log)
                     continue
                 recv = response_pipe[1].recv()
                 # 从模型接收模型的消息 消息格式为
@@ -73,7 +73,7 @@ async def main_logic(para, mod):
                         msg = "您办理的业务是否涉及" + msg
                     else:
                         msg = "您办理的业务属于" + msg
-                    messageSender(conv_id, msg)
+                    messageSender(conv_id, msg, log)
                 # 结束关闭管道
                 else:
                     user_pipe[0].close()
@@ -81,9 +81,9 @@ async def main_logic(para, mod):
                     service_name = recv['service']
                     log.info("first_utterance: {}".format(first_utterance))
                     log.info("service_name: {}".format(service_name))
-                    answer = get_answer(first_utterance, service_name)
+                    answer = get_answer(first_utterance, service_name, log)
                     # log.info(answer)
-                    messageSender(conv_id, answer)
+                    messageSender(conv_id, answer, log)
                     first_utterance = ""
                     # break
 

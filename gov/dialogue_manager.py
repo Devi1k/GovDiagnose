@@ -6,18 +6,17 @@ import thulac
 
 import gov.dialogue_configuration as dialogue_configuration
 from gov.state_tracker import StateTracker
-from utils.logger import Logger
 from utils.word_match import replace_list, load_dict
 
 
 class DialogueManager(object):
-    def __init__(self, user, agent, parameter):
+    def __init__(self, user, agent, parameter, log):
         self.state_tracker = StateTracker(user=user, agent=agent, parameter=parameter)
         self.parameter = parameter
         self.inform_wrong_service_count = 0
         self.stop_words = [i.strip() for i in open('data/baidu_stopwords.txt').readlines()]
         self.thu = thulac.thulac(user_dict='./data/new_dict.txt', seg_only=True)
-        self.log = Logger().getLogger()
+        self.log = log
 
     def initialize(self, sentence, model, greedy_strategy, train_mode=1, epoch_index=None):
 
