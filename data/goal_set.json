@@ -10,23 +10,28 @@
     },
     "user_action": {
         "turn": 2,
-        "action": "deny",
+        "action": "inform",
         "speaker": "user",
         "request_slots": {
             "service": "UNK"
         },
         "inform_slots": {
-            "补发": true,
-            "签发": true,
-            "普通": true,
-            "换发": true,
-            "国家": true,
-            "护照": true,
-            "加注": true,
-            "有效期": true,
-            "service": "普通护照签发、换发、补发及加注--换发护照"
+            "\u7ecf\u8425": true,
+            "\u8f6c\u79fb": true,
+            "\u514d\u529e": true,
+            "\u53f7\u724c": true,
+            "\u8f66\u8eab": true,
+            "\u521d\u6b21\u7533\u9886\u673a\u52a8\u8f66\u53f7\u724c\u548c\u884c\u9a76\u8bc1": true
         },
-        "user_judge": false
+        "user_judge": true
     },
-    "agent_aciton": {}
+    "agent_aciton": {
+        "turn": 3,
+        "action": "inform",
+        "speaker": "agent",
+        "request_slots": {},
+        "inform_slots": {
+            "service": "\u673a\u52a8\u8f66\u767b\u8bb0\u4e0e\u4e34\u65f6\u901a\u884c\u724c\u8bc1\u6838\u53d1--\u673a\u52a8\u8f66\u767b\u8bb0"
+        }
+    }
 }

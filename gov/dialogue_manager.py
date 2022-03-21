@@ -17,7 +17,7 @@ class DialogueManager(object):
         self.inform_wrong_service_count = 0
         self.stop_words = [i.strip() for i in open('data/baidu_stopwords.txt').readlines()]
         self.thu = thulac.thulac(user_dict='./data/new_dict.txt', seg_only=True)
-        self.log = Logger.getLogger()
+        self.log = Logger().getLogger()
 
     def initialize(self, sentence, model, greedy_strategy, train_mode=1, epoch_index=None):
 
@@ -44,7 +44,7 @@ class DialogueManager(object):
         for i in range(len(explicit_inform_slots) - 1, -1, -1):
             if explicit_inform_slots[i] in self.stop_words:
                 del explicit_inform_slots[i]
-        self.self.log.info(explicit_inform_slots)
+        self.log.info(explicit_inform_slots)
         # self.self.log.info(' '.join(explicit_inform_slots))
 
         user_action = self.state_tracker.user.initialize(explicit_inform_slots)

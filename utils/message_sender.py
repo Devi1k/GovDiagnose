@@ -3,6 +3,10 @@ import time
 
 import requests
 
+from utils.logger import Logger
+
+log = Logger().getLogger()
+
 
 def messageSender(conv_id, msg):
     # while True:
@@ -19,6 +23,6 @@ def messageSender(conv_id, msg):
     headers = {'Content-Type': 'application/json'}
     r = requests.post("https://asueeer.com/api/im/send_message?mock_login=123", data=response_json,
                       headers=headers)
-    print(r.json()['meta'])
+    log.info(r.json()['meta'])
     # except EOFError:
     #     break

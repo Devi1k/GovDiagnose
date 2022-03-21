@@ -8,7 +8,7 @@ import websockets
 from conf.config import get_config
 from gov.running_steward import simulation_epoch
 from utils.ai_wrapper import get_answer
-from utils.logger import Logger
+from utils.logger import *
 from utils.message_sender import messageSender
 
 log = Logger().getLogger()
@@ -38,6 +38,7 @@ async def main_logic(para, mod):
             # 首次询问
             if conv_id not in pipes_dict:
                 log.info("new conv")
+                clean_log(log)
                 user_pipe, response_pipe = Pipe(), Pipe()
                 pipes_dict[conv_id] = [user_pipe, response_pipe]
                 Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
@@ -68,15 +69,18 @@ async def main_logic(para, mod):
                 if recv['end_flag'] is not True:
                     msg = recv['service']
                     # log.info(msg)
-                    msg = "您办理的业务是否涉及" + msg
+                    if recv['action'] == 'request':
+                        msg = "您办理的业务是否涉及" + msg
+                    else:
+                        msg = "您办理的业务属于" + msg
                     messageSender(conv_id, msg)
                 # 结束关闭管道
                 else:
                     user_pipe[0].close()
                     response_pipe[1].close()
                     service_name = recv['service']
-                    log.info("first_utterance: ", first_utterance)
-                    log.info("service_name: ", service_name)
+                    log.info("first_utterance: {}".format(first_utterance))
+                    log.info("service_name: {}".format(service_name))
                     answer = get_answer(first_utterance, service_name)
                     # log.info(answer)
                     messageSender(conv_id, answer)

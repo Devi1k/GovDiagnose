@@ -22,12 +22,14 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
 
     if agent_action['action'] == 'inform':
         msg = {"service": agent_action["inform_slots"]["service"],
+               "action": agent_action['action'],
                "end_flag": episode_over}
         out_pipe.send(msg)
     elif agent_action['action'] == 'request':
         send_list = list(agent_action["request_slots"].keys())
         service = ''.join(send_list)
-        msg = {"service": service, "end_flag": episode_over}
+        msg = {"service": service,
+               "action": agent_action['action'], "end_flag": episode_over}
         out_pipe.send(msg)
 
     while episode_over is False:
@@ -57,6 +59,7 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
             # out_pipe.send("请问还有别的问题吗")
             episode_over = True
             msg = {"service": agent_action["inform_slots"]["service"],
+                   "action": agent_action['action'],
                    "end_flag": episode_over}
             out_pipe.send(msg)
             break
@@ -68,12 +71,15 @@ def simulation_epoch(pipe, parameter, model, train_mode=1):
 
         if agent_action['action'] == 'inform':
             msg = {"service": agent_action["inform_slots"]["service"],
+                   "action": agent_action['action'],
                    "end_flag": episode_over}
             out_pipe.send(msg)
         elif agent_action['action'] == 'request':
             send_list = list(agent_action["request_slots"].keys())
             service = ''.join(send_list)
-            msg = {"service": service, "end_flag": episode_over}
+            msg = {"service": service,
+                   "action": agent_action['action'],
+                   "end_flag": episode_over}
             out_pipe.send(msg)
 
         agent_action = _agent_action
