@@ -40,16 +40,17 @@ async def main_logic(para, mod):
                 log.info("new conv")
                 clean_log(log)
                 user_pipe, response_pipe = Pipe(), Pipe()
-                pipes_dict[conv_id] = [user_pipe, response_pipe]
+                pipes_dict[conv_id] = [user_pipe, response_pipe, ""]
                 Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod, log)).start()
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             else:
+                user_pipe, response_pipe, first_utterance = pipes_dict[conv_id]
                 if 'content' not in msg.keys():
                     first_utterance = ""
                     continue
                 if first_utterance == "":
                     first_utterance = msg['content']['text']
-                user_pipe, response_pipe = pipes_dict[conv_id]
+                pipes_dict[conv_id][2] = first_utterance
                 user_text = msg['content']
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
                 try:
@@ -74,12 +75,13 @@ async def main_logic(para, mod):
                     user_pipe[0].close()
                     response_pipe[1].close()
                     service_name = recv['service']
-                    log.info("first_utterance: {}".format(first_utterance))
+                    log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
                     log.info("service_name: {}".format(service_name))
-                    answer = get_answer(first_utterance, service_name, log)
+                    answer = get_answer(pipes_dict[conv_id][2], service_name, log)
                     # log.info(answer)
                     messageSender(conv_id, answer, log)
                     first_utterance = ""
+                    del pipes_dict[conv_id]
                     # break
 
 

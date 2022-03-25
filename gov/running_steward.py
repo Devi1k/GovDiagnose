@@ -30,6 +30,7 @@ def simulation_epoch(pipe, parameter, model, log, train_mode=1):
         service = ''.join(send_list)
         msg = {"service": service,
                "action": agent_action['action'], "end_flag": episode_over}
+        log.info(msg)
         out_pipe.send(msg)
 
     while episode_over is False:
@@ -69,6 +70,8 @@ def simulation_epoch(pipe, parameter, model, log, train_mode=1):
                                                                                      greedy_strategy=1,
                                                                                      agent_action=agent_action)
 
+        agent_action = _agent_action
+        log.info(agent_action)
         if agent_action['action'] == 'inform':
             msg = {"service": agent_action["inform_slots"]["service"],
                    "action": agent_action['action'],
@@ -82,6 +85,5 @@ def simulation_epoch(pipe, parameter, model, log, train_mode=1):
                    "end_flag": episode_over}
             out_pipe.send(msg)
 
-        agent_action = _agent_action
     in_pipe.close()
     out_pipe.close()
