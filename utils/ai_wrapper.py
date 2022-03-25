@@ -1,8 +1,6 @@
 import requests
 
 
-
-
 def get_answer(first_utterance, service_name, log):
     # --FAQ
     # faq_path = "https://miner.picp.net/FAQ?First_utterance={}&Service_name={}"
@@ -47,10 +45,9 @@ def get_answer(first_utterance, service_name, log):
 
         else:  # --diagnose
             log.info("diagnosis: {}".format(service_name))
-            return service_name
+            return "您要办理的业务属于:" + service_name
 
-
-if __name__ == '__main__':
-    service_name = "外国人居留停留一-外国人停留证件的签发、换发、补发"
-    first_utterance = "外国人来华签证关于贸易签证的签发、延期、换发、补发的相关申请材料和办理流程是什么"
-    log.info(get_answer(first_utterance, service_name))
+# if __name__ == '__main__':
+#     service_name = "外国人居留停留一-外国人停留证件的签发、换发、补发"
+#     first_utterance = "外国人来华签证关于贸易签证的签发、延期、换发、补发的相关申请材料和办理流程是什么"
+#     log.info(get_answer(first_utterance, service_name))

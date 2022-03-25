@@ -16,12 +16,12 @@
             "service": "UNK"
         },
         "inform_slots": {
-            "\u7ecf\u8425": true,
-            "\u8f6c\u79fb": true,
-            "\u514d\u529e": true,
-            "\u53f7\u724c": true,
-            "\u8f66\u8eab": true,
-            "\u521d\u6b21\u7533\u9886\u673a\u52a8\u8f66\u53f7\u724c\u548c\u884c\u9a76\u8bc1": true
+            "申请": true,
+            "资格证": true,
+            "就业": true,
+            "教师": true,
+            "所有人": true,
+            "认定教师资格": true
         },
         "user_judge": true
     },
@@ -31,7 +31,7 @@
         "speaker": "agent",
         "request_slots": {},
         "inform_slots": {
-            "service": "\u673a\u52a8\u8f66\u767b\u8bb0\u4e0e\u4e34\u65f6\u901a\u884c\u724c\u8bc1\u6838\u53d1--\u673a\u52a8\u8f66\u767b\u8bb0"
+            "service": "教师资格的认定"
         }
     }
 }

@@ -7,10 +7,11 @@ import gensim
 
 from conf.config import get_config
 from gov.running_steward import simulation_epoch
+from utils.logger import Logger
 
 pipes_dict = {}
 end_flag = "END"
-
+log = Logger().getLogger()
 
 async def main_logic(para, mod):
     response_json = '''
@@ -35,7 +36,7 @@ async def main_logic(para, mod):
             # print("new conv")
             user_pipe, response_pipe = Pipe(), Pipe()
             pipes_dict[conv_id] = [user_pipe, response_pipe]
-            Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod)).start()
+            Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod, log)).start()
             # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             # 输入问题
             # ques = msg['content']['text']
@@ -108,6 +109,6 @@ async def main_logic(para, mod):
 
 if __name__ == '__main__':
     model = gensim.models.Word2Vec.load('data/wb.text.model')
-    config_file = '../conf/settings.yaml'
+    config_file = 'conf/settings.yaml'
     parameter = get_config(config_file)
     asyncio.get_event_loop().run_until_complete(main_logic(parameter, model))

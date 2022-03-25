@@ -24,7 +24,7 @@ async def main_logic(para, mod):
     global service_name
     global conv_id
     while True:
-        async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
+        async with websockets.connect('ws://asueeer.com:1988/ws?mock_login=123') as websocket:
             # data = {"type": 101, "msg": {"conv_id": "1475055770457346048", "content": {"judge": True, "text": '护照丢了怎么办'}}}
             # s = json.dumps(data, ensure_ascii=False)
             # await websocket.send(s)  # 测试接口
@@ -66,13 +66,8 @@ async def main_logic(para, mod):
                 }
                 """
                 # 没结束 继续输入
-                if recv['end_flag'] is not True:
-                    msg = recv['service']
-                    # log.info(msg)
-                    if recv['action'] == 'request':
-                        msg = "您办理的业务是否涉及" + msg
-                    else:
-                        msg = "您办理的业务属于" + msg
+                if recv['end_flag'] is not True and recv['action'] == 'request':
+                    msg = "您办理的业务是否涉及" + recv['service']
                     messageSender(conv_id, msg, log)
                 # 结束关闭管道
                 else:
