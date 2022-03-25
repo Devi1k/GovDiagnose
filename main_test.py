@@ -8,6 +8,7 @@ import websockets
 from conf.config import get_config
 from gov.running_steward import simulation_epoch
 from utils.ai_wrapper import get_answer
+from utils.heart_beat import call_heart_beat
 from utils.logger import *
 from utils.message_sender import messageSender
 
@@ -24,7 +25,7 @@ async def main_logic(para, mod):
     global service_name
     global conv_id
     while True:
-        async with websockets.connect('ws://asueeer.com:1988/ws?mock_login=123') as websocket:
+        async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
             # data = {"type": 101, "msg": {"conv_id": "1475055770457346048", "content": {"judge": True, "text": '护照丢了怎么办'}}}
             # s = json.dumps(data, ensure_ascii=False)
             # await websocket.send(s)  # 测试接口
@@ -88,11 +89,16 @@ async def main_logic(para, mod):
 
 
 if __name__ == '__main__':
+    Process(target=call_heart_beat).start()
+
     end_flag = "END"
     pipes_dict = {}
     first_utterance, service_name = "", ""
+
     log.info('load model')
     model = gensim.models.Word2Vec.load('data/wb.text.model')
+
     config_file = './conf/settings.yaml'
     parameter = get_config(config_file)
+
     asyncio.get_event_loop().run_until_complete(main_logic(parameter, model))
