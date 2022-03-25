@@ -8,30 +8,6 @@
         "explicit_inform_slots": {},
         "implicit_inform_slots": {}
     },
-    "user_action": {
-        "turn": 2,
-        "action": "inform",
-        "speaker": "user",
-        "request_slots": {
-            "service": "UNK"
-        },
-        "inform_slots": {
-            "资格证": true,
-            "教师": true,
-            "所有人": true,
-            "就业": true,
-            "申请": true,
-            "认定教师资格": true
-        },
-        "user_judge": true
-    },
-    "agent_aciton": {
-        "turn": 3,
-        "action": "inform",
-        "speaker": "agent",
-        "request_slots": {},
-        "inform_slots": {
-            "service": "教师资格的认定"
-        }
-    }
+    "user_action": {},
+    "agent_aciton": {}
 }

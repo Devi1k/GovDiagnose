@@ -47,6 +47,7 @@ async def main_logic(para, mod):
                 user_pipe, response_pipe, first_utterance = pipes_dict[conv_id]
                 if 'content' not in msg.keys():
                     first_utterance = ""
+                    messageSender(conv_id, last_msg, log)
                     continue
                 if first_utterance == "":
                     first_utterance = msg['content']['text']
@@ -69,6 +70,7 @@ async def main_logic(para, mod):
                 # 没结束 继续输入
                 if recv['end_flag'] is not True and recv['action'] == 'request':
                     msg = "您办理的业务是否涉及" + recv['service']
+                    last_msg = msg
                     messageSender(conv_id, msg, log)
                 # 结束关闭管道
                 else:
