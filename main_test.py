@@ -81,7 +81,6 @@ async def main_logic(para, mod, link):
                     log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
                     log.info("service_name: {}".format(service_name))
                     answer = get_answer(pipes_dict[conv_id][2], service_name, log)
-                    # log.info(answer)
                     service_link = str(link[service_name])
                     print(service_link)
                     messageSender(conv_id, answer, log, service_link)
@@ -102,7 +101,9 @@ if __name__ == '__main__':
 
     config_file = './conf/settings.yaml'
     parameter = get_config(config_file)
+
     link_file = 'data/link.json'
     with open(link_file, 'r') as f:
         link = json.load(f)
+
     asyncio.get_event_loop().run_until_complete(main_logic(parameter, model, link))

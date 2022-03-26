@@ -111,20 +111,10 @@ def replace_list(seg_list, word_dict, model):
     return list(new_list)
 
 
-if __name__ == '__main__':
-    # jieba.initialize()
-    stopwords = [i.strip() for i in open('../data/baidu_stopwords.txt').readlines()]
-
-    word_dict = load_dict('../data/new_dict.txt')
-
-    question = "教师资格认定的办理形式"
-    thu = thulac.thulac(user_dict='../data/new_dict.txt', seg_only=True)
+def find_synonym(question, model):
     question = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "", question)
-    model = gensim.models.Word2Vec.load('../data/wb.text.model')
-    start = time.time()
     seg = thu.cut(question)
     seg_list = []
-    print(seg)
     for s in seg:
         seg_list.append(s[0])
     print(seg_list)
@@ -134,6 +124,23 @@ if __name__ == '__main__':
     new_seg_list = replace_list(seg_list, word_dict, model=model)
     print("new seg: " + "/ ".join(new_seg_list))
 
-    end = time.time()
-    print(end - start)
+
+if __name__ == '__main__':
+    # jieba.initialize()
+    load_start = time.time()
+    model = gensim.models.Word2Vec.load('../data/wb.text.model')
+    stopwords = [i.strip() for i in open('../data/baidu_stopwords.txt').readlines()]
+    word_dict = load_dict('../data/new_dict.txt')
+    thu = thulac.thulac(user_dict='../data/new_dict.txt', seg_only=True)
+    load_end = time.time()
+    print("load:", load_end - load_start)
+    question = "教师资格认定的办理形式"
+
+    while True:
+        start = time.time()
+        find_synonym(question, model)
+        end = time.time()
+        print("find:", end - start)
+        question = input()
+
     # question = input()

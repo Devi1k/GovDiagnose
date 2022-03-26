@@ -16,9 +16,12 @@ def simulation_epoch(pipe, parameter, model, log, train_mode=1):
     episode_over = False
     receive = in_pipe.recv()
     explicit = receive['text']
+    # init_start = time.time()
 
     agent_action = dialogue_manager.initialize(explicit, model, train_mode=parameter.get("train_mode"),
                                                greedy_strategy=1)
+    # init_end = time.time()
+    # print("init:", init_end - init_start)
 
     if agent_action['action'] == 'inform':
         msg = {"service": agent_action["inform_slots"]["service"],
@@ -64,12 +67,14 @@ def simulation_epoch(pipe, parameter, model, log, train_mode=1):
                    "end_flag": episode_over}
             out_pipe.send(msg)
             break
+        # next_start = time.time()
         reward, episode_over, dialogue_status, _agent_action = dialogue_manager.next(implicit, model,
                                                                                      save_record=True,
                                                                                      train_mode=train_mode,
                                                                                      greedy_strategy=1,
                                                                                      agent_action=agent_action)
-
+        # next_end = time.time()
+        # print("next:", next_end - next_start)
         agent_action = _agent_action
         log.info(agent_action)
         if agent_action['action'] == 'inform':

@@ -16,10 +16,11 @@
             "service": "UNK"
         },
         "inform_slots": {
-            "教师": true,
-            "就业": true,
             "所有人": true,
             "资格证": true,
+            "教师": true,
+            "申请": true,
+            "就业": true,
             "认定教师资格": true
         },
         "user_judge": true
