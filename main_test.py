@@ -15,7 +15,7 @@ from utils.message_sender import messageSender
 log = Logger().getLogger()
 
 
-async def main_logic(para, mod):
+async def main_logic(para, mod, link):
     response_json = '''
         {"type":101,"msg":{"conv_id":"1475055770457346048"}}
         '''
@@ -82,7 +82,9 @@ async def main_logic(para, mod):
                     log.info("service_name: {}".format(service_name))
                     answer = get_answer(pipes_dict[conv_id][2], service_name, log)
                     # log.info(answer)
-                    messageSender(conv_id, answer, log)
+                    service_link = str(link[service_name])
+                    print(service_link)
+                    messageSender(conv_id, answer, log, service_link)
                     first_utterance = ""
                     del pipes_dict[conv_id]
                     # break
@@ -100,5 +102,7 @@ if __name__ == '__main__':
 
     config_file = './conf/settings.yaml'
     parameter = get_config(config_file)
-
-    asyncio.get_event_loop().run_until_complete(main_logic(parameter, model))
+    link_file = 'data/link.json'
+    with open(link_file, 'r') as f:
+        link = json.load(f)
+    asyncio.get_event_loop().run_until_complete(main_logic(parameter, model, link))

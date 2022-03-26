@@ -117,21 +117,11 @@ if __name__ == '__main__':
 
     word_dict = load_dict('../data/new_dict.txt')
 
-    # with open('data/question.txt', 'r') as fp:
-    #     question = fp.readline()
     question = "教师资格认定的办理形式"
     thu = thulac.thulac(user_dict='../data/new_dict.txt', seg_only=True)
-    # while question:
     question = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "", question)
     model = gensim.models.Word2Vec.load('../data/wb.text.model')
-    # print(question)
     start = time.time()
-    # with open('../data/new_dict.txt', 'r') as fp:
-    #     content = fp.readlines()
-    #     for word in content:
-    #         jieba.add_word(word, 30000)
-
-    # seg_list = list(jieba.cut(question))
     seg = thu.cut(question)
     seg_list = []
     print(seg)
