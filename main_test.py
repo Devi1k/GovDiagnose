@@ -73,7 +73,11 @@ async def main_logic(para, mod, link):
                     msg = "您办理的业务是否涉及" + recv['service']
                     last_msg = msg
                     messageSender(conv_id, msg, log)
-                # 结束关闭管道
+                # todo:未诊断出结果
+                elif recv['end_flag'] is True and recv['action'] == 'request':
+                    messageSender(conv_id, msg, log, end=recv['end_flag'])
+                    pass
+                # 诊断出结果
                 else:
                     user_pipe[0].close()
                     response_pipe[1].close()
@@ -83,7 +87,7 @@ async def main_logic(para, mod, link):
                     answer = get_answer(pipes_dict[conv_id][2], service_name, log)
                     service_link = str(link[service_name])
                     print(service_link)
-                    messageSender(conv_id, answer, log, service_link)
+                    messageSender(conv_id, answer, log, service_link, end=recv['end_flag'])
                     first_utterance = ""
                     del pipes_dict[conv_id]
                     # break

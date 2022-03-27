@@ -78,7 +78,7 @@ class User(object):
         self.goal['implicit_inform_slots'] = implicit_inform_slots
         agent_act_type = agent_action["action"]
         self.state["turn"] = turn
-        if self.state["turn"] == (self.max_turn - 2):  # 这里还要改
+        if self.state["turn"] == (self.max_turn - 1):  # 这里还要改
             self.episode_over = True
             self.state["action"] = dialogue_configuration.CLOSE_DIALOGUE
             self.dialogue_status = dialogue_configuration.DIALOGUE_STATUS_FAILED

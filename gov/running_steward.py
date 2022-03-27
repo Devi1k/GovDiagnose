@@ -24,7 +24,7 @@ def simulation_epoch(pipe, parameter, model, log, train_mode=1):
     # print("init:", init_end - init_start)
 
     if agent_action['action'] == 'inform':
-        msg = {"service": agent_action["inform_slots"]["service"],
+        msg = {"service": agent_action["action"]["service"],
                "action": agent_action['action'],
                "end_flag": episode_over}
         out_pipe.send(msg)
@@ -32,11 +32,25 @@ def simulation_epoch(pipe, parameter, model, log, train_mode=1):
         send_list = list(agent_action["request_slots"].keys())
         service = ''.join(send_list)
         msg = {"service": service,
-               "action": agent_action['action'], "end_flag": episode_over}
+               "action": agent_action['action'],
+               "end_flag": episode_over}
         log.info(msg)
         out_pipe.send(msg)
 
-    while episode_over is False:
+    while True:
+        if episode_over is True:
+            if agent_action['action'] == 'inform':
+                msg = {"service": agent_action["action"]["service"],
+                       "action": agent_action['action'],
+                       "end_flag": episode_over}
+                out_pipe.send(msg)
+            elif agent_action['action'] == 'request':
+                msg = {"service": None,
+                       "action": agent_action['action'],
+                       "end_flag": episode_over}
+                log.info(msg)
+                out_pipe.send(msg)
+            break
         try:
             receive = in_pipe.recv()
         except EOFError:

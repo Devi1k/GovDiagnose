@@ -3,4 +3,4 @@ warm_start: 1
 warm_start_epoch_number: 20
 train_mode: 1
 allow_wrong_service: 1
-max_turn: 30
+max_turn: 5
