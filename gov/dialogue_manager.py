@@ -10,12 +10,13 @@ from utils.word_match import replace_list, load_dict
 
 
 class DialogueManager(object):
-    def __init__(self, user, agent, parameter, log):
+    def __init__(self, user, agent, parameter, log, similarity_dict):
         self.state_tracker = StateTracker(user=user, agent=agent, parameter=parameter)
         self.parameter = parameter
         self.inform_wrong_service_count = 0
         self.stop_words = [i.strip() for i in open('data/baidu_stopwords.txt').readlines()]
         self.thu = thulac.thulac(user_dict='./data/new_dict.txt', seg_only=True)
+        self.similarity_dict = similarity_dict
         self.log = log
 
     def initialize(self, sentence, model, greedy_strategy, train_mode=1, epoch_index=None):
@@ -39,7 +40,7 @@ class DialogueManager(object):
         for i in range(len(seg_list) - 1, -1, -1):
             if seg_list[i] in self.stop_words:
                 del seg_list[i]
-        explicit_inform_slots = replace_list(seg_list, word_dict, model=model)
+        explicit_inform_slots = replace_list(seg_list, word_dict, model=model, similarity_dict=self.similarity_dict)
         for i in range(len(explicit_inform_slots) - 1, -1, -1):
             if explicit_inform_slots[i] in self.stop_words:
                 del explicit_inform_slots[i]

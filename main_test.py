@@ -15,7 +15,7 @@ from utils.message_sender import messageSender
 log = Logger().getLogger()
 
 
-async def main_logic(para, mod, link):
+async def main_logic(para, mod, link, similarity_dict):
     response_json = '''
         {"type":101,"msg":{"conv_id":"1475055770457346048"}}
         '''
@@ -42,7 +42,8 @@ async def main_logic(para, mod, link):
                 clean_log(log)
                 user_pipe, response_pipe = Pipe(), Pipe()
                 pipes_dict[conv_id] = [user_pipe, response_pipe, ""]
-                Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod, log)).start()
+                Process(target=simulation_epoch,
+                        args=((user_pipe[1], response_pipe[0]), para, mod, log, similarity_dict)).start()
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             else:
                 user_pipe, response_pipe, first_utterance = pipes_dict[conv_id]
@@ -110,4 +111,6 @@ if __name__ == '__main__':
     with open(link_file, 'r') as f:
         link = json.load(f)
 
-    asyncio.get_event_loop().run_until_complete(main_logic(parameter, model, link))
+    with open('../data/similar.json', 'r') as f:
+        similarity_dict = json.load(f)
+    asyncio.get_event_loop().run_until_complete(main_logic(parameter, model, link, similarity_dict))

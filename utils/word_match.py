@@ -1,3 +1,4 @@
+import json
 import numbers
 import re
 import time
@@ -83,21 +84,27 @@ def compare(s1, s2, model):
     return float("%.3f" % r)
 
 
-def replace_list(seg_list, word_dict, model):
+def replace_list(seg_list, word_dict, similarity_dict, model):
     new_list = set()
     for x in seg_list:
         replace_word = x
         max_score = 0
         to_check = []
         u = x
+        seek_start = time.time()
         try:
-            u = model.wv.most_similar(x, topn=5)
+            # todo: 改成AnnoyIndex
+            u = similarity_dict[x]
+            # u = model.wv.most_similar(x, topn=5)
         except KeyError:
             pass
         to_check.append(x)
+        seek_end = time.time()
+        print("seek:", seek_end - seek_start)
         for i, _u in enumerate(u):
             to_check.append(u[i][0])
         to_check = list(reversed(to_check))
+        com_start = time.time()
         for k in to_check:
             score = [compare(k, y, model) for y in word_dict]
             choice = max(score)
@@ -107,11 +114,13 @@ def replace_list(seg_list, word_dict, model):
                 replace_word = list(word_dict)[choice_index]
                 # if check_score > 0.1:
                 #     replace_word = check_word
+        com_end = time.time()
+        print("compare:", com_end - com_start)
         new_list.add(replace_word)
     return list(new_list)
 
 
-def find_synonym(question, model):
+def find_synonym(question, model, similarity_dict):
     question = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "", question)
     seg = thu.cut(question)
     seg_list = []
@@ -121,7 +130,7 @@ def find_synonym(question, model):
     for i in range(len(seg_list) - 1, -1, -1):
         if seg_list[i] in stopwords:
             del seg_list[i]
-    new_seg_list = replace_list(seg_list, word_dict, model=model)
+    new_seg_list = replace_list(seg_list, word_dict, model=model, similarity_dict=similarity_dict)
     print("new seg: " + "/ ".join(new_seg_list))
 
 
@@ -132,13 +141,15 @@ if __name__ == '__main__':
     stopwords = [i.strip() for i in open('../data/baidu_stopwords.txt').readlines()]
     word_dict = load_dict('../data/new_dict.txt')
     thu = thulac.thulac(user_dict='../data/new_dict.txt', seg_only=True)
+    with open('../data/similar.json', 'r') as f:
+        similarity_dict = json.load(f)
     load_end = time.time()
     print("load:", load_end - load_start)
-    question = "教师资格认定的办理形式"
+    question = "社会组织（社会团体、民办非企业单位、基金会）成立、变更、注销登记--基金会登记是否有运行系统？"
 
     while True:
         start = time.time()
-        find_synonym(question, model)
+        find_synonym(question, model, similarity_dict)
         end = time.time()
         print("find:", end - start)
         question = input()
