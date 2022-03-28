@@ -85,7 +85,7 @@ class DialogueManager(object):
                 if seg_list[i] in self.stop_words:
                     del seg_list[i]
             # self.log.info(' '.join(seg_list))
-            implicit_inform_slots = replace_list(seg_list, word_dict, model)
+            implicit_inform_slots = replace_list(seg_list, word_dict, model=model, similarity_dict=self.similarity_dict)
             self.log.info(implicit_inform_slots)
             for i in range(len(implicit_inform_slots) - 1, -1, -1):
                 if implicit_inform_slots[i] in self.stop_words:

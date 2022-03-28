@@ -91,7 +91,7 @@ def replace_list(seg_list, word_dict, similarity_dict, model):
         max_score = 0
         to_check = []
         u = x
-        seek_start = time.time()
+        # seek_start = time.time()
         try:
             # todo: 改成AnnoyIndex
             u = similarity_dict[x]
@@ -99,12 +99,12 @@ def replace_list(seg_list, word_dict, similarity_dict, model):
         except KeyError:
             pass
         to_check.append(x)
-        seek_end = time.time()
-        print("seek:", seek_end - seek_start)
+        # seek_end = time.time()
+        # print("seek:", seek_end - seek_start)
         for i, _u in enumerate(u):
             to_check.append(u[i][0])
         to_check = list(reversed(to_check))
-        com_start = time.time()
+        # com_start = time.time()
         for k in to_check:
             score = [compare(k, y, model) for y in word_dict]
             choice = max(score)
@@ -114,8 +114,8 @@ def replace_list(seg_list, word_dict, similarity_dict, model):
                 replace_word = list(word_dict)[choice_index]
                 # if check_score > 0.1:
                 #     replace_word = check_word
-        com_end = time.time()
-        print("compare:", com_end - com_start)
+        # com_end = time.time()
+        # print("compare:", com_end - com_start)
         new_list.add(replace_word)
     return list(new_list)
 

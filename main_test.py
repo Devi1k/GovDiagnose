@@ -111,6 +111,6 @@ if __name__ == '__main__':
     with open(link_file, 'r') as f:
         link = json.load(f)
 
-    with open('../data/similar.json', 'r') as f:
+    with open('data/similar.json', 'r') as f:
         similarity_dict = json.load(f)
     asyncio.get_event_loop().run_until_complete(main_logic(parameter, model, link, similarity_dict))

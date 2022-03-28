@@ -8,35 +8,6 @@
         "explicit_inform_slots": {},
         "implicit_inform_slots": {}
     },
-    "user_action": {
-        "turn": 4,
-        "action": "closing",
-        "speaker": "user",
-        "request_slots": {
-            "service": "UNK"
-        },
-        "inform_slots": {
-            "外交": true,
-            "中国": true,
-            "入境": true,
-            "申请": true,
-            "所有人": true,
-            "考试合格": true,
-            "出国": true,
-            "认定": true,
-            "改变": true,
-            "加注": true,
-            "护照加注": false
-        },
-        "user_judge": false
-    },
-    "agent_aciton": {
-        "turn": 5,
-        "action": "request",
-        "speaker": "agent",
-        "request_slots": {
-            "车辆管理所管辖区域改变": "UNK"
-        },
-        "inform_slots": {}
-    }
+    "user_action": {},
+    "agent_aciton": {}
 }

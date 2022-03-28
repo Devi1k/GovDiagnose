@@ -13,7 +13,7 @@ pipes_dict = {}
 end_flag = "END"
 log = Logger().getLogger()
 
-async def main_logic(para, mod):
+async def main_logic(para, mod, link, similarity_dict):
     response_json = '''
         {"type":101,"msg":{"conv_id":"1475055770457346048"}}
         '''
@@ -36,7 +36,8 @@ async def main_logic(para, mod):
             # print("new conv")
             user_pipe, response_pipe = Pipe(), Pipe()
             pipes_dict[conv_id] = [user_pipe, response_pipe]
-            Process(target=simulation_epoch, args=((user_pipe[1], response_pipe[0]), para, mod, log)).start()
+            Process(target=simulation_epoch,
+                    args=((user_pipe[1], response_pipe[0]), para, mod, log, similarity_dict)).start()
             # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             # 输入问题
             # ques = msg['content']['text']
@@ -111,4 +112,10 @@ if __name__ == '__main__':
     model = gensim.models.Word2Vec.load('data/wb.text.model')
     config_file = 'conf/settings.yaml'
     parameter = get_config(config_file)
-    asyncio.get_event_loop().run_until_complete(main_logic(parameter, model))
+    link_file = 'data/link.json'
+    with open(link_file, 'r') as f:
+        link = json.load(f)
+
+    with open('data/similar.json', 'r') as f:
+        similarity_dict = json.load(f)
+    asyncio.get_event_loop().run_until_complete(main_logic(parameter, model, link, similarity_dict))

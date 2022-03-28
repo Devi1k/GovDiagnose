@@ -26,7 +26,7 @@ def simulation_epoch(pipe, parameter, model, log, similarity_dict, train_mode=1)
     # print("init:", init_end - init_start)
 
     if agent_action['action'] == 'inform':
-        msg = {"service": agent_action["action"]["service"],
+        msg = {"service": agent_action["inform_slots"]["service"],
                "action": agent_action['action'],
                "end_flag": episode_over}
         out_pipe.send(msg)
@@ -42,7 +42,7 @@ def simulation_epoch(pipe, parameter, model, log, similarity_dict, train_mode=1)
     while True:
         if episode_over is True:
             if agent_action['action'] == 'inform':
-                msg = {"service": agent_action["action"]["service"],
+                msg = {"service": agent_action["inform_slots"]["service"],
                        "action": agent_action['action'],
                        "end_flag": episode_over}
                 out_pipe.send(msg)
