@@ -8,31 +8,6 @@
         "explicit_inform_slots": {},
         "implicit_inform_slots": {}
     },
-    "user_action": {
-        "turn": 4,
-        "action": "inform",
-        "speaker": "user",
-        "request_slots": {
-            "service": "UNK"
-        },
-        "inform_slots": {
-            "完毕": true,
-            "免办": true,
-            "多音字": true,
-            "汽车": true,
-            "公务": true,
-            "护照加注": false,
-            "初次申领机动车号牌和行驶证": true
-        },
-        "user_judge": true
-    },
-    "agent_aciton": {
-        "turn": 5,
-        "action": "inform",
-        "speaker": "agent",
-        "request_slots": {},
-        "inform_slots": {
-            "service": "机动车登记与临时通行牌证核发-机动车登记"
-        }
-    }
+    "user_action": {},
+    "agent_aciton": {}
 }
