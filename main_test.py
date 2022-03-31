@@ -25,6 +25,7 @@ async def main_logic(para, mod, link, similarity_dict):
     global service_name
     global conv_id
     global end_flag
+    global last_msg
     while True:
         async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
             # data = {"type": 101, "msg": {"conv_id": "1475055770457346048", "content": {"judge": True, "text": '护照丢了怎么办'}}}
@@ -47,6 +48,8 @@ async def main_logic(para, mod, link, similarity_dict):
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p]
 
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
+
+            # 处理多轮对话 继续发言
             elif conv_id not in pipes_dict and end_flag is True:
                 log.info("continue to ask")
                 user_pipe, response_pipe = Pipe(), Pipe()
@@ -55,13 +58,15 @@ async def main_logic(para, mod, link, similarity_dict):
                 p.start()
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p]
                 end_flag = False
-                user_text = msg['content']
-                log.info(user_text)
-                print(first_utterance)
+                if 'content' not in msg.keys():
+                    first_utterance = ""
+                    messageSender(conv_id, last_msg, log)
+                    continue
                 if first_utterance == "":
                     first_utterance = msg['content']['text']
+                user_text = msg['content']
+                log.info(user_text)
                 pipes_dict[conv_id][2] = first_utterance
-                print(first_utterance)
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
                 try:
                     user_pipe[0].send(user_text)
@@ -101,7 +106,9 @@ async def main_logic(para, mod, link, similarity_dict):
                     log.info('process kill')
                     p_del.join()
                     del pipes_dict[conv_id]
-                    messageSender(conv_id, "请问还有问题吗", log, service_link, end=True)
+                    last_msg = "请问还有问题吗"
+                    messageSender(conv_id, "请问还有问题吗", log, "", end=True)
+            # 正常接收问题
             else:
                 user_pipe, response_pipe, first_utterance, p_del = pipes_dict[conv_id]
                 if 'content' not in msg.keys():
@@ -153,6 +160,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     log.info('process kill')
                     p_del.join()
                     del pipes_dict[conv_id]
+                    last_msg = "请问还有问题吗"
                     messageSender(conv_id, "请问还有问题吗", log, "", end=end_flag)
                     # break
 
@@ -163,7 +171,7 @@ if __name__ == '__main__':
     end_flag = False
     pipes_dict = {}
     first_utterance, service_name = "", ""
-
+    last_msg = ""
     log.info('load model')
     model = gensim.models.Word2Vec.load('data/wb.text.model')
 
