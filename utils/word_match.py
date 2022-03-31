@@ -93,7 +93,6 @@ def replace_list(seg_list, word_dict, similarity_dict, model):
         u = x
         # seek_start = time.time()
         try:
-            # todo: 改成AnnoyIndex
             u = similarity_dict[x]
             # u = model.wv.most_similar(x, topn=5)
         except KeyError:

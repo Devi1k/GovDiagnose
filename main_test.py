@@ -35,18 +35,19 @@ async def main_logic(para, mod, link, similarity_dict):
             msg_type = user_json['type']
             msg = user_json['msg']
             conv_id = msg['conv_id']
-            # log.info(user_json)
             # 首次询问
             if conv_id not in pipes_dict:
                 log.info("new conv")
                 clean_log(log)
                 user_pipe, response_pipe = Pipe(), Pipe()
-                pipes_dict[conv_id] = [user_pipe, response_pipe, ""]
-                Process(target=simulation_epoch,
-                        args=((user_pipe[1], response_pipe[0]), para, mod, log, similarity_dict)).start()
+                p = Process(target=simulation_epoch,
+                            args=((user_pipe[1], response_pipe[0]), para, mod, log, similarity_dict))
+                p.start()
+                pipes_dict[conv_id] = [user_pipe, response_pipe, "", p]
+
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
             else:
-                user_pipe, response_pipe, first_utterance = pipes_dict[conv_id]
+                user_pipe, response_pipe, first_utterance, p_del = pipes_dict[conv_id]
                 if 'content' not in msg.keys():
                     first_utterance = ""
                     messageSender(conv_id, last_msg, log)
@@ -55,6 +56,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     first_utterance = msg['content']['text']
                 pipes_dict[conv_id][2] = first_utterance
                 user_text = msg['content']
+                log.info(user_text)
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
                 try:
                     user_pipe[0].send(user_text)
@@ -88,8 +90,11 @@ async def main_logic(para, mod, link, similarity_dict):
                     answer = get_answer(pipes_dict[conv_id][2], service_name, log)
                     service_link = str(link[service_name])
                     print(service_link)
-                    messageSender(conv_id, answer, log, service_link, end=recv['end_flag'])
+                    messageSender(conv_id, answer, log, service_link, end=True)
                     first_utterance = ""
+                    p_del.terminate()
+                    log.info('process kill')
+                    p_del.join()
                     del pipes_dict[conv_id]
                     # break
 
