@@ -87,8 +87,8 @@ async def main_logic(para, mod, link, similarity_dict):
                     msg = "您办理的业务是否涉及" + recv['service']
                     last_msg = msg
                     messageSender(conv_id, msg, log)
-                # todo:未诊断出结果
                 elif end_flag is True and recv['action'] == 'request':
+                    msg = "抱歉，无法确定您想要办理的业务"
                     messageSender(conv_id, msg, log, end=end_flag)
                     pass
                 # 诊断出结果
@@ -106,8 +106,8 @@ async def main_logic(para, mod, link, similarity_dict):
                     log.info('process kill')
                     p_del.join()
                     del pipes_dict[conv_id]
-                    last_msg = "请问还有问题吗"
-                    messageSender(conv_id, "请问还有问题吗", log, "", end=True)
+                    last_msg = "请问还有其他问题吗"
+                    messageSender(conv_id, "请问还有其他问题吗", log, "", end=True)
             # 正常接收问题
             else:
                 user_pipe, response_pipe, first_utterance, p_del = pipes_dict[conv_id]
@@ -140,8 +140,8 @@ async def main_logic(para, mod, link, similarity_dict):
                     msg = "您办理的业务是否涉及" + recv['service']
                     last_msg = msg
                     messageSender(conv_id, msg, log)
-                # todo:未诊断出结果
                 elif end_flag is True and recv['action'] == 'request':
+                    msg = "抱歉，无法确定您想要办理的业务"
                     messageSender(conv_id, msg, log, end=end_flag)
                     pass
                 # 诊断出结果
@@ -160,8 +160,8 @@ async def main_logic(para, mod, link, similarity_dict):
                     log.info('process kill')
                     p_del.join()
                     del pipes_dict[conv_id]
-                    last_msg = "请问还有问题吗"
-                    messageSender(conv_id, "请问还有问题吗", log, "", end=end_flag)
+                    last_msg = "请问还有其他问题吗"
+                    messageSender(conv_id, "请问还有其他问题吗", log, "", end=end_flag)
                     # break
 
 
