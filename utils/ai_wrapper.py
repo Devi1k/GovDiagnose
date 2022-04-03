@@ -20,7 +20,7 @@ def get_answer(first_utterance, service_name, log):
         intent_class = intent_res['data']
         log.info("intention:{}".format(intent_class))
 
-        if intent_class == "qa":  # --QA match
+        if intent_class == "QA":  # --QA match
             qamatch_path = "https://burninghell.xicp.net/QAMatch?serviceName={}&question={}"
             context = requests.get(qamatch_path.format(service_name, first_utterance)).text
             # log.info("QA match: ", context)
@@ -31,13 +31,13 @@ def get_answer(first_utterance, service_name, log):
             log.info("QA: {},{}".format(score, answer))
             return answer
 
-        elif intent_class == "infer":  # --NLI
+        elif intent_class == "NLI":  # --NLI
             nli_path = "https://burninghell.xicp.net/zmytest?Service_name={}&First_utterance={}"
             nli_res = requests.get(nli_path.format(service_name, first_utterance)).text
             log.info("NLI:{} ".format(nli_res))
             return nli_res
 
-        elif intent_class == "retrieval":  # --IR
+        elif intent_class == "IR":  # --IR
             ir_path = "https://burninghell.xicp.net/IR?serviceName={}&firstUtterance={}"
             ir_res = requests.get(ir_path.format(service_name, first_utterance)).json()['abs']
             log.info("IR: {}".format(ir_res))

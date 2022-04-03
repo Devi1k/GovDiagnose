@@ -93,6 +93,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     pass
                 # 诊断出结果
                 else:
+                    end_flag = True
                     user_pipe[0].close()
                     response_pipe[1].close()
                     service_name = recv['service']

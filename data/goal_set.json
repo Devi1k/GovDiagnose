@@ -8,8 +8,6 @@
         "explicit_inform_slots": {},
         "implicit_inform_slots": {}
     },
-    "user_action": {
-        "user_judge": true
-    },
+    "user_action": {},
     "agent_aciton": {}
 }
