@@ -1,5 +1,6 @@
 import asyncio
 import json
+from json import JSONDecodeError
 from multiprocessing import Pipe, Process
 
 import gensim
@@ -89,8 +90,13 @@ async def main_logic(para, mod, link, similarity_dict):
                     messageSender(conv_id, msg, log)
                 elif end_flag is True and recv['action'] == 'request':
                     msg = "抱歉，无法确定您想要办理的业务"
-                    messageSender(conv_id, msg, log, end=end_flag)
-                    pass
+                    messageSender(conv_id, msg, log, end=False)
+                    p_del.terminate()
+                    log.info('process kill')
+                    p_del.join()
+                    del pipes_dict[conv_id]
+                    last_msg = "请问还有其他问题吗"
+                    messageSender(conv_id, "请问还有其他问题吗", log, "", end=end_flag)
                 # 诊断出结果
                 else:
                     end_flag = True
@@ -99,7 +105,10 @@ async def main_logic(para, mod, link, similarity_dict):
                     service_name = recv['service']
                     log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
                     log.info("service_name: {}".format(service_name))
-                    answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+                    try:
+                        answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+                    except JSONDecodeError:
+                        answer = "无法回答当前问题"
                     service_link = str(link[service_name])
                     messageSender(conv_id, answer, log, service_link, end=True)
                     first_utterance = ""
@@ -143,8 +152,13 @@ async def main_logic(para, mod, link, similarity_dict):
                     messageSender(conv_id, msg, log)
                 elif end_flag is True and recv['action'] == 'request':
                     msg = "抱歉，无法确定您想要办理的业务"
-                    messageSender(conv_id, msg, log, end=end_flag)
-                    pass
+                    messageSender(conv_id, msg, log, end=False)
+                    p_del.terminate()
+                    log.info('process kill')
+                    p_del.join()
+                    del pipes_dict[conv_id]
+                    last_msg = "请问还有其他问题吗"
+                    messageSender(conv_id, "请问还有其他问题吗", log, "", end=end_flag)
                 # 诊断出结果
                 else:
                     user_pipe[0].close()
@@ -153,7 +167,10 @@ async def main_logic(para, mod, link, similarity_dict):
                     end_flag = True
                     log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
                     log.info("service_name: {}".format(service_name))
-                    answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+                    try:
+                        answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+                    except JSONDecodeError:
+                        answer = "无法回答当前问题"
                     service_link = str(link[service_name])
                     messageSender(conv_id, answer, log, service_link, end=end_flag)
                     first_utterance = ""
@@ -163,7 +180,6 @@ async def main_logic(para, mod, link, similarity_dict):
                     del pipes_dict[conv_id]
                     last_msg = "请问还有其他问题吗"
                     messageSender(conv_id, "请问还有其他问题吗", log, "", end=end_flag)
-                    # break
 
 
 if __name__ == '__main__':
