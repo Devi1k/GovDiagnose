@@ -13,7 +13,11 @@ def messageSender(conv_id, msg, log, link="", end=False):
     #     break
     now_time = round(time.time() * 1000)
     # msg = recv['service']
-    response = {"conv_id": conv_id, "content": {"text": msg, "link": link, "end": end}, "type": "text",
+    response = {"conv_id": conv_id,
+                "content": {
+                    "text": msg, "link": link, "end": end
+                },
+                "type": "text",
                 "role": "sys_helper",  # 加一个机器人标识
                 "timestamp": now_time}
     response_json = json.dumps(response)
