@@ -146,7 +146,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 """
                 end_flag = recv['end_flag']
                 # 没结束 继续输入
-                if end_flag is not True:
+                if end_flag is not True and recv['action'] == 'request':
                     msg = "您办理的业务是否涉及" + recv['service']
                     last_msg = msg
                     messageSender(conv_id, msg, log)

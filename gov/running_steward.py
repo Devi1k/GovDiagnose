@@ -1,7 +1,7 @@
 # -*-coding: utf-8 -*-
 import json
 
-from gov.agent_dqn import AgentDQN
+from gov.agent_rule import AgentRule
 from gov.dialogue_manager import DialogueManager
 from gov.user import User
 
@@ -9,8 +9,8 @@ from gov.user import User
 def simulation_epoch(pipe, parameter, model, log, similarity_dict, train_mode=1):
     in_pipe, out_pipe = pipe
     user = User(parameter=parameter)
-    # agent = AgentRule(parameter=parameter)
-    agent = AgentDQN(parameter=parameter)
+    agent = AgentRule(parameter=parameter)
+    # agent = AgentDQN(parameter=parameter)
     dialogue_manager = DialogueManager(user=user, agent=agent, parameter=parameter, log=log,
                                        similarity_dict=similarity_dict)
     dialogue_manager.set_agent(agent=agent)

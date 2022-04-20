@@ -3,16 +3,16 @@ import requests
 
 def get_answer(first_utterance, service_name, log):
     # --FAQ
-    # faq_path = "https://miner.picp.net/FAQ?First_utterance={}&Service_name={}"
-    # faq_res = requests.get(faq_path.format(first_utterance, service_name)).json()
-    # similar_score, answer = faq_res['Similarity_score'], faq_res['answer']
-    # log.info("FAQ:{}".format( similar_score, answer))
+    faq_path = "https://miner.picp.net/FAQ?First_utterance={}&Service_name={}"
+    faq_res = requests.get(faq_path.format(first_utterance, service_name)).json()
+    similar_score, answer = faq_res['Similarity_score'], faq_res['answer']
+    log.info("FAQ:{}".format(similar_score, answer))
 
-    similar_score = 0
+    # similar_score = 0
 
     if float(similar_score) > 0.5:
-        pass
-        # return answer
+        # pass
+        return answer
     else:
         # --intention detection
         intent_path = "https://miner.picp.net/intent?text={}"

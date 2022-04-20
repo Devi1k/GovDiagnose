@@ -20,8 +20,9 @@ class User(object):
             "action": None,
             "request_slots": {},
             "inform_slots": {},
-            "user_judge":True
-
+            "user_judge": True,
+            "explicit_inform_slots": {},
+            "implicit_inform_slots": {}
         }
 
         # self.goal_set = random.choice(goal_set.goal_set)
@@ -65,7 +66,9 @@ class User(object):
             "speaker": "user",
             "request_slots": self.state["request_slots"],
             "inform_slots": self.state["inform_slots"],
-            "user_judge":self.state["user_judge"]
+            "explicit_inform_slots": self.state["explicit_inform_slots"],
+            "implicit_inform_slots": self.state["implicit_inform_slots"],
+            "user_judge": self.state["user_judge"]
         }
         return user_action
 

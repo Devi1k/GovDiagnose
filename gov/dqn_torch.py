@@ -444,7 +444,8 @@ class DQN2(object):
         ], lr=self.params.get("dqn_learning_rate", 0.0002))
 
         if self.params.get("train_mode") != 1:
-            self.restore_model(self.params.get("saved_model"))
+            print(os.path.join(os.getcwd(), self.params.get("saved_model")))
+            self.restore_model(os.path.join(os.getcwd(), self.params.get("saved_model")))
             self.current_net.eval()
             self.target_net.eval()
 

@@ -2,8 +2,8 @@
 
 import random
 
-from agent import Agent
-from dqn_torch import DQN2 as DQN
+from gov.agent import Agent
+from gov.dqn_torch import DQN2 as DQN
 
 
 class AgentDQN(Agent):
