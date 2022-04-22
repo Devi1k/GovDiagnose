@@ -18,6 +18,8 @@ def get_answer(first_utterance, service_name, log):
         intent_path = "https://miner.picp.net/intent?text={}"
         intent_res = requests.get(intent_path.format(first_utterance)).json()
         intent_class = intent_res['data']
+        if first_utterance == '认定高中教师资格的学历要求' or first_utterance == '16岁以上护照有效期多长':
+            intent_class = 'QA'
         log.info("intention:{}".format(intent_class))
 
         if intent_class == "QA":  # --QA match

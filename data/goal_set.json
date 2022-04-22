@@ -16,14 +16,10 @@
             "service": "UNK"
         },
         "inform_slots": {
+            "更换": true,
             "迁入": true,
             "资格证": true,
-            "考试合格": true,
-            "标准": true,
-            "繁体": true,
             "教师": true,
-            "普通": true,
-            "申请": true,
             "认定教师资格": true
         },
         "explicit_inform_slots": {},

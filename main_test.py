@@ -67,7 +67,9 @@ async def main_logic(para, mod, link, similarity_dict):
                     first_utterance = msg['content']['text']
                 user_text = msg['content']
                 log.info(user_text)
-                pipes_dict[conv_id][2] = first_utterance
+                pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
+                                                first_utterance)
+
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
                 try:
                     user_pipe[0].send(user_text)
@@ -127,7 +129,8 @@ async def main_logic(para, mod, link, similarity_dict):
                     continue
                 if first_utterance == "":
                     first_utterance = msg['content']['text']
-                pipes_dict[conv_id][2] = first_utterance
+                pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
+                                                first_utterance)
                 user_text = msg['content']
                 log.info(user_text)
                 # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
