@@ -8,33 +8,6 @@
         "explicit_inform_slots": {},
         "implicit_inform_slots": {}
     },
-    "user_action": {
-        "turn": 2,
-        "action": "inform",
-        "speaker": "user",
-        "request_slots": {
-            "service": "UNK"
-        },
-        "inform_slots": {
-            "有效期": true,
-            "多音字": true,
-            "护照": true,
-            "申请": true,
-            "护照加注": false,
-            "首次": true,
-            "免办": true
-        },
-        "explicit_inform_slots": {},
-        "implicit_inform_slots": {},
-        "user_judge": false
-    },
-    "agent_aciton": {
-        "turn": 3,
-        "action": "inform",
-        "speaker": "agent",
-        "request_slots": {},
-        "inform_slots": {
-            "service": "普通护照签发、换发、补发及加注-首次申请护照"
-        }
-    }
+    "user_action": {},
+    "agent_aciton": {}
 }
