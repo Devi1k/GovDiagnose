@@ -419,13 +419,8 @@ class DQN2(object):
         print(self.current_net)
 
         if torch.cuda.is_available():
-            if torch.cuda.device_count() > 1:  # multi GPUs
-                print('Data Parallel')
-                self.current_net = torch.nn.DataParallel(self.current_net)
-                self.target_net = torch.nn.DataParallel(self.target_net)
-            else:  # Single GPU
-                self.current_net.cuda(device=self.device)
-                self.target_net.cuda(device=self.device)
+            self.current_net.cuda(device=self.device)
+            self.target_net.cuda(device=self.device)
 
         self.target_net.load_state_dict(self.current_net.state_dict())  # Copy paraameters from current networks.
         self.target_net.eval()  # set this model as evaluate mode. And it's parameters will not be updated.

@@ -4,8 +4,9 @@ warm_start_epoch_number: 20
 train_mode: 0
 allow_wrong_service: 1
 max_turn: 10
-saved_model: model/model_d_agent_dqn_s1.0_r36.4_t3.36_wd0.0_e49.pkl
-input_size_dqn: 1122
+#saved_model: model/model_d_agent_dqn_s1.0_r36.4_t3.36_wd0.0_e49.pkl
+saved_model: model/model_d_agent_dqn_s1.0_r72.2_t5.64_wd0.0_e359.pkl
+input_size_dqn: 1121
 hidden_size_dqn: 300
 experience_replay_pool_size: 20000
 epsilon: 0.1
