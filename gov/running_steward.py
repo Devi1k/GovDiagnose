@@ -1,15 +1,14 @@
 # -*-coding: utf-8 -*-
 import json
 
-from gov.agent_rule import AgentRule
 from gov.dialogue_manager import DialogueManager
 from gov.user import User
 
 
-def simulation_epoch(pipe, parameter, model, log, similarity_dict, train_mode=1):
+def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, train_mode=1):
     in_pipe, out_pipe = pipe
     user = User(parameter=parameter)
-    agent = AgentRule(parameter=parameter)
+    agent = agent
     # agent = AgentDQN(parameter=parameter)
     dialogue_manager = DialogueManager(user=user, agent=agent, parameter=parameter, log=log,
                                        similarity_dict=similarity_dict)
@@ -21,7 +20,7 @@ def simulation_epoch(pipe, parameter, model, log, similarity_dict, train_mode=1)
     # init_start = time.time()
 
     agent_action = dialogue_manager.initialize(explicit, model, train_mode=parameter.get("train_mode"),
-                                               greedy_strategy=1)
+                                               greedy_strategy=0)
     # init_end = time.time()
     # print("init:", init_end - init_start)
 

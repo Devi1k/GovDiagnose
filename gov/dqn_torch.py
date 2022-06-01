@@ -409,7 +409,7 @@ class DQN2(object):
     def __init__(self, input_size, hidden_size, output_size, parameter,
                  named_tuple=('state', 'agent_action', 'reward', 'next_state', 'episode_over')):
         self.params = parameter
-        self.Transition = namedtuple('Transition', named_tuple)
+        # self.Transition = namedtuple('Transition', named_tuple)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.output_size = output_size
 
@@ -462,7 +462,7 @@ class DQN2(object):
         # print('batch_before',batch)
         gamma = params.get('gamma', 0.9)
         batch_size = len(batch)
-        batch = self.Transition(*zip(*batch))
+        # batch = self.Transition(*zip(*batch))
         # print('batch_after',batch)
 
         # Compute a mask of non-final states and concatenate the batch elements
@@ -564,7 +564,7 @@ class DQN2(object):
         # assert train_mode is not None
         # if train_mode is False:
         #     self.current_net.eval()
-        Xs = torch.Tensor(Xs).to(device=self.device)
+        Xs = torch.Tensor(np.array(Xs)).to(device=self.device)
         Ys = self.current_net(Xs)
         # print(Ys.detach().numpy())
         # self.current_net.train()

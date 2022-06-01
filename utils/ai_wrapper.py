@@ -10,7 +10,7 @@ def get_answer(first_utterance, service_name, log):
 
     # similar_score = 0
 
-    if float(similar_score) > 0.5:
+    if float(similar_score) > 0.6:
         # pass
         return answer
     else:

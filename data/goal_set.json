@@ -17,8 +17,8 @@
         },
         "inform_slots": {
             "多音字": true,
-            "申请": true,
             "护照": true,
+            "申请": true,
             "有效期": true,
             "护照加注": false,
             "首次": true,

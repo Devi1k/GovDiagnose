@@ -7,6 +7,7 @@ import gensim
 import websockets
 
 from conf.config import get_config
+from gov.agent_rule import AgentRule
 from gov.running_steward import simulation_epoch
 from utils.ai_wrapper import get_answer
 from utils.heart_beat import call_heart_beat
@@ -45,7 +46,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 clean_log(log)
                 user_pipe, response_pipe = Pipe(), Pipe()
                 p = Process(target=simulation_epoch,
-                            args=((user_pipe[1], response_pipe[0]), para, mod, log, similarity_dict))
+                            args=((user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict))
                 p.start()
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, end_flag]
 
@@ -55,7 +56,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 log.info("continue to ask")
                 user_pipe, response_pipe = Pipe(), Pipe()
                 p = Process(target=simulation_epoch,
-                            args=((user_pipe[1], response_pipe[0]), para, mod, log, similarity_dict))
+                            args=((user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict))
                 p.start()
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, False]
                 pipes_dict[conv_id][4] = False
@@ -87,7 +88,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 pipes_dict[conv_id][4] = recv['end_flag']
                 # 没结束 继续输入
                 if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
-                    msg = "您办理的业务是否涉及" + recv['service']
+                    msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                     last_msg = msg
                     messageSender(conv_id, msg, log)
                 elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
@@ -149,7 +150,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 # end_flag = recv['end_flag']
                 # 没结束 继续输入
                 if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
-                    msg = "您办理的业务是否涉及" + recv['service']
+                    msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                     last_msg = msg
                     messageSender(conv_id, msg, log)
                 elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
@@ -186,7 +187,6 @@ async def main_logic(para, mod, link, similarity_dict):
 
 if __name__ == '__main__':
     Process(target=call_heart_beat).start()
-
     end_flag = False
     pipes_dict = {}
     first_utterance, service_name = "", ""
@@ -200,7 +200,8 @@ if __name__ == '__main__':
     link_file = 'data/link.json'
     with open(link_file, 'r') as f:
         link = json.load(f)
-
+    # agent = AgentDQN(parameter=parameter)
+    agent = AgentRule(parameter=parameter)
     with open('data/similar.json', 'r') as f:
         similarity_dict = json.load(f)
     asyncio.get_event_loop().run_until_complete(main_logic(parameter, model, link, similarity_dict))

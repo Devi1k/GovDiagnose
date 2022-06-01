@@ -1,14 +1,26 @@
 # -*- coding: utf-8 -*-
 import copy
+import json
+
+import numpy as np
 
 import gov.dialogue_configuration as dialogue_configuration
-from gov.slot_config import requirement_weight, service, slot_max
-from gov.slot_config import slot_max_weight
+from gov.slot_config import requirement_weight, service
+
+
+# from gov.slot_config import slot_max_weight, slot_set
 
 
 class Agent(object):
     def __init__(self, parameter):
+        with open('data/slot_set.json', 'r') as f:
+            slot_set = json.load(f)
+        with open('data/slot_max_weight.json', 'r') as f:
+            slot_max_weight = json.load(f)
         self.slot_max_weight = slot_max_weight
+        self.slot_set = slot_set
+        self.slot_max = list(self.slot_max_weight.keys())
+        self.action_set = {'request': 0, 'inform': 1, 'closing': 2, 'deny': 3}
         self.service = service
         self.parameter = parameter
         self.action_space = self._build_action_space()
@@ -20,6 +32,7 @@ class Agent(object):
             "inform_slots": {}
         }
 
+
     def initialize(self):
         self.agent_action = {
             "turn": None,
@@ -30,7 +43,7 @@ class Agent(object):
         }
         self.requirement_weight = copy.deepcopy(requirement_weight)
         self.service = copy.deepcopy(service)
-        self.slot_max = copy.deepcopy(slot_max)
+        # self.slot_max = copy.deepcopy(slot_max)
 
     def _build_action_space(self):  # warm_start没用到，dqn部分用
         feasible_actions = [
@@ -46,3 +59,56 @@ class Agent(object):
             feasible_actions.append({'action': 'inform', 'inform_slots': {"service": slot}, 'request_slots': {}})
 
         return feasible_actions
+
+    def state_to_representation_last(self, state):
+        current_slots = copy.deepcopy(state["current_slots"]["inform_slots"])
+        current_slots_rep = np.zeros(len(self.slot_set.keys()))
+        for slot in current_slots.keys():
+            # 用权重
+            # current_slots_rep[self.slot_set[slot]] =current_slots[slot]
+            if current_slots[slot] == True:
+                current_slots_rep[self.slot_set[slot]] = 1.0
+            elif current_slots[slot] == False:
+                current_slots_rep[self.slot_set[slot]] = -1.0
+        turn_rep = np.zeros(self.parameter["max_turn"])
+        turn_rep[state["turn"]] = 1.0
+        user_action_rep = np.zeros(len(self.action_set))
+        user_action_rep[self.action_set[state["user_action"]["action"]]] = 1.0
+        user_inform_slots = copy.deepcopy(state["user_action"]["inform_slots"])
+        user_inform_slots.update(state["user_action"]["explicit_inform_slots"])
+        user_inform_slots.update(state["user_action"]["implicit_inform_slots"])
+        if "service" in user_inform_slots: user_inform_slots.pop("service")
+        user_inform_slots_rep = np.zeros(len(self.slot_set.keys()))
+        for slot in user_inform_slots.keys():
+            # user_inform_slots_rep[self.slot_set[slot]] = user_inform_slots[slot]
+            if user_inform_slots[slot] == True:
+                user_inform_slots_rep[self.slot_set[slot]] = 1.0
+            elif user_inform_slots[slot] == False:
+                user_inform_slots_rep[self.slot_set[slot]] = -1.0
+        user_request_slots = copy.deepcopy(state["user_action"]["request_slots"])
+        user_request_slots_rep = np.zeros(len(self.slot_set.keys()))
+        for slot in user_request_slots.keys():
+            user_request_slots_rep[self.slot_set[slot]] = 1.0
+        agent_action_rep = np.zeros(len(self.action_set))
+        try:
+            agent_action_rep[self.action_set[state["agent_action"]["action"]]] = 1.0
+        except:
+            pass
+        agent_inform_slots_rep = np.zeros(len(self.slot_set.keys()))
+        try:
+            agent_inform_slots = copy.deepcopy(state["agent_action"]["inform_slots"])
+            for slot in agent_inform_slots.keys():
+                agent_inform_slots_rep[self.slot_set[slot]] = 1.0
+        except:
+            pass
+        agent_request_slots_rep = np.zeros(len(self.slot_set.keys()))
+        try:
+            agent_request_slots = copy.deepcopy(state["agent_action"]["request_slots"])
+            for slot in agent_request_slots.keys():
+                agent_request_slots_rep[self.slot_set[slot]] = 1.0
+        except:
+            pass
+        state_rep = np.hstack((current_slots_rep, user_action_rep, user_inform_slots_rep,
+                               user_request_slots_rep, agent_action_rep, agent_inform_slots_rep,
+                               agent_request_slots_rep, turn_rep))
+        return state_rep
