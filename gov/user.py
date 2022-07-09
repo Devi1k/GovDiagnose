@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import json
+import os.path
 
 import gov.dialogue_configuration as dialogue_configuration
 
@@ -8,11 +9,12 @@ import gov.dialogue_configuration as dialogue_configuration
 
 
 class User(object):
-    def __init__(self, parameter):
+    def __init__(self, parameter, conv_id):
         self.max_turn = parameter["max_turn"]
         self.parameter = parameter
         self.allow_wrong_service = parameter.get("allow_wrong_service")
-        # self._init()
+        self.conv_id = conv_id
+        self._init()
 
     def _init(self):
         self.state = {
@@ -40,7 +42,8 @@ class User(object):
             "agent_aciton": {}
         }
         self.goal_set = goal
-        with open('./data/goal_set.json', 'w') as f:
+        self.goal_set_path = os.path.join('./data', 'goal_set_{}.json'.format(self.conv_id))
+        with open(self.goal_set_path, 'w') as f:
             json.dump(goal, f)
         self.goal = self.goal_set["goal"]
         self.episode_over = False
@@ -81,7 +84,7 @@ class User(object):
         self.goal['implicit_inform_slots'] = implicit_inform_slots
         agent_act_type = agent_action["action"]
         self.state["turn"] = turn
-        if self.state["turn"] == (self.max_turn - 1):  # 这里还要改
+        if self.state["turn"] == self.max_turn - 2:  # 这里还要改
             self.episode_over = True
             self.state["action"] = dialogue_configuration.CLOSE_DIALOGUE
             self.dialogue_status = dialogue_configuration.DIALOGUE_STATUS_FAILED
@@ -105,12 +108,12 @@ class User(object):
         把agent_action["request_slots"]传到前端
         :param agent_action:
         """
-        with open('./data/goal_set.json', 'r') as f:
+        with open(self.goal_set_path, 'r') as f:
             goal_set = json.load(f)
         slots = agent_action["request_slots"].keys()
         for slot in slots:
             if goal_set['user_action']['user_judge'] is True:
-                self.state["user_judge"]=goal_set['user_action']['user_judge']
+                self.state["user_judge"] = goal_set['user_action']['user_judge']
                 self.state["action"] = "inform"
                 self.state["inform_slots"][slot] = True
                 self.dialogue_status = dialogue_configuration.DIALOGUE_STATUS_INFORM_RIGHT_SLOT
@@ -127,11 +130,11 @@ class User(object):
         把agent_action["inform_slots"]["service"]传到前端
         :param agent_action:
         """
-        #agent_all_inform_slots = copy.deepcopy(agent_action["inform_slots"])
+        # agent_all_inform_slots = copy.deepcopy(agent_action["inform_slots"])
         # user_all_inform_slots = copy.deepcopy(self.goal["explicit_inform_slots"])
         # user_all_inform_slots.update(self.goal["implicit_inform_slots"])
 
-        with open('./data/goal_set.json', 'r') as f:
+        with open(self.goal_set_path, 'r') as f:
             goal_set = json.load(f)
         if "service" in agent_action["inform_slots"] and goal_set['user_action']['user_judge'] is True:
             self.state["user_judge"] = goal_set['user_action']['user_judge']

@@ -70,10 +70,10 @@ class DialogueManager(object):
         user_action, reward, episode_over, dialogue_status = self.state_tracker.user.next(implicit_inform_slots,
                                                                                           agent_action=agent_action,
                                                                                           turn=self.state_tracker.turn)
-        with open('./data/goal_set.json', 'r') as f:
+        with open(self.state_tracker.user.goal_set_path, 'r') as f:
             goal_set = json.load(f)
             goal_set['user_action'] = user_action
-        with open('./data/goal_set.json', 'w') as f:
+        with open(self.state_tracker.user.goal_set_path, 'w') as f:
             json.dump(goal_set, f, indent=4, ensure_ascii=False)
         self.state_tracker.state_updater(user_action=user_action)
 
@@ -81,12 +81,16 @@ class DialogueManager(object):
             self.inform_wrong_service_count += 1
 
         state = self.state_tracker.get_state()
+
+        # if user_action['action'] == 'closing':
+        #     return reward, episode_over, dialogue_status, agent_action
+
         agent_action, action_index = self.state_tracker.agent.next(state=state, turn=self.state_tracker.turn,
                                                                    greedy_strategy=greedy_strategy)
-        with open('./data/goal_set.json', 'r') as f:
+        with open(self.state_tracker.user.goal_set_path, 'r') as f:
             goal_set = json.load(f)
-            goal_set['agent_aciton'] = agent_action
-        with open('./data/goal_set.json', 'w') as f:
+            goal_set['agent_action'] = agent_action
+        with open(self.state_tracker.user.goal_set_path, 'w') as f:
             json.dump(goal_set, f, indent=4, ensure_ascii=False)
         self.state_tracker.state_updater(agent_action=agent_action)
 
