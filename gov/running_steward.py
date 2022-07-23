@@ -1,5 +1,7 @@
 # -*-coding: utf-8 -*-
 import json
+import os
+import signal
 
 from gov.dialogue_manager import DialogueManager
 from gov.user import User
@@ -15,8 +17,14 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
     dialogue_manager.set_agent(agent=agent)
 
     episode_over = False
-    receive = in_pipe.recv()
-    explicit = receive['text']
+    explicit = ""
+    try:
+        receive = in_pipe.recv()
+        explicit = receive['text']
+    except EOFError:
+        episode_over = True
+        pid = os.getpid()
+        os.kill(pid, signal.SIGINT)
     # init_start = time.time()
 
     agent_action = dialogue_manager.initialize(explicit, model, train_mode=parameter.get("train_mode"),

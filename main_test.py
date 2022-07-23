@@ -29,18 +29,14 @@ async def main_logic(para, mod, link, similarity_dict):
     global end_flag
     global last_msg
     while True:
-        async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
-            # data = {"type": 101, "msg": {"conv_id": "1475055770457346048", "content": {"judge": True, "text": '护照丢了怎么办'}}}
-            # s = json.dumps(data, ensure_ascii=False)
-            # await websocket.send(s)  # 测试接口
+        async with websockets.connect('ws://asueeer.com:1988/ws?mock_login=123') as websocket:
             log.info('wait message')
             response = await websocket.recv()
             user_json = json.loads(response)
             msg_type = user_json['type']
             msg = user_json['msg']
             conv_id = msg['conv_id']
-            # todo: 收到结束信号，增加删除conv_id以及进程
-            # 首次询问 or 追加问题
+            # First inquiry and initialize the conversation
             if conv_id not in pipes_dict:
                 log.info("new conv")
                 clean_log(log)
@@ -51,10 +47,13 @@ async def main_logic(para, mod, link, similarity_dict):
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, end_flag]
 
                 # Process(target=messageSender, args=(conv_id, end_flag, response_pipe[1], user_pipe[0])).start()
-                # 处理多轮对话 继续发言
+            # Handle multiple rounds of dialogues  Continue to speak
             elif conv_id in pipes_dict and pipes_dict[conv_id][4] is True:
                 log.info("continue to ask")
                 user_pipe, response_pipe = Pipe(), Pipe()
+                # todo: Determine whether the label in msg is the previous business, then directly bind the business
+                #  name send to retrieval, otherwise a new process will be opened.
+                #  And decide whether to end the conversation according to the flag in msg to delete the goal set.
                 p = Process(target=simulation_epoch,
                             args=((user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict, conv_id))
                 p.start()
@@ -74,6 +73,8 @@ async def main_logic(para, mod, link, similarity_dict):
                 if float(similar_score) > 0.6:
                     user_pipe[0].close()
                     response_pipe[1].close()
+                    user_pipe[1].close()
+                    response_pipe[0].close()
                     pipes_dict[conv_id][4] = True
                     messageSender(conv_id, answer, log, end=pipes_dict[conv_id][4])
                     first_utterance = ""
@@ -84,15 +85,15 @@ async def main_logic(para, mod, link, similarity_dict):
                     last_msg = "请问还有其他问题吗"
                     messageSender(conv_id, "请问还有其他问题吗", log, "", end=pipes_dict[conv_id][4])
                 else:
-
-                    # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
+                    # After initializing the session, send judgments and descriptions to the model (including
+                    # subsequent judgments and supplementary descriptions).
                     try:
                         user_pipe[0].send(user_text)
                     except OSError:
                         messageSender(conv_id, "会话结束", log, end=True)
                         continue
                     recv = response_pipe[1].recv()
-                    # 从模型接收模型的消息 消息格式为
+                    # The message format of the model received from the model is
                     """
                     {
                         "service": agent_action["inform_slots"]["service"] or ,   service为业务名
@@ -100,7 +101,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     }
                     """
                     pipes_dict[conv_id][4] = recv['end_flag']
-                    # 没结束 继续输入
+                    # Continue to input without ending
                     if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
                         msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                         last_msg = msg
@@ -109,12 +110,13 @@ async def main_logic(para, mod, link, similarity_dict):
                         msg = "抱歉，无法确定您想要办理的业务"
                         messageSender(conv_id, msg, log, end=False)
                         p_del.terminate()
+
                         log.info('process kill')
                         p_del.join()
                         del pipes_dict[conv_id]
                         last_msg = "请问还有其他问题吗"
                         messageSender(conv_id, "请问还有其他问题吗", log, "", end=pipes_dict[conv_id][4])
-                    # 诊断出结果
+                    # Diagnostic results
                     else:
                         pipes_dict[conv_id][4] = True
                         user_pipe[0].close()
@@ -130,12 +132,12 @@ async def main_logic(para, mod, link, similarity_dict):
                         messageSender(conv_id, answer, log, service_link, end=True)
                         first_utterance = ""
                         p_del.terminate()
+
                         log.info('process kill')
                         p_del.join()
-                        # del pipes_dict[conv_id]
                         last_msg = "请问还有其他问题吗"
                         messageSender(conv_id, "请问还有其他问题吗", log, "", end=True)
-            # 首次对话
+            # First conversation
             else:
                 user_pipe, response_pipe, first_utterance, p_del, end_flag = pipes_dict[conv_id]
                 if 'content' not in msg.keys():
@@ -163,22 +165,13 @@ async def main_logic(para, mod, link, similarity_dict):
                 else:
                     user_text = msg['content']
                     log.info(user_text)
-                    # 初始化会话后 向模型发送判断以及描述（包括此后的判断以及补充描述
                     try:
                         user_pipe[0].send(user_text)
                     except OSError:
                         messageSender(conv_id, "会话结束", log)
                         continue
                     recv = response_pipe[1].recv()
-                    # 从模型接收模型的消息 消息格式为
-                    """
-                    {
-                        "service": agent_action["inform_slots"]["service"] or ,   service为业务名
-                        "end_flag": episode_over  会话是否结束
-                    }
-                    """
                     # end_flag = recv['end_flag']
-                    # 没结束 继续输入
                     if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
                         msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                         last_msg = msg
@@ -192,7 +185,6 @@ async def main_logic(para, mod, link, similarity_dict):
                         # del pipes_dict[conv_id]
                         last_msg = "请问还有其他问题吗"
                         messageSender(conv_id, "请问还有其他问题吗", log, "", end=pipes_dict[conv_id][4])
-                    # 诊断出结果
                     else:
                         user_pipe[0].close()
                         response_pipe[1].close()
@@ -208,6 +200,11 @@ async def main_logic(para, mod, link, similarity_dict):
                         messageSender(conv_id, answer, log, service_link, end=pipes_dict[conv_id][4])
                         first_utterance = ""
                         pipes_dict[conv_id][3].terminate()
+                        # try:
+                        #     os.remove(os.path.join('data','goal_set_{}.json'.format(conv_id)))
+                        #     log.info('delete goal set')
+                        # except FileNotFoundError:
+                        #     pass
                         log.info('process kill')
                         pipes_dict[conv_id][3].join()
                         # del pipes_dict[conv_id]
@@ -216,7 +213,7 @@ async def main_logic(para, mod, link, similarity_dict):
 
 
 if __name__ == '__main__':
-    Process(target=call_heart_beat).start()
+    Process(target=call_heart_beat, args=(log,)).start()
     end_flag = False
     pipes_dict = {}
     first_utterance, service_name = "", ""
