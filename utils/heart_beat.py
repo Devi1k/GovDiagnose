@@ -7,12 +7,12 @@ import websockets
 
 async def heart_beat(log):
     while True:
-        async with websockets.connect('ws://asueeer.com:1988/ws?mock_login=123') as websocket:
+        async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
             data = {"type": 0, "msg": "ping"}
             s = json.dumps(data, ensure_ascii=False)
             await websocket.send(s)
-            response_str = await websocket.recv()
-            log.info(response_str)
+            # response_str = await websocket.recv()
+            # log.info(response_str)
             # print(response_str)
             time.sleep(5)
 
