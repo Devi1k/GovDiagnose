@@ -1,11 +1,12 @@
 import asyncio
 import json
+import time
 from json import JSONDecodeError
 from multiprocessing import Pipe, Process
 
 import gensim
 import websockets
-from websockets import ConnectionClosedOK
+from websockets import ConnectionClosed
 
 from conf.config import get_config
 from gov.agent_rule import AgentRule
@@ -18,17 +19,32 @@ log = Logger().getLogger()
 count = 0
 
 
+# async def reconnect(ws):
+#     while True:
+#         try:
+#             data = {"msg": {"type": 0, "text": "ping"}}
+#             s = json.dumps(data, ensure_ascii=False)
+#             await ws.send(s)
+#             response_str = await ws.recv()
+#             log.info(response_str)
+#             # await ws.close(reason='reconnect')
+#             await asyncio.sleep(10)
+#         except:
+#             break
+
+
 async def main_logic(para, mod, link, similarity_dict):
-
-
-    global first_utterance
-    global service_name
-    global conv_id
-    global end_flag
-    global last_msg
+    global first_utterance, service_name, conv_id, end_flag, last_msg, start_time, end_time
+    address = 'wss://asueeer.com/ws?mock_login=123'
     while True:
+
         try:
-            async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
+            async with websockets.connect(address, ping_timeout=None) as websocket:
+                end_time = time.time()
+                if end_time - start_time > 60:
+                    log.info('timeout, reconnect')
+                    await websocket.close(code=1000, reason='timeout')
+                    start_time = end_time
                 log.info('wait message')
                 response = await websocket.recv()
                 user_json = json.loads(response)
@@ -82,7 +98,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         messageSender(conv_id, answer, log, end=pipes_dict[conv_id][4])
                         first_utterance = ""
                         pipes_dict[conv_id][3].terminate()
-                        await websocket.close(reason='finish')
+                        await websocket.close(code=1000, reason='finish')
 
                         log.info('process kill')
                         pipes_dict[conv_id][3].join()
@@ -162,7 +178,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         messageSender(conv_id, answer, log, end=pipes_dict[conv_id][4])
                         first_utterance = ""
                         pipes_dict[conv_id][3].terminate()
-                        await websocket.close(reason='finish')
+                        await websocket.close(code=1000, reason='finish')
 
                         log.info('process kill')
                         pipes_dict[conv_id][3].join()
@@ -178,7 +194,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             messageSender(conv_id, "会话结束", log)
                             continue
                         recv = response_pipe[1].recv()
-                        # end_flag = recv['end_flag']
+                        pipes_dict[conv_id][4] = recv['end_flag']
                         if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
                             msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                             last_msg = msg
@@ -187,7 +203,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             msg = "抱歉，无法确定您想要办理的业务"
                             messageSender(conv_id, msg, log, end=False)
                             pipes_dict[conv_id][3].terminate()
-                            await websocket.close(reason='finish')
+                            await websocket.close(code=1000, reason='finish')
                             log.info('process kill')
                             pipes_dict[conv_id][3].join()
                             # del pipes_dict[conv_id]
@@ -208,7 +224,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             messageSender(conv_id, answer, log, service_link, end=pipes_dict[conv_id][4])
                             first_utterance = ""
                             pipes_dict[conv_id][3].terminate()
-                            await websocket.close(reason='finish')
+                            await websocket.close(code=1000, reason='finish')
 
                             # try:
                             #     os.remove(os.path.join('data','goal_set_{}.json'.format(conv_id)))
@@ -220,17 +236,19 @@ async def main_logic(para, mod, link, similarity_dict):
                             # del pipes_dict[conv_id]
                             last_msg = "请问还有其他问题吗"
                             messageSender(conv_id, "请问还有其他问题吗", log, "", end=pipes_dict[conv_id][4])
-        except ConnectionClosedOK as e:
-            log.info(e)
+        except ConnectionClosed as e:
+            log.info(e.code)
             global count
             if count == 10:
+                count = 0
                 return
             count += 1
             await asyncio.sleep(2)
 
 
 if __name__ == '__main__':
-    # Process(target=call_heart_beat, args=(log,)).start()
+    start_time = time.time()
+    end_time = time.time()
     end_flag = False
     pipes_dict = {}
     first_utterance, service_name = "", ""
