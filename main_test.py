@@ -41,7 +41,7 @@ async def main_logic(para, mod, link, similarity_dict):
         try:
             async with websockets.connect(address, ping_timeout=None) as websocket:
                 end_time = time.time()
-                if end_time - start_time > 60:
+                if end_time - start_time > 600:
                     log.info('timeout, reconnect')
                     await websocket.close(code=1000, reason='timeout')
                     start_time = end_time
