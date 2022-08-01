@@ -82,7 +82,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         first_utterance = ""
                         messageSender(conv_id, last_msg, log)
                         continue
-                    if first_utterance == "":
+                    if pipes_dict[conv_id][2] == "":
                         first_utterance = msg['content']['text']
                     user_text = msg['content']
                     log.info(user_text)
@@ -165,7 +165,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         first_utterance = ""
                         messageSender(conv_id, last_msg, log)
                         continue
-                    if first_utterance == "":
+                    if pipes_dict[conv_id][2] == "":
                         first_utterance = msg['content']['text']
                     pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                     first_utterance)
