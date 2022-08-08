@@ -1,19 +1,26 @@
 import asyncio
 import json
+import time
+
+from websockets import ConnectionClosedOK
 
 
-async def heart_beat(log, ws):
-    # while True:
-    # async with websockets.connect('wss://asueeer.com/ws?mock_login=123') as websocket:
-    data = {"msg": {"type": 0, "text": "ping"}}
-    s = json.dumps(data, ensure_ascii=False)
-    await ws.send(s)
-    response_str = await ws.recv()
-    log.info(response_str)
-    # print(response_str)
-    await asyncio.sleep(10)
+async def heart_beat(log, websocket):
+    while True:
+        # async with websockets.connect('ws://asueeer.com:1988/ws?mock_login=123') as websocket:
+        data = {"type": 0, "msg": "ping"}
+        s = json.dumps(data, ensure_ascii=False)
+        try:
+            await websocket.send(s)
+        except ConnectionClosedOK:
+            pass
+        # response_str = await websocket.recv()
+        # log.info(response_str)
+        # print(response_str)
+        time.sleep(20)
 
 
-def call_heart_beat(log, websocket):
-    asyncio.get_event_loop().run_until_complete(heart_beat(log, ws=websocket))
-    asyncio.get_event_loop().run_forever()
+def call_heart_beat(log, ws):
+    new_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(new_loop)
+    asyncio.get_event_loop().run_until_complete(heart_beat(log, ws))
