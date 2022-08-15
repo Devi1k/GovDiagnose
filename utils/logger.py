@@ -9,18 +9,18 @@ class Logger:
     def __init__(self):
         logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         self.log_path = os.getcwd() + '/log/diagnose'
-        self.log_fmt = '%(asctime)s\tFile \"%(filename)s\",line %(lineno)s\t%(levelname)s: %(message)s'
+        self.log_fmt = '%(asctime)s - File \"%(filename)s\" - line %(lineno)s - %(levelname)s - %(message)s'
         self.formatter = logging.Formatter(self.log_fmt)
-        self.logger = logging.getLogger("Diagnose")
+        self.logger = logging.getLogger()
 
     def getLogger(self):
-        self.logger.setLevel(logging.DEBUG)
         self.logger.suffix = "%Y-%m-%d_%H-%M.log"
         self.logger.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}.log$")
         log_file_handler = TimedRotatingFileHandler(filename=self.log_path, when="D", interval=1, backupCount=7)
         log_file_handler.setFormatter(self.formatter)
-
+        log_file_handler.setLevel(logging.DEBUG)
         self.logger.addHandler(log_file_handler)
+        self.logger.setLevel(logging.DEBUG)
         return self.logger
 
 
