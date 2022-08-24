@@ -4,7 +4,7 @@ import time
 import requests
 
 
-def messageSender(conv_id, msg, log, link="", end=False):
+def messageSender(conv_id, msg, log, link="", service_name="", end=False):
     # while True:
     # recv = out_pipe.recv()
     # 从模型接收模型的消息 消息格式为
@@ -15,7 +15,7 @@ def messageSender(conv_id, msg, log, link="", end=False):
     # msg = recv['service']
     response = {"conv_id": conv_id,
                 "content": {
-                    "text": msg, "link": link, "end": end
+                    "text": msg, "link": link, "service_name": service_name, "end": end
                 },
                 "type": "text",
                 "role": "sys_helper",  # 加一个机器人标识

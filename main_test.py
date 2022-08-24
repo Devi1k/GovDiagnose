@@ -112,12 +112,13 @@ async def main_logic(para, mod, link, similarity_dict):
                         last_msg = msg
                         messageSender(conv_id, msg, log)
                     elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
+                        # todo: Add call retrieval lookup items
                         msg = "抱歉，无法确定您想要办理的业务"
                         messageSender(conv_id, msg, log, end=False)
-                        p_del.terminate()
+                        pipes_dict[conv_id][3].terminate()
 
                         log.info('process kill')
-                        p_del.join()
+                        pipes_dict[conv_id][3].join()
                         del pipes_dict[conv_id]
                         last_msg = "请问还有其他问题吗，如果有请继续提问"
                         messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=pipes_dict[conv_id][4])
@@ -136,12 +137,12 @@ async def main_logic(para, mod, link, similarity_dict):
                         service_link = str(link[service_name])
                         messageSender(conv_id, answer, log, service_link, end=True)
                         first_utterance = ""
-                        p_del.terminate()
+                        pipes_dict[conv_id][3].terminate()
 
                         log.info('process kill')
-                        p_del.join()
+                        pipes_dict[conv_id][3].join()
                         last_msg = "请问还有其他问题吗，如果有请继续提问"
-                        messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=True)
+                        messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=True, service_name=service_name)
             # First conversation
             else:
                 user_pipe, response_pipe, first_utterance, p_del, end_flag = pipes_dict[conv_id]
@@ -184,6 +185,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         last_msg = msg
                         messageSender(conv_id, msg, log)
                     elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
+                        # todo: Add call retrieval lookup items
                         msg = "抱歉，无法确定您想要办理的业务"
                         messageSender(conv_id, msg, log, end=False)
                         pipes_dict[conv_id][3].terminate()
@@ -219,7 +221,8 @@ async def main_logic(para, mod, link, similarity_dict):
                         pipes_dict[conv_id][3].join()
                         # del pipes_dict[conv_id]
                         last_msg = "请问还有其他问题吗，如果有请继续提问"
-                        messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=pipes_dict[conv_id][4])
+                        messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=True,
+                                      service_name=service_name)
         except ConnectionClosed as e:
             log.info(e)
             continue
