@@ -8,6 +8,18 @@ def get_faq(first_utterance, service=""):
     return similar_score, answer
 
 
+def get_retrieval(first_utterance, service_name):
+    ir_path = "https://burninghell.xicp.net/IR?serviceName={}&firstUtterance={}"
+    ir_res = requests.get(ir_path.format(service_name, first_utterance)).json()['abs']
+    return ir_res
+
+
+def get_nli(first_utterance, service_name):
+    nli_path = "https://burninghell.xicp.net/zmytest?Service_name={}&First_utterance={}"
+    nli_res = requests.get(nli_path.format(service_name, first_utterance)).text
+    return nli_res
+
+
 def get_answer(first_utterance, service_name, log):
     # --FAQ
     similar_score, answer = get_faq(first_utterance, service_name)
@@ -44,14 +56,12 @@ def get_answer(first_utterance, service_name, log):
             return answer
 
         elif intent_class == "NLI":  # --NLI
-            nli_path = "https://burninghell.xicp.net/zmytest?Service_name={}&First_utterance={}"
-            nli_res = requests.get(nli_path.format(service_name, first_utterance)).text
+            nli_res = get_nli(first_utterance, service_name)
             log.info("NLI:{} ".format(nli_res))
             return nli_res
 
         elif intent_class == "IR":  # --IR
-            ir_path = "https://burninghell.xicp.net/IR?serviceName={}&firstUtterance={}"
-            ir_res = requests.get(ir_path.format(service_name, first_utterance)).json()['abs']
+            ir_res = get_retrieval(first_utterance, service_name)
             log.info("IR: {}".format(ir_res))
             return ir_res
 
