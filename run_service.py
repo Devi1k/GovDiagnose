@@ -14,7 +14,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 def run_diagnose():
     print("清除多余进程")
-    os.system("ps -ef | grep main_test | grep -v grep | awk \'{print \"kill -9 \"$2}\' | sh")
+    os.system("ps -ef | grep gov_service_official | grep -v grep | awk \'{print \"kill -9 \"$2}\' | sh")
     print("执行诊断")
     os.system("nohup python3 gov_service_official.py > /dev/null 2>&1 &")
 

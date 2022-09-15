@@ -2,7 +2,7 @@ from json import JSONDecodeError
 
 import requests
 
-from message_sender import messageSender
+from utils.message_sender import messageSender
 
 
 def get_faq(first_utterance, service=""):
