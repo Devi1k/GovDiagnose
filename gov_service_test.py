@@ -11,7 +11,7 @@ from websockets import ConnectionClosed
 from conf.config import get_config
 from gov.agent_rule import AgentRule
 from gov.running_steward import simulation_epoch
-from utils.ai_wrapper import get_answer, get_faq
+from utils.ai_wrapper import *
 from utils.logger import *
 from utils.message_sender import messageSender
 
@@ -47,13 +47,14 @@ async def main_logic(para, mod, link, similarity_dict):
                             args=(
                                 (user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict, conv_id))
                 p.start()
-                # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish
-                pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, False, False]
+                # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish, service_name
+                pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, False, False, ""]
 
             # Handle multiple rounds of dialogues  Continue to speak
             elif conv_id in pipes_dict and pipes_dict[conv_id][5] is False and pipes_dict[conv_id][4] is True:
                 log.info("continue to ask")
                 user_pipe, response_pipe = Pipe(), Pipe()
+
                 if 'content' not in msg.keys():
                     pipes_dict[conv_id][2] = ""
                     messageSender(conv_id, last_msg, log)
@@ -70,9 +71,8 @@ async def main_logic(para, mod, link, similarity_dict):
                     user_pipe[1].close()
                     response_pipe[0].close()
                     pipes_dict[conv_id][4] = True
-
-                    messageSender(conv_id, "暂未支持", log, end=pipes_dict[conv_id][4])
-                    pass
+                    answer = get_retrieval(pipes_dict[conv_id][2], pipes_dict[conv_id][6])
+                    messageSender(conv_id, answer, log, end=pipes_dict[conv_id][4])
                 else:
                     # 重新诊断
                     p = Process(target=simulation_epoch,
@@ -80,7 +80,7 @@ async def main_logic(para, mod, link, similarity_dict):
                                     (user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict, conv_id))
                     p.start()
                     # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish
-                    pipes_dict[conv_id] = [user_pipe, response_pipe, pipes_dict[conv_id][2], p, False, False]
+                    pipes_dict[conv_id] = [user_pipe, response_pipe, pipes_dict[conv_id][2], p, False, False, ""]
                     pipes_dict[conv_id][4] = False
                     pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                     pipes_dict[conv_id][2])
@@ -127,7 +127,6 @@ async def main_logic(para, mod, link, similarity_dict):
                             last_msg = msg
                             messageSender(conv_id, msg, log)
                         elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
-                            # todo: Add call retrieval lookup items
                             msg = "抱歉，无法确定您想要办理的业务"
                             messageSender(conv_id, msg, log, end=False)
                             pipes_dict[conv_id][3].terminate()
@@ -142,14 +141,14 @@ async def main_logic(para, mod, link, similarity_dict):
                             pipes_dict[conv_id][4] = True
                             user_pipe[0].close()
                             response_pipe[1].close()
-                            service_name = recv['service']
+                            pipes_dict[conv_id][6] = recv['service']
                             log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
-                            log.info("service_name: {}".format(service_name))
+                            log.info("service_name: {}".format(pipes_dict[conv_id][6]))
                             try:
-                                answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+                                answer = get_answer(pipes_dict[conv_id][2], pipes_dict[conv_id][6], log)
                             except JSONDecodeError:
                                 answer = "无法回答当前问题"
-                            service_link = str(link[service_name])
+                            service_link = str(link[pipes_dict[conv_id][6]])
                             messageSender(conv_id, answer, log, service_link, end=True)
                             pipes_dict[conv_id][2] = ""
                             pipes_dict[conv_id][3].terminate()
@@ -157,7 +156,8 @@ async def main_logic(para, mod, link, similarity_dict):
                             log.info('process kill')
                             pipes_dict[conv_id][3].join()
                             last_msg = "请问还有其他问题吗，如果有请继续提问"
-                            messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=True, service_name=service_name)
+                            messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=True,
+                                          service_name=pipes_dict[conv_id][6])
             # First conversation
             else:
                 user_pipe, response_pipe, first_utterance, p_del, single_finish_flag, all_finish_flag = pipes_dict[
@@ -216,15 +216,15 @@ async def main_logic(para, mod, link, similarity_dict):
                     else:
                         user_pipe[0].close()
                         response_pipe[1].close()
-                        service_name = recv['service']
+                        pipes_dict[conv_id][6] = recv['service']
                         pipes_dict[conv_id][4] = True
                         log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
-                        log.info("service_name: {}".format(service_name))
+                        log.info("service_name: {}".format(pipes_dict[conv_id][6]))
                         try:
-                            answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+                            answer = get_answer(pipes_dict[conv_id][2], pipes_dict[conv_id][6], log)
                         except JSONDecodeError:
                             answer = "抱歉，无法回答当前问题"
-                        service_link = str(link[service_name])
+                        service_link = str(link[pipes_dict[conv_id][6]])
                         messageSender(conv_id, answer, log, service_link, end=pipes_dict[conv_id][4])
                         pipes_dict[conv_id][2] = ""
                         pipes_dict[conv_id][3].terminate()
@@ -240,7 +240,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         # del pipes_dict[conv_id]
                         last_msg = "请问还有其他问题吗，如果有请继续提问"
                         messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=True,
-                                      service_name=service_name)
+                                      service_name=pipes_dict[conv_id][6])
         except ConnectionClosed as e:
             log.info(e)
             continue
