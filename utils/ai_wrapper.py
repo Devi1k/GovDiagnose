@@ -1,4 +1,8 @@
+from json import JSONDecodeError
+
 import requests
+
+from utils.message_sender import messageSender
 
 
 def get_faq(first_utterance, service=""):
@@ -68,6 +72,71 @@ def get_answer(first_utterance, service_name, log):
         else:  # --diagnose
             log.info("diagnosis: {}".format(service_name))
             return "您要办理的业务属于:" + service_name
+
+
+def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log):
+    user_pipe[0].close()
+    response_pipe[1].close()
+    user_pipe[1].close()
+    response_pipe[0].close()
+    pipes_dict[conv_id][4] = True
+    messageSender(conv_id, answer, log, end=pipes_dict[conv_id][4])
+    pipes_dict[conv_id][2] = ""
+    pipes_dict[conv_id][3].terminate()
+    log.info('process kill')
+    pipes_dict[conv_id][3].join()
+    last_msg = "请问还有其他问题吗，如果有请继续提问"
+    messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=pipes_dict[conv_id][4])
+    return last_msg
+
+
+def rl_diagnose(user_pipe, response_pipe, pipes_dict, conv_id, log, link):
+    recv = response_pipe[1].recv()
+    # The message format of the model received from the model is
+    """
+    {
+        "service": agent_action["inform_slots"]["service"] or ,   service为业务名
+        "end_flag": episode_over  会话是否结束
+    }
+    """
+    pipes_dict[conv_id][4] = recv['end_flag']
+    # Continue to input without ending
+    if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
+        msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
+        last_msg = msg
+        messageSender(conv_id, msg, log)
+    elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
+        # todo: Add call retrieval lookup items
+        msg = "抱歉，无法确定您想要办理的业务"
+        pipes_dict[conv_id][4] = True
+        messageSender(conv_id, msg, log, end=False)
+        pipes_dict[conv_id][3].terminate()
+        log.info('process kill')
+        pipes_dict[conv_id][3].join()
+        del pipes_dict[conv_id]
+        last_msg = "请问还有其他问题吗，如果有请继续提问"
+        messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=pipes_dict[conv_id][4])
+    else:
+        pipes_dict[conv_id][4] = True
+        user_pipe[0].close()
+        response_pipe[1].close()
+        service_name = recv['service']
+        log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
+        log.info("service_name: {}".format(service_name))
+        try:
+            answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+        except JSONDecodeError:
+            answer = "抱歉，无法回答当前问题"
+        service_link = str(link[service_name])
+        messageSender(conv_id, answer, log, service_link, end=pipes_dict[conv_id][4])
+        pipes_dict[conv_id][2] = ""
+        pipes_dict[conv_id][3].terminate()
+        log.info('process kill')
+        pipes_dict[conv_id][3].join()
+        last_msg = "请问还有其他问题吗，如果有请继续提问"
+        messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=True,
+                      service_name=service_name)
+    return last_msg
 
 # if __name__ == '__main__':
 #     service_name = "外国人居留停留一-外国人停留证件的签发、换发、补发"
