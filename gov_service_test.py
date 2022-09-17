@@ -36,7 +36,7 @@ async def main_logic(para, mod, link, similarity_dict):
             log.info(user_json)
             msg = user_json['msg']
             conv_id = msg['conv_id']
-            # First inquiry and initialize the conversation
+            # Initialize the conversation
             if conv_id not in pipes_dict:
                 log.info("new conv")
                 clean_log(log)
@@ -47,7 +47,6 @@ async def main_logic(para, mod, link, similarity_dict):
                 p.start()
                 # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, False, False]
-
             # Handle multiple rounds of dialogues  Continue to speak
             elif conv_id in pipes_dict and pipes_dict[conv_id][5] is False and pipes_dict[conv_id][4] is True:
                 log.info("continue to ask")
@@ -61,7 +60,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     messageSender(conv_id, "请问您询问的问题是否与上述业务相关", log)
                     continue
                 if msg['content']['text'] == '是':
-                    # 直接调用检索 传递上一个service_name和first_utterance
+                    # Directly call to retrieve and pass the last service_name and first_utterance
                     user_pipe[0].close()
                     response_pipe[1].close()
                     user_pipe[1].close()
@@ -70,7 +69,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     answer = get_retrieval(pipes_dict[conv_id][2], pipes_dict[conv_id][6])
                     messageSender(conv_id, answer, log, end=pipes_dict[conv_id][4])
                 else:
-                    # 重新诊断
+                    # Rediagnosis
                     p = Process(target=simulation_epoch,
                                 args=(
                                     (user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict, conv_id))
@@ -94,7 +93,6 @@ async def main_logic(para, mod, link, similarity_dict):
                         except OSError:
                             messageSender(conv_id, "会话结束", log, end=True)
                             continue
-
                         last_msg = rl_diagnose(user_pipe, response_pipe, pipes_dict, conv_id, log, link)
             # First conversation
             else:
@@ -119,7 +117,6 @@ async def main_logic(para, mod, link, similarity_dict):
                     except OSError:
                         messageSender(conv_id, "会话结束", log)
                         continue
-
                     last_msg = rl_diagnose(user_pipe, response_pipe, pipes_dict, conv_id, log, link)
 
         except ConnectionClosed as e:

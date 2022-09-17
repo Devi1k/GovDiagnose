@@ -11,6 +11,11 @@ def get_faq(first_utterance, service=""):
     similar_score, answer = faq_res['Similarity_score'], faq_res['answer']
     return similar_score, answer
 
+def get_business(first_utterance):
+    # todo: Determine interface
+    business_path = ""
+    faq_res = requests.get(business_path.format(first_utterance)).json()
+    return faq_res
 
 def get_retrieval(first_utterance, service_name):
     ir_path = "https://burninghell.xicp.net/IR?serviceName={}&firstUtterance={}"
