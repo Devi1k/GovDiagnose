@@ -113,14 +113,15 @@ def rl_diagnose(user_pipe, response_pipe, pipes_dict, conv_id, log, link):
     elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
         # todo: Add call retrieval lookup items
         msg = "抱歉，无法确定您想要办理的业务"
+        # msg = get_retrieval(pipes_dict[conv_id][2])
         pipes_dict[conv_id][4] = True
         messageSender(conv_id, msg, log, end=False)
         pipes_dict[conv_id][3].terminate()
         log.info('process kill')
         pipes_dict[conv_id][3].join()
         del pipes_dict[conv_id]
-        last_msg = "请问还有其他问题吗，如果有请继续提问"
-        messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=pipes_dict[conv_id][4])
+        # last_msg = "请问还有其他问题吗，如果有请继续提问"
+        # messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=pipes_dict[conv_id][4])
     else:
         pipes_dict[conv_id][4] = True
         user_pipe[0].close()
