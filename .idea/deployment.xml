@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="yanking@10.13.56.38:22 password" uploadOnCheckin="0ea3d675-8d19-4cb2-85ca-80b9d4967735" remoteFilesAllowedToDisappearOnAutoupload="false" showNewOnSourceInSync="false">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" showNewOnSourceInSync="false">
+    <option name="confirmBeforeUploading" value="false" />
     <serverData>
-      <paths name="yanking@10.13.56.38:22 password">
+      <paths name="38">
         <serverdata>
           <mappings>
             <mapping deploy="/home/yanking/disk1/nizepu/GovDiagnose" local="$PROJECT_DIR$" web="/" />
@@ -10,6 +11,5 @@
         </serverdata>
       </paths>
     </serverData>
-    <option name="myUploadOnCheckinName" value="yanking@10.13.56.38:22 password" />
   </component>
 </project>

@@ -1,0 +1,8 @@
+APScheduler==3.9.1
+gensim==4.2.0
+numpy==1.19.5
+PyYAML==6.0
+requests==2.27.1
+thulac==0.2.1
+torch==1.12.1
+websockets==10.3
