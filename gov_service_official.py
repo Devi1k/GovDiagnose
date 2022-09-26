@@ -112,7 +112,6 @@ async def main_logic(para, mod, link, similarity_dict):
                         msg = "抱歉，无法确定您想要办理的业务"
                         messageSender(conv_id, msg, log, end=False)
                         pipes_dict[conv_id][3].terminate()
-
                         log.info('process kill')
                         pipes_dict[conv_id][3].join()
                         del pipes_dict[conv_id]
