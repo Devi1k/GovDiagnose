@@ -13,7 +13,7 @@ def get_faq(first_utterance, service=""):
 
 def get_business(first_utterance):
     # todo: Determine interface
-    business_path = ""
+    # business_path = "http://10.13.56.38:5700/yewu?text=%E6%88%91%E6%83%B3%E8%A6%81%E6%94%B6%E8%97%8F"
     faq_res = requests.get(business_path.format(first_utterance)).json()
     return faq_res
 
