@@ -30,16 +30,17 @@ def get_nli(first_utterance, service_name):
     return nli_res
 
 
-def get_answer(first_utterance, service_name, log):
+def get_answer(first_utterance, service_name, log, intent_class=''):
     # --intention detection
-    intent_path = "https://miner.picp.net/intent?text={}"
-    intent_res = requests.get(intent_path.format(first_utterance)).json()
-    intent_class = intent_res['data']
-    if first_utterance == '认定高中教师资格的学历要求':
-        return '研究生或者大学本科学历'
-    elif first_utterance == '16岁以上护照有效期多长':
-        return '十年'
-    log.info("intention:{}".format(intent_class))
+    if intent_class == '':
+        intent_path = "https://miner.picp.net/intent?text={}"
+        intent_res = requests.get(intent_path.format(first_utterance)).json()
+        intent_class = intent_res['data']
+        if first_utterance == '认定高中教师资格的学历要求':
+            return '研究生或者大学本科学历'
+        elif first_utterance == '16岁以上护照有效期多长':
+            return '十年'
+        log.info("intention:{}".format(intent_class))
 
     if intent_class == "QA":  # --QA match
         qamatch_path = "https://burninghell.xicp.net/QAMatch?serviceName={}&question={}"
@@ -83,9 +84,9 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log):
     return last_msg
 
 
-def return_answer(pipes_dict, conv_id, service_name, log, link):
+def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class=''):
     try:
-        answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+        answer = get_answer(pipes_dict[conv_id][2], service_name, log, intent_class)
     except JSONDecodeError:
         answer = "抱歉，无法回答当前问题"
     service_link = str(link[service_name])
