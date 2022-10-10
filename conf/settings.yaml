@@ -3,7 +3,7 @@ warm_start: 1
 warm_start_epoch_number: 20
 train_mode: 0
 allow_wrong_service: 0
-max_turn: 8
+max_turn: 6
 saved_model: model/origin.pkl
 input_size_dqn: 1222
 hidden_size_dqn: 300

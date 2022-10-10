@@ -18,7 +18,7 @@ def messageSender(conv_id, msg, log, link="", service_name="", end=False):
                     "text": msg, "link": link, "service_name": service_name, "end": end
                 },
                 "type": "text",
-                "role": "sys_helper",  # 加一个机器人标识
+                "role": "sys_helper",
                 "timestamp": now_time}
     response_json = json.dumps(response)
     # print("sending msg", response_json)
