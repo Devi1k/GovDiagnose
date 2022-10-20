@@ -14,8 +14,8 @@ def get_faq(first_utterance, service=""):
 
 def get_business(first_utterance):
     business_path = "http://10.13.56.38:5700/yewu?text={}"
-    faq_res = requests.get(business_path.format(first_utterance)).json()
-    return faq_res
+    busienss_res = requests.get(business_path.format(first_utterance)).json()
+    return busienss_res
 
 
 def get_retrieval(first_utterance, service_name):
@@ -28,6 +28,12 @@ def get_nli(first_utterance, service_name):
     nli_path = "https://burninghell.xicp.net/zmytest?Service_name={}&First_utterance={}"
     nli_res = requests.get(nli_path.format(service_name, first_utterance)).text
     return nli_res
+
+
+def get_related_title(first_utterance):
+    title_path = "http://10.13.56.38:5700/getRelatedTitle?query={first_utterance}"
+    title_res = requests.get(title_path.format(first_utterance)).text
+    return title_res['titleList']
 
 
 def get_answer(first_utterance, service_name, log, intent_class=''):
