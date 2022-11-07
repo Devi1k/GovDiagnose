@@ -91,7 +91,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     if pipes_dict[conv_id][6] is True:
                         pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                         pipes_dict[conv_id][2])
-                        similar_score, answer = get_faq(pipes_dict[conv_id][2])
+                        # similar_score, answer = get_faq(pipes_dict[conv_id][2])
                         pipes_dict[conv_id][6] = False
 
                     user_text = {'text': pipes_dict[conv_id][2]}
@@ -159,7 +159,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 if pipes_dict[conv_id][6] is True:
                     pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                     pipes_dict[conv_id][2])
-                    similar_score, answer = get_faq(pipes_dict[conv_id][2])
+                    # similar_score, answer = get_faq(pipes_dict[conv_id][2])
                     pipes_dict[conv_id][6] = False
                 # similar_score = 0.5
                 if float(similar_score) > 0.6:

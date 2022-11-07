@@ -31,8 +31,10 @@ def get_nli(first_utterance, service_name):
 
 
 def get_related_title(first_utterance):
-    title_path = "http://10.13.56.38:5700/getRelatedTitle?query={first_utterance}"
-    title_res = requests.get(title_path.format(first_utterance)).text
+    title_path = "http://10.13.56.38:5700/getRelatedTitle?query={}"
+    # title_res = requests.get(title_path.format(first_utterance)).text
+    title_list = ['机动车登记', '机动车办理', '机动车', '机动']
+    return title_list
     return title_res['titleList']
 
 

@@ -18,12 +18,13 @@ def messageSender(conv_id, log, msg="", options=None, link="", service_name="", 
     response = {"conv_id": conv_id,
                 "content": {
                     "text": msg, "link": link, "service_name": service_name, "end": end, "options": options
+                    # "text": msg, "link": link, "service_name": service_name, "end": end,
                 },
                 "type": "text",
                 "role": "sys_helper",
                 "timestamp": now_time}
     response_json = json.dumps(response)
-    # print("sending msg", response_json)
+    log.info("sending msg {}".format(response_json))
     headers = {'Content-Type': 'application/json'}
     r = requests.post("https://asueeer.com/api/im/send_message?mock_login=123", data=response_json,
                       headers=headers)
