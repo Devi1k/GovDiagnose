@@ -32,9 +32,9 @@ def get_nli(first_utterance, service_name):
 
 def get_related_title(first_utterance):
     title_path = "http://10.13.56.38:5700/getRelatedTitle?query={}"
-    # title_res = requests.get(title_path.format(first_utterance)).text
-    title_list = ['机动车登记', '机动车办理', '机动车', '机动']
-    return title_list
+    title_res = requests.get(title_path.format(first_utterance)).text
+    # title_list = ['机动车登记与临时通行牌证核发-机动车登记', '机动车办理', '机动车', '机动']
+    # return title_list
     return title_res['titleList']
 
 
@@ -98,12 +98,12 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
     except JSONDecodeError:
         answer = "抱歉，无法回答当前问题"
     service_link = str(link[service_name])
-    messageSender(conv_id, answer, log, service_link, end=pipes_dict[conv_id][4])
+    messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
     log.info('process kill')
     pipes_dict[conv_id][3].join()
     last_msg = "请问还有其他问题吗，如果有请继续提问"
-    messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=True,
+    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
                   service_name=service_name)
     return last_msg
