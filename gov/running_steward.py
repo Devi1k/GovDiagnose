@@ -15,7 +15,7 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
     dialogue_manager = DialogueManager(user=user, agent=agent, parameter=parameter, log=log,
                                        similarity_dict=similarity_dict)
     dialogue_manager.set_agent(agent=agent)
-
+    positive_list = ['是的', '是', '没错', '对', '对的,', '嗯']
     episode_over = False
     explicit = ""
     try:
@@ -68,7 +68,7 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
         judge = False
         implicit = receive['text']
         # print(implicit)
-        if implicit == "是":
+        if implicit in positive_list:
             judge = True
             with open(user.goal_set_path, 'r') as f:
                 goal_set = json.load(f)
