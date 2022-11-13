@@ -140,11 +140,13 @@ if __name__ == '__main__':
     stopwords = [i.strip() for i in open('../data/baidu_stopwords.txt').readlines()]
     word_dict = load_dict('../data/new_dict.txt')
     thu = thulac.thulac(user_dict='../data/new_dict.txt', seg_only=True)
+    for c in thu.cut('符合户外广告设置规划，并与周围建筑、街景环境相协调 符合户外广告设置规范 采用新技术、新材料'):
+        print(c[0], end=' ')
     with open('../data/similar.json', 'r') as f:
         similarity_dict = json.load(f)
     load_end = time.time()
     print("load:", load_end - load_start)
-    question = "社会组织（社会团体、民办非企业单位、基金会）成立、变更、注销登记--基金会登记是否有运行系统？"
+    question = "我想挂个牌匾需要办理什么业务？"
 
     while True:
         start = time.time()

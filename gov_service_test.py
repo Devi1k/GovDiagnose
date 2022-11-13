@@ -21,7 +21,7 @@ heart = {"type": 10000, "msg": "heart_beat"}
 
 
 async def main_logic(para, mod, link, similarity_dict):
-    global first_utterance, service_name, conv_id, end_flag, last_msg, start_time, end_time, pipes_dict
+    global first_utterance, service_name, conv_id, end_flag, last_msg, start_time, end_time, pipes_dict, positive_list
     address = 'wss://asueeer.com/ws?mock_login=123'
     async for websocket in websockets.connect(address, ping_interval=6000):
         try:
@@ -56,7 +56,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 p.start()
                 # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, False, False, True,
-                                       False]
+                                       ""]
             # Handle multiple rounds of dialogues  Continue to speak
             elif conv_id in pipes_dict and pipes_dict[conv_id][5] is False and pipes_dict[conv_id][4] is True:
                 log.info("continue to ask")
@@ -69,15 +69,18 @@ async def main_logic(para, mod, link, similarity_dict):
                     pipes_dict[conv_id][2] = msg['content']['text']
                     messageSender(conv_id=conv_id, msg="请问您询问的问题是否与上述业务相关", log=log)
                     continue
-                if msg['content']['text'] == '是':
+                if msg['content']['text'] in positive_list:
                     # Directly call to retrieve and pass the last service_name and first_utterance
                     user_pipe[0].close()
                     response_pipe[1].close()
                     user_pipe[1].close()
                     response_pipe[0].close()
                     pipes_dict[conv_id][4] = True
-                    answer = get_retrieval(pipes_dict[conv_id][2], pipes_dict[conv_id][6])
+                    answer = get_multi_res(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
                     messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
+                    last_msg = "请问还有其他问题吗，如果有请继续提问"
+                    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
+                                  service_name=service_name)
                 else:
                     # Rediagnosis
                     p = Process(target=simulation_epoch,
@@ -86,14 +89,13 @@ async def main_logic(para, mod, link, similarity_dict):
                     p.start()
                     # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish
                     pipes_dict[conv_id] = [user_pipe, response_pipe, pipes_dict[conv_id][2], p, False, False, True,
-                                           False]
+                                           ""]
                     similar_score, answer = 0, ""
                     if pipes_dict[conv_id][6] is True:
                         pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                         pipes_dict[conv_id][2])
                         # similar_score, answer = get_faq(pipes_dict[conv_id][2])
                         pipes_dict[conv_id][6] = False
-
                     user_text = {'text': pipes_dict[conv_id][2]}
                     log.info(user_text)
                     if float(similar_score) > 0.6:
@@ -120,16 +122,12 @@ async def main_logic(para, mod, link, similarity_dict):
                             msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                             last_msg = msg
                             messageSender(conv_id=conv_id, msg=msg, log=log)
-                        # elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
-                        #     msg = "抱歉，无法确定您想要办理的业务"
-                        #     # 需根据返回值设定service_name，然后直接调用get_answer,获取答案再message_sender
-                        #     # msg = get_retrieval(pipes_dict[conv_id][2])
-                        #     messageSender(conv_id, msg, log, end=False)
                         else:
                             pipes_dict[conv_id][4] = True
                             user_pipe[0].close()
                             response_pipe[1].close()
                             service_name = recv['service']
+                            pipes_dict[conv_id][7] = service_name
                             log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
                             log.info("service_name: {}".format(service_name))
                             try:
@@ -195,6 +193,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         user_pipe[0].close()
                         response_pipe[1].close()
                         service_name = recv['service']
+                        pipes_dict[conv_id][7] = service_name
                         log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
                         log.info("service_name: {}".format(service_name))
                         last_msg = return_answer(pipes_dict=pipes_dict, conv_id=conv_id, service_name=service_name,
@@ -218,7 +217,7 @@ if __name__ == '__main__':
 
     config_file = './conf/settings.yaml'
     parameter = get_config(config_file)
-
+    positive_list = ['是的', '是', '没错', '对', '对的,', '嗯']
     link_file = 'data/link.json'
     with open(link_file, 'r') as f:
         link = json.load(f)

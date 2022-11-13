@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import copy
-from random import randint
 
 import gov.dialogue_configuration as dialogue_configuration
 from gov.agent import Agent
@@ -17,13 +16,13 @@ class AgentRule(Agent):
     def next(self, state, turn, greedy_strategy):
         score_max = 0
         max = 0
-        #delete = 0
+        # delete = 0
         score = []
         for i in range(len(self.slot_max)):
             score.append(0)
         # pop掉wrong max_slot
         # print(state["current_slots"]["agent_request_slots"].keys()) #为什么这里是空啊
-        #3.20 lyj改
+        # 3.20 lyj改
         """
         if state["user_action"]["user_judge"] == False:
             for i in range(len(self.slot_max)):
@@ -60,12 +59,12 @@ class AgentRule(Agent):
         #
         inform_slots = list(state["current_slots"]["inform_slots"].keys())
         for i in range(len(self.slot_max)):
-            for j in range(len(inform_slots)):
-                if inform_slots[j] in self.requirement_weight[i].keys():  # 如果该事项包含的slots中有inform的slot，该事项的score就加上该slot的权重
-                    if state["current_slots"]["inform_slots"][inform_slots[j]] == True:
-                        score[i] += self.requirement_weight[i][inform_slots[j]]
-                    elif state["current_slots"]["inform_slots"][inform_slots[j]] == False:
-                        score[i] -= self.requirement_weight[i][inform_slots[j]]
+            for inform in inform_slots:
+                if inform in self.requirement_weight[i].keys():
+                    if state["current_slots"]["inform_slots"][inform] == True:
+                        score[i] += self.requirement_weight[i][inform]
+                    elif state["current_slots"]["inform_slots"][inform] == False:
+                        score[i] -= self.requirement_weight[i][inform]
                 else:
                     pass
             if score[i] > score_max:  # 然后比较score的值，选出最大的那个，用max记下score最大的位置

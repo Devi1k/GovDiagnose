@@ -31,11 +31,9 @@ def get_nli(first_utterance, service_name):
 
 
 def get_related_title(first_utterance):
-    title_path = "http://10.13.56.38:5700/getRelatedTitle?query={}"
-    title_res = requests.get(title_path.format(first_utterance)).text
-    # title_list = ['机动车登记与临时通行牌证核发-机动车登记', '机动车办理', '机动车', '机动']
-    # return title_list
-    return title_res['titleList']
+    title_path = "https://burninghell.xicp.net/getRelatedTitle?query={}"
+    title_res = requests.get(title_path.format(first_utterance)).json()["titleList"]
+    return title_res[:5]
 
 
 def get_answer(first_utterance, service_name, log, intent_class=''):
@@ -97,7 +95,10 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
         answer = get_answer(pipes_dict[conv_id][2], service_name, log, intent_class)
     except JSONDecodeError:
         answer = "抱歉，无法回答当前问题"
-    service_link = str(link[service_name])
+    try:
+        service_link = str(link[service_name])
+    except KeyError:
+        service_link = ""
     messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
@@ -107,3 +108,10 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
     messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
                   service_name=service_name)
     return last_msg
+
+
+def get_multi_res(first_utterance, service_name):
+    similar_score, answer = get_faq(first_utterance=first_utterance, service=service_name)
+    if float(similar_score) < 0.6:
+        answer = get_retrieval(first_utterance=first_utterance, service_name=service_name)
+    return answer

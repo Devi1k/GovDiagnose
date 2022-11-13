@@ -15,4 +15,4 @@ pipe_dict中的参数
 4. single_finish 单一对话结束状态
 5. all_finish 整体对话结束状态
 6. is_first 是否是第一句话
-7. is_multiround 是否是多轮次对话
+7. service_name 当前对话事项名称
