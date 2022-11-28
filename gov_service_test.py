@@ -79,6 +79,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     answer = get_multi_res(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
                     messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
                     last_msg = "请问还有其他问题吗，如果有请继续提问"
+                    pipes_dict[conv_id][2] = ""
                     messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
                                   service_name=service_name)
                 else:
@@ -94,7 +95,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     if pipes_dict[conv_id][6] is True:
                         pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                         pipes_dict[conv_id][2])
-                        # similar_score, answer = get_faq(pipes_dict[conv_id][2])
+                        similar_score, answer = get_faq(pipes_dict[conv_id][2])
                         pipes_dict[conv_id][6] = False
                     user_text = {'text': pipes_dict[conv_id][2]}
                     log.info(user_text)
@@ -119,7 +120,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         pipes_dict[conv_id][4] = recv['end_flag']
                         # Continue to input without ending
                         if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
-                            msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
+                            msg = "您询问的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                             last_msg = msg
                             messageSender(conv_id=conv_id, msg=msg, log=log)
                         else:
@@ -134,7 +135,10 @@ async def main_logic(para, mod, link, similarity_dict):
                                 answer = get_answer(pipes_dict[conv_id][2], service_name, log)
                             except JSONDecodeError:
                                 answer = "抱歉，无法回答当前问题"
-                            service_link = str(link[service_name])
+                            try:
+                                service_link = str(link[service_name])
+                            except KeyError:
+                                service_link = ""
                             messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link,
                                           end=pipes_dict[conv_id][4])
                             pipes_dict[conv_id][2] = ""
@@ -157,7 +161,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 if pipes_dict[conv_id][6] is True:
                     pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                     pipes_dict[conv_id][2])
-                    # similar_score, answer = get_faq(pipes_dict[conv_id][2])
+                    similar_score, answer = get_faq(pipes_dict[conv_id][2])
                     pipes_dict[conv_id][6] = False
                 # similar_score = 0.5
                 if float(similar_score) > 0.6:
@@ -181,7 +185,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     pipes_dict[conv_id][4] = recv['end_flag']
                     # Continue to input without ending
                     if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
-                        msg = "您办理的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
+                        msg = "您询问的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                         last_msg = msg
                         messageSender(conv_id=conv_id, msg=msg, log=log)
                     elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':

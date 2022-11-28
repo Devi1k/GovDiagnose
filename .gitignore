@@ -2,3 +2,4 @@
 /data/wb.text.model.syn1neg.npy
 /data/wb.text.model.wv.vectors.npy
 /log/*
+/data/goal_set*

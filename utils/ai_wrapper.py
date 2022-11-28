@@ -7,15 +7,17 @@ from utils.message_sender import messageSender
 
 def get_faq(first_utterance, service=""):
     faq_path = "https://miner.picp.net/FAQ?First_utterance={}&Service_name={}"
+    first_utterance = service + first_utterance
     faq_res = requests.get(faq_path.format(first_utterance, service)).json()
     similar_score, answer = faq_res['Similarity_score'], faq_res['answer']
     return similar_score, answer
 
 
 def get_business(first_utterance):
-    business_path = "http://10.13.56.38:5700/yewu?text={}"
-    busienss_res = requests.get(business_path.format(first_utterance)).json()
-    return busienss_res
+    business_path = "https://miner.picp.net/yewu?text={}"
+    res = requests.get(business_path.format(first_utterance)).json()
+    business_res = '(' + res['type'] + ')'
+    return business_res
 
 
 def get_retrieval(first_utterance, service_name):
@@ -32,8 +34,9 @@ def get_nli(first_utterance, service_name):
 
 def get_related_title(first_utterance):
     title_path = "https://burninghell.xicp.net/getRelatedTitle?query={}"
-    title_res = requests.get(title_path.format(first_utterance)).json()["titleList"]
-    return title_res[:5]
+    title_res = requests.get(title_path.format(first_utterance)).json()["titleList"][:5]
+    title_res.append('以上都不是')
+    return title_res
 
 
 def get_answer(first_utterance, service_name, log, intent_class=''):
@@ -80,13 +83,13 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log):
     user_pipe[1].close()
     response_pipe[0].close()
     pipes_dict[conv_id][4] = True
-    messageSender(conv_id, answer, log, end=pipes_dict[conv_id][4])
+    messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
     log.info('process kill')
     pipes_dict[conv_id][3].join()
     last_msg = "请问还有其他问题吗，如果有请继续提问"
-    messageSender(conv_id, "请问还有其他问题吗，如果有请继续提问", log, "", end=pipes_dict[conv_id][4])
+    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=pipes_dict[conv_id][4])
     return last_msg
 
 
@@ -99,6 +102,8 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
         service_link = str(link[service_name])
     except KeyError:
         service_link = ""
+    business = get_business(first_utterance=pipes_dict[conv_id][2])
+    answer = answer + business
     messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
