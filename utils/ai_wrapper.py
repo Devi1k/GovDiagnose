@@ -74,7 +74,7 @@ def get_answer(first_utterance, service_name, log, intent_class=''):
 
     else:  # --diagnose
         log.info("diagnosis: {}".format(service_name))
-        return "您要办理的业务属于:" + service_name
+        return "您询问的业务属于:" + service_name
 
 
 def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log):
