@@ -188,7 +188,8 @@ async def main_logic(para, mod, link, similarity_dict):
                         msg = "您询问的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
                         last_msg = msg
                         messageSender(conv_id=conv_id, msg=msg, log=log)
-                    elif pipes_dict[conv_id][4] is True and recv['action'] == 'request':
+                    elif pipes_dict[conv_id][4] is True and recv['action'] == 'request' and user_text[
+                        'text'] not in positive_list:
                         options = get_related_title(pipes_dict[conv_id][2])
                         pipes_dict[conv_id][4] = True
                         messageSender(conv_id=conv_id, log=log, options=options, end=False)
