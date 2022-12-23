@@ -16,8 +16,7 @@ def get_faq(first_utterance, service=""):
 def get_business(first_utterance):
     business_path = "https://miner.picp.net/yewu?text={}"
     res = requests.get(business_path.format(first_utterance)).json()
-    business_res = '(' + res['type'] + ')'
-    return business_res
+    return res['type']
 
 
 def get_retrieval(first_utterance, service_name):
@@ -103,7 +102,7 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
     except KeyError:
         service_link = ""
     business = get_business(first_utterance=pipes_dict[conv_id][2])
-    answer = answer + business
+    answer = answer + '\n' + '(' + service_name + '——' + business + ')'
     messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
@@ -120,5 +119,5 @@ def get_multi_res(first_utterance, service_name):
     if float(similar_score) < 0.6:
         answer = get_retrieval(first_utterance=first_utterance, service_name=service_name)
     business = get_business(first_utterance=first_utterance)
-    answer = answer + business
+    answer = answer + '\n' + '(' + service_name + '——' + business + ')'
     return answer

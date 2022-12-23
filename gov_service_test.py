@@ -134,6 +134,8 @@ async def main_logic(para, mod, link, similarity_dict):
                             log.info("service_name: {}".format(service_name))
                             try:
                                 answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+                                business = get_business(first_utterance=pipes_dict[conv_id][2])
+                                answer = answer + '\n' + '(' + pipes_dict[conv_id][7] + '——' + business + ')'
                             except JSONDecodeError:
                                 answer = "抱歉，无法回答当前问题"
                             try:

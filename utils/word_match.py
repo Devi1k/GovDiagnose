@@ -100,8 +100,8 @@ def replace_list(seg_list, word_dict, similarity_dict, model):
         to_check.append(x)
         # seek_end = time.time()
         # print("seek:", seek_end - seek_start)
-        for i, _u in enumerate(u):
-            to_check.append(u[i][0])
+        for _u in u:
+            to_check.append(_u)
         to_check = list(reversed(to_check))
         # com_start = time.time()
         for k in to_check:
