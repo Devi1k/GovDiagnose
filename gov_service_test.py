@@ -38,6 +38,7 @@ async def main_logic(para, mod, link, similarity_dict):
             try:
                 if msg['content']['service_name'] is not None:
                     service_name = msg['content']['service_name']
+                    pipes_dict[conv_id][7] = service_name
                     first_utterance = pipes_dict[conv_id][2]
                     last_msg = return_answer(pipes_dict=pipes_dict, conv_id=conv_id, service_name=service_name, log=log,
                                              link=link, intent_class='IR')

@@ -119,4 +119,6 @@ def get_multi_res(first_utterance, service_name):
     similar_score, answer = get_faq(first_utterance=first_utterance, service=service_name)
     if float(similar_score) < 0.6:
         answer = get_retrieval(first_utterance=first_utterance, service_name=service_name)
+    business = get_business(first_utterance=first_utterance)
+    answer = answer + business
     return answer
