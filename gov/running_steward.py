@@ -82,6 +82,8 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
                 goal_set['user_action']['user_judge'] = False
             with open(user.goal_set_path, 'w') as f:
                 json.dump(goal_set, f)
+            # episode_over = True
+            # break
         if agent_action['action'] == 'inform' and judge is True:
             # out_pipe.send("请问还有别的问题吗")
             episode_over = True

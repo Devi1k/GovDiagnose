@@ -32,11 +32,20 @@ def load_dict(file_path):
     return word_dictionary
 
 
-def lev(first, second, utterance=False):
+def lev(first, second, utterance=False, service=False):
+    """
+
+    :param first: utterance / candidate service
+    :param second: service name
+    :param utterance:是否计算utterance与事项
+    :param service:是否诊断前的阈值计算
+    :return:
+    """
     sentence1_len, sentence2_len = len(first), len(second)
     maxlen = max(sentence1_len, sentence2_len)
-    if sentence1_len > sentence2_len:
-        first, second = second, first
+    if not service:
+        if sentence1_len > sentence2_len:
+            first, second = second, first
 
     distances = range(len(first) + 1)
     count = 0
@@ -58,7 +67,8 @@ def lev(first, second, utterance=False):
     d = float((maxlen - levenshtein) / maxlen)
     s = d + count / len(second)
     # smoothing
-    # s = (sigmoid(d * 6) - 0.5) * 2
+    if not utterance and not service:
+        s = (sigmoid(d * 6) - 0.5) * 2
     # print("smoothing[%s| %s]: %s -> %s" % (sentence1, sentence2, d, s))
     return s
 
@@ -146,7 +156,7 @@ def is_multi_round(utterance, service_name):
     candidate_service = ""
     max_score = 0
     for o in options:
-        distance = lev(utterance, o, True)
+        distance = lev(utterance, o, True, True)
         if max_score < distance:
             max_score = distance
             candidate_service = o
@@ -159,7 +169,7 @@ def is_multi_round(utterance, service_name):
         # todo：候选事项和上一轮事项几乎无关分两种情况：
         #  1、用户事项变换
         #  2、用户对话实际上是与上一轮有关 却检索出其他事项，同时事项与上一轮无关（解决不了）
-        service_distance = lev(candidate_service, service_name, False)
+        service_distance = lev(candidate_service, service_name)
         if service_distance > service_threshold:
             return True, service_distance
         else:

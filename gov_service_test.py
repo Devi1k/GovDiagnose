@@ -13,7 +13,7 @@ from gov.running_steward import simulation_epoch
 from utils.ai_wrapper import *
 from utils.logger import *
 from utils.message_sender import messageSender
-from utils.word_match import is_multi_round
+from utils.word_match import is_multi_round, lev
 
 log = Logger().getLogger()
 count = 0
@@ -98,19 +98,6 @@ async def main_logic(para, mod, link, similarity_dict):
                     pipes_dict[conv_id][2] = ""
                     messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
                                   service_name=service_name)
-                # if msg['content']['text'] in positive_list:
-                #     # Directly call to retrieve and pass the last service_name and first_utterance
-                #     user_pipe[0].close()
-                #     response_pipe[1].close()
-                #     user_pipe[1].close()
-                #     response_pipe[0].close()
-                #     pipes_dict[conv_id][4] = True
-                #     answer = get_multi_res(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
-                #     messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
-                #     last_msg = "请问还有其他问题吗，如果有请继续提问"
-                #     pipes_dict[conv_id][2] = ""
-                #     messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
-                #                   service_name=service_name)
                 else:
                     log.info("Different matter")
                     # Rediagnosis
@@ -135,26 +122,18 @@ async def main_logic(para, mod, link, similarity_dict):
                     else:
                         # After initializing the session, send judgments and descriptions to the model (including
                         # subsequent judgments and supplementary descriptions).
-                        try:
-                            user_pipe[0].send(user_text)
-                        except OSError:
-                            messageSender(conv_id=conv_id, msg="会话结束", log=log, end=True)
-                            continue
-                        recv = response_pipe[1].recv()
-                        # The message format of the model received from the model is
-                        """
-                        {
-                            "service": agent_action["inform_slots"]["service"] or ,   service为业务名
-                            "end_flag": episode_over  会话是否结束
-                        }
-                        """
-                        pipes_dict[conv_id][4] = recv['end_flag']
-                        # Continue to input without ending
-                        if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
-                            msg = "您询问的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
-                            last_msg = msg
-                            messageSender(conv_id=conv_id, msg=msg, log=log)
-                        else:
+
+                        # IR
+                        options = get_related_title(pipes_dict[conv_id][2])
+                        business_threshold = 0.9524
+                        candidate_service = ""
+                        max_score = 0
+                        for o in options:
+                            distance = lev(pipes_dict[conv_id][2], o, True, True)
+                            if max_score < distance:
+                                max_score = distance
+                                candidate_service = o
+                        if max_score > business_threshold:
                             pipes_dict[conv_id][4] = True
                             pipes_dict[conv_id][6] = True
                             user_pipe[0].close()
@@ -162,26 +141,59 @@ async def main_logic(para, mod, link, similarity_dict):
                             service_name = recv['service']
                             pipes_dict[conv_id][7] = service_name
                             log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
-                            log.info("service_name: {}".format(service_name))
+                            log.info("service_name: {}".format(candidate_service))
+                            last_msg = return_answer(pipes_dict=pipes_dict, conv_id=conv_id,
+                                                     service_name=candidate_service,
+                                                     log=log,
+                                                     link=link)
+                        else:
                             try:
-                                answer = get_answer(pipes_dict[conv_id][2], service_name, log)
-                                business = get_business(first_utterance=pipes_dict[conv_id][2])
-                                answer = answer + '\n' + '(' + pipes_dict[conv_id][7] + '——' + business + ')'
-                            except JSONDecodeError:
-                                answer = "抱歉，无法回答当前问题"
-                            try:
-                                service_link = str(link[service_name])
-                            except KeyError:
-                                service_link = ""
-                            messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link,
-                                          end=pipes_dict[conv_id][4])
-                            pipes_dict[conv_id][2] = ""
-                            pipes_dict[conv_id][3].terminate()
-                            log.info('process kill')
-                            pipes_dict[conv_id][3].join()
-                            last_msg = "请问还有其他问题吗，如果有请继续提问"
-                            messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
-                                          service_name=service_name)
+                                user_pipe[0].send(user_text)
+                            except OSError:
+                                messageSender(conv_id=conv_id, msg="会话结束", log=log, end=True)
+                                continue
+                            recv = response_pipe[1].recv()
+                            # The message format of the model received from the model is
+                            """
+                            {
+                                "service": agent_action["inform_slots"]["service"] or ,   service为业务名
+                                "end_flag": episode_over  会话是否结束
+                            }
+                            """
+                            pipes_dict[conv_id][4] = recv['end_flag']
+                            # Continue to input without ending
+                            if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
+                                msg = "您询问的业务是否涉及" + recv['service']
+                                last_msg = msg
+                                messageSender(conv_id=conv_id, msg=msg, log=log)
+                            else:
+                                pipes_dict[conv_id][4] = True
+                                pipes_dict[conv_id][6] = True
+                                user_pipe[0].close()
+                                response_pipe[1].close()
+                                service_name = recv['service']
+                                pipes_dict[conv_id][7] = service_name
+                                log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
+                                log.info("service_name: {}".format(service_name))
+                                try:
+                                    answer = get_answer(pipes_dict[conv_id][2], service_name, log)
+                                    business = get_business(first_utterance=pipes_dict[conv_id][2])
+                                    answer = answer + '\n' + '(' + pipes_dict[conv_id][7] + '——' + business + ')'
+                                except JSONDecodeError:
+                                    answer = "抱歉，无法回答当前问题"
+                                try:
+                                    service_link = str(link[service_name])
+                                except KeyError:
+                                    service_link = ""
+                                messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link,
+                                              end=pipes_dict[conv_id][4])
+                                pipes_dict[conv_id][2] = ""
+                                pipes_dict[conv_id][3].terminate()
+                                log.info('process kill')
+                                pipes_dict[conv_id][3].join()
+                                last_msg = "请问还有其他问题吗，如果有请继续提问"
+                                messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
+                                              service_name=service_name)
             #
             else:
                 user_pipe, response_pipe, *_ = pipes_dict[conv_id]
@@ -204,42 +216,66 @@ async def main_logic(para, mod, link, similarity_dict):
                 else:
                     user_text = msg['content']
                     log.info(user_text)
-                    try:
-                        user_pipe[0].send(user_text)
-                    except OSError:
-                        messageSender(conv_id=conv_id, msg="会话结束", log=log)
-                        continue
-                    recv = response_pipe[1].recv()
-                    # The message format of the model received from the model is
-                    """
-                    {
-                        "service": agent_action["inform_slots"]["service"] or ,   service为业务名
-                        "end_flag": episode_over  会话是否结束
-                    }
-                    """
-                    pipes_dict[conv_id][4] = recv['end_flag']
-                    # Continue to input without ending
-                    if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
-                        msg = "您询问的业务是否涉及" + recv['service'] + "业务，如果是，请输入是；如果不涉及，请进一步详细说明"
-                        last_msg = msg
-                        messageSender(conv_id=conv_id, msg=msg, log=log)
-                    elif pipes_dict[conv_id][4] is True and recv['action'] == 'request' and user_text[
-                        'text'] not in positive_list:
-                        options = get_related_title(pipes_dict[conv_id][2])
-                        pipes_dict[conv_id][4] = True
-                        messageSender(conv_id=conv_id, log=log, options=options, end=False)
-                    else:
+
+                    # IR
+                    options = get_related_title(pipes_dict[conv_id][2])
+                    business_threshold = 0.9524
+                    candidate_service = ""
+                    max_score = 0
+                    for o in options:
+                        distance = lev(pipes_dict[conv_id][2], o, True, True)
+                        if max_score < distance:
+                            max_score = distance
+                            candidate_service = o
+                    if max_score > business_threshold:
                         pipes_dict[conv_id][4] = True
                         pipes_dict[conv_id][6] = True
                         user_pipe[0].close()
                         response_pipe[1].close()
-                        service_name = recv['service']
-                        pipes_dict[conv_id][7] = service_name
+                        pipes_dict[conv_id][7] = candidate_service
                         log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
-                        log.info("service_name: {}".format(service_name))
-                        last_msg = return_answer(pipes_dict=pipes_dict, conv_id=conv_id, service_name=service_name,
+                        log.info("service_name: {}".format(candidate_service))
+                        last_msg = return_answer(pipes_dict=pipes_dict, conv_id=conv_id,
+                                                 service_name=candidate_service,
                                                  log=log,
                                                  link=link)
+                    else:
+                        try:
+                            user_pipe[0].send(user_text)
+                        except OSError:
+                            messageSender(conv_id=conv_id, msg="会话结束", log=log)
+                            continue
+                        recv = response_pipe[1].recv()
+                        # The message format of the model received from the model is
+                        """
+                        {
+                            "service": agent_action["inform_slots"]["service"] or ,   service为业务名
+                            "end_flag": episode_over  会话是否结束
+                        }
+                        """
+                        pipes_dict[conv_id][4] = recv['end_flag']
+                        # Continue to input without ending
+                        if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
+                            msg = "您询问的业务是否涉及" + recv['service']
+                            last_msg = msg
+                            messageSender(conv_id=conv_id, msg=msg, log=log)
+                        elif pipes_dict[conv_id][4] is True and recv['action'] == 'request' and user_text[
+                            'text'] not in positive_list:
+                            options = get_related_title(pipes_dict[conv_id][2])
+                            pipes_dict[conv_id][4] = True
+                            messageSender(conv_id=conv_id, log=log, options=options, end=False)
+                        else:
+                            pipes_dict[conv_id][4] = True
+                            pipes_dict[conv_id][6] = True
+                            user_pipe[0].close()
+                            response_pipe[1].close()
+                            service_name = recv['service']
+                            pipes_dict[conv_id][7] = service_name
+                            log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
+                            log.info("service_name: {}".format(service_name))
+                            last_msg = return_answer(pipes_dict=pipes_dict, conv_id=conv_id, service_name=service_name,
+                                                     log=log,
+                                                     link=link)
 
         except ConnectionClosed as e:
             log.info(e)
