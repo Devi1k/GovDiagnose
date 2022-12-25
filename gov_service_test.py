@@ -13,6 +13,7 @@ from gov.running_steward import simulation_epoch
 from utils.ai_wrapper import *
 from utils.logger import *
 from utils.message_sender import messageSender
+from utils.word_match import is_multi_round
 
 log = Logger().getLogger()
 count = 0
@@ -42,6 +43,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     first_utterance = pipes_dict[conv_id][2]
                     last_msg = return_answer(pipes_dict=pipes_dict, conv_id=conv_id, service_name=service_name, log=log,
                                              link=link, intent_class='IR')
+                    pipes_dict[conv_id][6] = True
 
                     continue
             except KeyError:
@@ -55,7 +57,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             args=(
                                 (user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict, conv_id))
                 p.start()
-                # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish
+                # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish,  first_utt, service_name
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, False, False, True,
                                        ""]
             # Handle multiple rounds of dialogues  Continue to speak
@@ -66,30 +68,57 @@ async def main_logic(para, mod, link, similarity_dict):
                     pipes_dict[conv_id][2] = ""
                     messageSender(conv_id=conv_id, msg=last_msg, log=log)
                     continue
+                multi = True
                 if pipes_dict[conv_id][2] == "":
                     pipes_dict[conv_id][2] = msg['content']['text']
-                    messageSender(conv_id=conv_id, msg="请问您询问的问题是否与上述业务相关", log=log)
-                    continue
-                if msg['content']['text'] in positive_list:
-                    # Directly call to retrieve and pass the last service_name and first_utterance
+                    if pipes_dict[conv_id][6] is True:
+                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
+                                                        pipes_dict[conv_id][2])
+
+                        similar_score, answer = get_faq(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
+                        pipes_dict[conv_id][6] = False
+                    if float(similar_score) > 0.9:
+                        last_msg = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log)
+                        pipes_dict[conv_id][6] = True
+                        continue
+                    multi, similarity = is_multi_round(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
+                    # messageSender(conv_id=conv_id, msg="请问您询问的问题是否与上述业务相关", log=log)
+                    # continue
+                if multi:
+                    log.info("Same matter.")
                     user_pipe[0].close()
                     response_pipe[1].close()
                     user_pipe[1].close()
                     response_pipe[0].close()
                     pipes_dict[conv_id][4] = True
+                    pipes_dict[conv_id][6] = True
                     answer = get_multi_res(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
                     messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
                     last_msg = "请问还有其他问题吗，如果有请继续提问"
                     pipes_dict[conv_id][2] = ""
                     messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
                                   service_name=service_name)
+                # if msg['content']['text'] in positive_list:
+                #     # Directly call to retrieve and pass the last service_name and first_utterance
+                #     user_pipe[0].close()
+                #     response_pipe[1].close()
+                #     user_pipe[1].close()
+                #     response_pipe[0].close()
+                #     pipes_dict[conv_id][4] = True
+                #     answer = get_multi_res(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
+                #     messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
+                #     last_msg = "请问还有其他问题吗，如果有请继续提问"
+                #     pipes_dict[conv_id][2] = ""
+                #     messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
+                #                   service_name=service_name)
                 else:
+                    log.info("Different matter")
                     # Rediagnosis
                     p = Process(target=simulation_epoch,
                                 args=(
                                     (user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict, conv_id))
                     p.start()
-                    # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish
+                    # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish, first_utt, service_name
                     pipes_dict[conv_id] = [user_pipe, response_pipe, pipes_dict[conv_id][2], p, False, False, True,
                                            ""]
                     similar_score, answer = 0, ""
@@ -102,6 +131,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     log.info(user_text)
                     if float(similar_score) > 0.6:
                         last_msg = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log)
+                        pipes_dict[conv_id][6] = True
                     else:
                         # After initializing the session, send judgments and descriptions to the model (including
                         # subsequent judgments and supplementary descriptions).
@@ -126,6 +156,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             messageSender(conv_id=conv_id, msg=msg, log=log)
                         else:
                             pipes_dict[conv_id][4] = True
+                            pipes_dict[conv_id][6] = True
                             user_pipe[0].close()
                             response_pipe[1].close()
                             service_name = recv['service']
@@ -169,6 +200,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 # similar_score = 0.5
                 if float(similar_score) > 0.6:
                     last_msg = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log)
+                    pipes_dict[conv_id][6] = True
                 else:
                     user_text = msg['content']
                     log.info(user_text)
@@ -198,6 +230,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         messageSender(conv_id=conv_id, log=log, options=options, end=False)
                     else:
                         pipes_dict[conv_id][4] = True
+                        pipes_dict[conv_id][6] = True
                         user_pipe[0].close()
                         response_pipe[1].close()
                         service_name = recv['service']

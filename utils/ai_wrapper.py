@@ -33,8 +33,11 @@ def get_nli(first_utterance, service_name):
 
 def get_related_title(first_utterance):
     title_path = "https://burninghell.xicp.net/getRelatedTitle?query={}"
-    title_res = requests.get(title_path.format(first_utterance)).json()["titleList"][:5]
-    title_res.append('以上都不是')
+    try:
+        title_res = requests.get(title_path.format(first_utterance)).json()["titleList"][:5]
+        title_res.append('以上都不是')
+    except TypeError:
+        title_res = []
     return title_res
 
 
@@ -82,6 +85,7 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log):
     user_pipe[1].close()
     response_pipe[0].close()
     pipes_dict[conv_id][4] = True
+    pipes_dict[conv_id][6] = True
     messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
@@ -118,6 +122,8 @@ def get_multi_res(first_utterance, service_name):
     similar_score, answer = get_faq(first_utterance=first_utterance, service=service_name)
     if float(similar_score) < 0.6:
         answer = get_retrieval(first_utterance=first_utterance, service_name=service_name)
-    business = get_business(first_utterance=first_utterance)
-    answer = answer + '\n' + '(' + service_name + '——' + business + ')'
-    return answer
+        business = get_business(first_utterance=first_utterance)
+        answer = answer + '\n' + '(' + service_name + '——' + business + ')'
+        return answer
+    else:
+        return answer
