@@ -68,7 +68,7 @@ def lev(first, second, utterance=False, service=False):
     s = d + count / len(second)
     # smoothing
     if not utterance and not service:
-        s = (sigmoid(d * 6) - 0.5) * 2
+        s = (sigmoid(s * 6) - 0.5) * 2
     # print("smoothing[%s| %s]: %s -> %s" % (sentence1, sentence2, d, s))
     return s
 
@@ -148,17 +148,36 @@ def find_synonym(question, model, similarity_dict):
     print("new seg: " + "/ ".join(new_seg_list))
 
 
+def longestCommonSubsequence(text1: str, text2: str) -> int:
+    m, n = len(text1), len(text2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if text1[i - 1] == text2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+
+    return dp[m][n]
+
+
 def is_multi_round(utterance, service_name):
     # 当前最低阈值
+    # todo:待调
     utter_threshold = 0.3332
-    service_threshold = 0.8
+    service_threshold = 1.084
     options = get_related_title(utterance)
     candidate_service = ""
     max_score = 0
     for o in options:
+        lcs = longestCommonSubsequence(utterance, o) / o
+        if lcs <= 0.5:
+            continue
         distance = lev(utterance, o, True, True)
-        if max_score < distance:
-            max_score = distance
+        final_distance = sigmoid(distance + lcs)
+        if max_score < final_distance:
+            max_score = final_distance
             candidate_service = o
     # 每句话和候选事项名称之间的相似度想给护照加注应该怎么办理
 
