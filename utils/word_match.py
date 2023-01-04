@@ -171,13 +171,13 @@ def is_multi_round(utterance, service_name):
     candidate_service = ""
     max_score = 0
     for o in options:
-        lcs = longestCommonSubsequence(utterance, o) / o
-        if lcs <= 0.5:
-            continue
+        # lcs = longestCommonSubsequence(utterance, o) / len(o)
+        # if lcs <= 0.5:
+        #     continue
         distance = lev(utterance, o, True, True)
-        final_distance = sigmoid(distance + lcs)
-        if max_score < final_distance:
-            max_score = final_distance
+        # distance = sigmoid(distance + lcs)
+        if max_score < distance:
+            max_score = distance
             candidate_service = o
     # 每句话和候选事项名称之间的相似度想给护照加注应该怎么办理
 

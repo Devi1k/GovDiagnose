@@ -23,7 +23,7 @@ def run_regression():
     # 程序启动时先跑一次
     print("定时任务已经启动...The time is: %s" % datetime.now())
     run_diagnose()
-    # 设置每天定时启动的时间，当前每天19：00自动发送
+    # 设置每天定时启动的时间，当前每天22：00自动重启
     task_hour = 22
     task_minute = 00
     scheduler = BlockingScheduler()

@@ -39,25 +39,25 @@ async def main_logic(para, mod, link, similarity_dict):
             try:
                 if msg['content']['service_name'] is not None:
                     service_name = msg['content']['service_name']
-                    if service_name == '以上都不是':
-                        pipes_dict[conv_id][4] = True
-                        pipes_dict[conv_id][8] = "抱歉，未能找到您所需的事项。请问还有其他问题吗，如果有请继续提问。"
-                        messageSender(conv_id=conv_id, msg=pipes_dict[conv_id][8], log=log,
-                                      end=pipes_dict[conv_id][4])
-                        pipes_dict[conv_id][2] = ""
-                        pipes_dict[conv_id][3].terminate()
-                        log.info('process kill')
-                        pipes_dict[conv_id][3].join()
-                        continue
-                    else:
+                    if service_name != '以上都不是':
                         pipes_dict[conv_id][7] = service_name
                         first_utterance = pipes_dict[conv_id][2]
                         pipes_dict[conv_id][8] = return_answer(pipes_dict=pipes_dict, conv_id=conv_id,
                                                                service_name=service_name,
                                                                log=log,
                                                                link=link, intent_class='IR')
-                        pipes_dict[conv_id][6] = True
 
+                        continue
+                    elif service_name == '以上都不是' and pipes_dict[conv_id][9] == 2:
+                        pipes_dict[conv_id][4] = True
+                        pipes_dict[conv_id][8] = "抱歉，未能找到您所需的事项。请问还有其他问题吗，如果有请继续提问。"
+                        messageSender(conv_id=conv_id, msg=pipes_dict[conv_id][8], log=log,
+                                      end=pipes_dict[conv_id][4])
+                        pipes_dict[conv_id][6] = True
+                        pipes_dict[conv_id][2] = ""
+                        pipes_dict[conv_id][3].terminate()
+                        log.info('process kill')
+                        pipes_dict[conv_id][3].join()
                         continue
             except KeyError:
                 pass
@@ -71,9 +71,9 @@ async def main_logic(para, mod, link, similarity_dict):
                                 (user_pipe[1], response_pipe[0]), agent, para, mod, log, similarity_dict, conv_id))
                 p.start()
                 # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish,  first_utt,
-                # service_name, last_msg
+                # service_name, last_msg, dialogue_retrieval_turn
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, False, False, True,
-                                       "", ""]
+                                       "", "", 1]
             # Handle multiple rounds of dialogues  Continue to speak
             elif conv_id in pipes_dict and pipes_dict[conv_id][5] is False and pipes_dict[conv_id][4] is True:
                 log.info("continue to ask")
@@ -97,9 +97,8 @@ async def main_logic(para, mod, link, similarity_dict):
                                                               log)
                         pipes_dict[conv_id][6] = True
                         continue
+                    # Determine whether it is a multi-round conversation
                     multi, similarity = is_multi_round(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
-                    # messageSender(conv_id=conv_id, msg="请问您询问的问题是否与上述业务相关", log=log)
-                    # continue
                 if multi:
                     log.info("Same matter.")
                     user_pipe[0].close()
@@ -124,7 +123,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish, first_utt,
                     # service_name, last_msg
                     pipes_dict[conv_id] = [user_pipe, response_pipe, pipes_dict[conv_id][2], p, False, False, True,
-                                           "", ""]
+                                           "", "", 1]
                     similar_score, answer = 0, ""
                     if pipes_dict[conv_id][6] is True:
                         pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）0-9]+",
@@ -172,7 +171,8 @@ async def main_logic(para, mod, link, similarity_dict):
                         else:
                             if pipes_dict[conv_id][6]:
                                 pipes_dict[conv_id][6] = False
-                                pass
+                                pipes_dict[conv_id][9] += 1
+                                messageSender(conv_id=conv_id, log=log, options=options, end=False)
                             else:
                                 try:
                                     user_pipe[0].send(user_text)
@@ -272,7 +272,8 @@ async def main_logic(para, mod, link, similarity_dict):
                     else:
                         if pipes_dict[conv_id][6]:
                             pipes_dict[conv_id][6] = False
-                            pass
+                            pipes_dict[conv_id][9] += 1
+                            messageSender(conv_id=conv_id, log=log, options=options, end=False)
                         else:
                             try:
                                 user_pipe[0].send(user_text)

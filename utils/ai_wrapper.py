@@ -107,7 +107,9 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
         service_link = ""
     business = get_business(first_utterance=pipes_dict[conv_id][2])
     answer = answer + '\n' + '(' + service_name + '——' + business + ')'
-    messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=pipes_dict[conv_id][4])
+    messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=True)
+    pipes_dict[conv_id][4] = True
+    pipes_dict[conv_id][6] = True
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
     log.info('process kill')
