@@ -28,12 +28,12 @@ async def main_logic(para, mod, link, similarity_dict):
         try:
             log.info('wait message')
             response = await websocket.recv()
-            log.info(response)
+            # log.info(response)
             try:
                 user_json = json.loads(response)
             except JSONDecodeError:
                 continue
-            log.info(user_json)
+            # log.info(user_json)
             msg = user_json['msg']
             conv_id = msg['conv_id']
             try:
@@ -41,11 +41,10 @@ async def main_logic(para, mod, link, similarity_dict):
                     service_name = msg['content']['service_name']
                     if service_name != '以上都不是':
                         pipes_dict[conv_id][7] = service_name
-                        first_utterance = pipes_dict[conv_id][2]
                         pipes_dict[conv_id][8] = return_answer(pipes_dict=pipes_dict, conv_id=conv_id,
                                                                service_name=service_name,
                                                                log=log,
-                                                               link=link, intent_class='IR')
+                                                               link=link)
 
                         continue
                     elif service_name == '以上都不是' and pipes_dict[conv_id][9] == 2:
@@ -73,7 +72,7 @@ async def main_logic(para, mod, link, similarity_dict):
                 # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish,  first_utt,
                 # service_name, last_msg, dialogue_retrieval_turn
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", p, False, False, True,
-                                       "", "", 1]
+                                       "", "", 0]
             # Handle multiple rounds of dialogues  Continue to speak
             elif conv_id in pipes_dict and pipes_dict[conv_id][5] is False and pipes_dict[conv_id][4] is True:
                 log.info("continue to ask")
@@ -85,14 +84,13 @@ async def main_logic(para, mod, link, similarity_dict):
                 multi = True
                 if pipes_dict[conv_id][2] == "":
                     pipes_dict[conv_id][2] = msg['content']['text']
+                    pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）0-9]+",
+                                                    "",
+                                                    pipes_dict[conv_id][2])
                     if pipes_dict[conv_id][6] is True:
-                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）0-9]+",
-                                                        "",
-                                                        pipes_dict[conv_id][2])
-
                         similar_score, answer = get_faq(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
                         pipes_dict[conv_id][6] = False
-                    if float(similar_score) > 0.9:
+                    if float(similar_score) > 0.98:
                         pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                               log)
                         pipes_dict[conv_id][6] = True
@@ -123,12 +121,12 @@ async def main_logic(para, mod, link, similarity_dict):
                     # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish, first_utt,
                     # service_name, last_msg
                     pipes_dict[conv_id] = [user_pipe, response_pipe, pipes_dict[conv_id][2], p, False, False, True,
-                                           "", "", 1]
+                                           "", "", 0]
+                    pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）0-9]+",
+                                                    "",
+                                                    pipes_dict[conv_id][2])
                     similar_score, answer = 0, ""
                     if pipes_dict[conv_id][6] is True:
-                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）0-9]+",
-                                                        "",
-                                                        pipes_dict[conv_id][2])
                         similar_score, answer = get_faq(pipes_dict[conv_id][2])
                     user_text = {'text': pipes_dict[conv_id][2]}
                     log.info(user_text)
@@ -142,13 +140,13 @@ async def main_logic(para, mod, link, similarity_dict):
 
                         # IR
                         options = get_related_title(pipes_dict[conv_id][2])
-                        # todo: 待调
-                        business_threshold = 0.9524
+                        # todo: 待调 当前最低
+                        business_threshold = 0.804
                         candidate_service = ""
                         max_score = 0
                         for o in options:
-                            lcs = longestCommonSubsequence(pipes_dict[conv_id][2], o) / o
-                            if lcs <= 0.5:
+                            lcs = longestCommonSubsequence(pipes_dict[conv_id][2], o) / len(o)
+                            if lcs < 0.2:
                                 continue
                             distance = lev(pipes_dict[conv_id][2], o, True, True)
                             final_distance = sigmoid(lcs + distance)
@@ -179,6 +177,8 @@ async def main_logic(para, mod, link, similarity_dict):
                                 except OSError:
                                     messageSender(conv_id=conv_id, msg="会话结束", log=log, end=True)
                                     continue
+                                if user_text['text'] != pipes_dict[conv_id][2]:
+                                    pipes_dict[conv_id][2] += user_text['text']
                                 recv = response_pipe[1].recv()
                                 # The message format of the model received from the model is
                                 """
@@ -241,77 +241,81 @@ async def main_logic(para, mod, link, similarity_dict):
                     # pipes_dict[conv_id][6] = True
                 else:
                     user_text = msg['content']
-                    log.info(user_text)
-
-                    # IR
-                    options = get_related_title(pipes_dict[conv_id][2])
-                    # todo:待调
-                    business_threshold = 0.9524
-                    candidate_service = ""
-                    max_score = 0
-                    for o in options:
-                        lcs = longestCommonSubsequence(pipes_dict[conv_id][2], o) / o
-                        if lcs <= 0.5:
+                    if 'text' in user_text.keys() and pipes_dict[conv_id][9] != 1:
+                        # IR
+                        options = get_related_title(pipes_dict[conv_id][2])
+                        # todo:待调 目前最低
+                        business_threshold = 0.804
+                        candidate_service = ""
+                        max_score = 0
+                        for o in options:
+                            lcs = longestCommonSubsequence(pipes_dict[conv_id][2], o) / len(o)
+                            if lcs < 0.2:
+                                continue
+                            distance = lev(pipes_dict[conv_id][2], o, True, True)
+                            distance = sigmoid(distance + lcs)
+                            if max_score < distance:
+                                max_score = distance
+                                candidate_service = o
+                        if max_score > business_threshold:
+                            pipes_dict[conv_id][4] = True
+                            pipes_dict[conv_id][6] = True
+                            user_pipe[0].close()
+                            response_pipe[1].close()
+                            pipes_dict[conv_id][7] = candidate_service
+                            log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
+                            log.info("service_name: {}".format(candidate_service))
+                            pipes_dict[conv_id][8] = return_answer(pipes_dict=pipes_dict, conv_id=conv_id,
+                                                                   service_name=candidate_service,
+                                                                   log=log,
+                                                                   link=link)
                             continue
-                        distance = lev(pipes_dict[conv_id][2], o, True, True)
-                        if max_score < distance:
-                            max_score = distance
-                            candidate_service = o
-                    if max_score > business_threshold:
-                        pipes_dict[conv_id][4] = True
-                        pipes_dict[conv_id][6] = True
-                        user_pipe[0].close()
-                        response_pipe[1].close()
-                        pipes_dict[conv_id][7] = candidate_service
-                        log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
-                        log.info("service_name: {}".format(candidate_service))
-                        pipes_dict[conv_id][8] = return_answer(pipes_dict=pipes_dict, conv_id=conv_id,
-                                                               service_name=candidate_service,
-                                                               log=log,
-                                                               link=link)
+                    if pipes_dict[conv_id][6]:
+                        pipes_dict[conv_id][6] = False
+                        pipes_dict[conv_id][9] += 1
+                        messageSender(conv_id=conv_id, log=log, options=options, end=False)
                     else:
-                        if pipes_dict[conv_id][6]:
-                            pipes_dict[conv_id][6] = False
-                            pipes_dict[conv_id][9] += 1
+                        if 'text' not in user_text.keys():
+                            user_text = {'text': pipes_dict[conv_id][2]}
+                        try:
+                            user_pipe[0].send(user_text)
+                        except OSError:
+                            messageSender(conv_id=conv_id, msg="会话结束", log=log)
+                            continue
+                        if user_text['text'] != pipes_dict[conv_id][2]:
+                            pipes_dict[conv_id][2] += user_text['text']
+                        recv = response_pipe[1].recv()
+                        # The message format of the model received from the model is
+                        """
+                        {
+                            "service": agent_action["inform_slots"]["service"] or ,   service为业务名
+                            "end_flag": episode_over  会话是否结束
+                        }
+                        """
+                        pipes_dict[conv_id][4] = recv['end_flag']
+                        # Continue to input without ending
+                        if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
+                            msg = "您询问的业务是否涉及" + recv['service']
+                            pipes_dict[conv_id][8] = msg
+                            messageSender(conv_id=conv_id, msg=msg, log=log)
+                        elif pipes_dict[conv_id][4] is True and recv['action'] == 'request' and user_text[
+                            'text'] not in positive_list:
+                            options = get_related_title(pipes_dict[conv_id][2])
+                            pipes_dict[conv_id][4] = True
                             messageSender(conv_id=conv_id, log=log, options=options, end=False)
                         else:
-                            try:
-                                user_pipe[0].send(user_text)
-                            except OSError:
-                                messageSender(conv_id=conv_id, msg="会话结束", log=log)
-                                continue
-                            recv = response_pipe[1].recv()
-                            # The message format of the model received from the model is
-                            """
-                            {
-                                "service": agent_action["inform_slots"]["service"] or ,   service为业务名
-                                "end_flag": episode_over  会话是否结束
-                            }
-                            """
-                            pipes_dict[conv_id][4] = recv['end_flag']
-                            # Continue to input without ending
-                            if pipes_dict[conv_id][4] is not True and recv['action'] == 'request':
-                                msg = "您询问的业务是否涉及" + recv['service']
-                                pipes_dict[conv_id][8] = msg
-                                messageSender(conv_id=conv_id, msg=msg, log=log)
-                            elif pipes_dict[conv_id][4] is True and recv['action'] == 'request' and user_text[
-                                'text'] not in positive_list:
-                                options = get_related_title(pipes_dict[conv_id][2])
-                                pipes_dict[conv_id][4] = True
-                                messageSender(conv_id=conv_id, log=log, options=options, end=False)
-                            else:
-                                pipes_dict[conv_id][4] = True
-                                pipes_dict[conv_id][6] = True
-                                user_pipe[0].close()
-                                response_pipe[1].close()
-                                service_name = recv['service']
-                                pipes_dict[conv_id][7] = service_name
-                                log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
-                                log.info("service_name: {}".format(service_name))
-                                pipes_dict[conv_id][8] = return_answer(pipes_dict=pipes_dict, conv_id=conv_id,
-                                                                       service_name=service_name,
-                                                                       log=log,
-                                                                       link=link)
+                            pipes_dict[conv_id][4] = True
+                            pipes_dict[conv_id][6] = True
+                            user_pipe[0].close()
+                            response_pipe[1].close()
+                            service_name = recv['service']
+                            pipes_dict[conv_id][7] = service_name
+                            log.info("first_utterance: {}".format(pipes_dict[conv_id][2]))
+                            log.info("service_name: {}".format(service_name))
+                            pipes_dict[conv_id][8] = return_answer(pipes_dict=pipes_dict, conv_id=conv_id,
+                                                                   service_name=service_name,
+                                                                   log=log,
+                                                                   link=link)
 
         except ConnectionClosed as e:
             log.info(e)

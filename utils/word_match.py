@@ -163,33 +163,36 @@ def longestCommonSubsequence(text1: str, text2: str) -> int:
 
 
 def is_multi_round(utterance, service_name):
+    high_frequency_statement = ['我要预约', '我想预约', '我想在线预约', '我要办理', '我想办理', '我想在线办理', '我想评价', '我要评价', '我想在线评价']
+    if utterance in high_frequency_statement:
+        return True, 0
     # 当前最低阈值
     # todo:待调
-    utter_threshold = 0.3332
-    service_threshold = 1.084
+    utter_threshold = 0.65
+    service_threshold = 1.08
     options = get_related_title(utterance)
     candidate_service = ""
     max_score = 0
     for o in options:
-        # lcs = longestCommonSubsequence(utterance, o) / len(o)
-        # if lcs <= 0.5:
-        #     continue
+        lcs = longestCommonSubsequence(utterance, o) / len(o)
+        if lcs < 0.2 or (len(o) < 7 and lcs <= 0.5):
+            continue
         distance = lev(utterance, o, True, True)
-        # distance = sigmoid(distance + lcs)
+        distance = sigmoid(distance + lcs)
         if max_score < distance:
             max_score = distance
             candidate_service = o
     # 每句话和候选事项名称之间的相似度想给护照加注应该怎么办理
 
     # 候选事项和对话内容有关
-    if max_score < utter_threshold:
+    if max_score < utter_threshold and max_score != 0:
         return True, max_score
     else:
         # todo：候选事项和上一轮事项几乎无关分两种情况：
         #  1、用户事项变换
         #  2、用户对话实际上是与上一轮有关 却检索出其他事项，同时事项与上一轮无关（解决不了）
         service_distance = lev(candidate_service, service_name)
-        if service_distance > service_threshold:
+        if service_distance > service_threshold or candidate_service == service_name:
             return True, service_distance
         else:
             return False, service_distance
@@ -209,30 +212,4 @@ if __name__ == '__main__':
     # question = "我想挂个牌匾需要办理什么业务？"
     # find_synonym(question, model, similarity_dict)
 
-    print(is_multi_round("16岁以上护照有效期多长", "教师资格的认定"))
-
-    l = ["我需要怎么办理",
-         "我在双街镇经营",
-         "我应该满足什么条件才能办理",
-         "申请条件是什么",
-         "有什么要求",
-         "我需要提交什么材料",
-         "我需要准备什么材料",
-         "需要填写什么呢",
-         "需要准备什么呢",
-         "申请书有什么要求",
-         "申请书怎么填写",
-         "现状彩色照片有什么要求",
-         "效果图有什么要求",
-         "产权证明有什么要求",
-         "与产权人签订的同意设置户外广告设施的书面协议",
-         "相邻人同意设置的书面协议怎么填",
-         "座落位置示意图有什么要求",
-         "规划预留户外广告设施（牌匾除外）的设计图纸有什么要求",
-         "这有什么收费的项目吗",
-         "办理这个事收费吗",
-         "我去大厅办理，能给我邮寄到家吗"]
-    for _l in l:
-        test_res, score = is_multi_round(_l, "户外广告及临时悬挂、设置标语或者宣传品许可--户外广告设施许可（不含公交候车亭附属广告及公交车体广告设施）（市级权限委托市内六区实施）")
-        if not test_res:
-            print(score, test_res, _l)
+    print(is_multi_round("我想挂个牌匾需要办理什么业务", "新车注册登记预选机动车号牌"))
