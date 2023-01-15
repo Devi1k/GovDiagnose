@@ -47,9 +47,10 @@ async def main_logic(para, mod, link, similarity_dict):
                                                                link=link)
 
                         continue
-                    elif service_name == '以上都不是' and pipes_dict[conv_id][9] == 2:
+                    elif service_name == '以上都不是' and pipes_dict[conv_id][9] > 1:
                         pipes_dict[conv_id][4] = True
                         pipes_dict[conv_id][8] = "抱歉，未能找到您所需的事项。请问还有其他问题吗，如果有请继续提问。"
+                        pipes_dict[conv_id][7] = ""
                         messageSender(conv_id=conv_id, msg=pipes_dict[conv_id][8], log=log,
                                       end=pipes_dict[conv_id][4])
                         pipes_dict[conv_id][6] = True
@@ -84,13 +85,13 @@ async def main_logic(para, mod, link, similarity_dict):
                 multi = True
                 if pipes_dict[conv_id][2] == "":
                     pipes_dict[conv_id][2] = msg['content']['text']
-                    pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）0-9]+",
+                    pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+",
                                                     "",
                                                     pipes_dict[conv_id][2])
                     if pipes_dict[conv_id][6] is True:
                         similar_score, answer = get_faq(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
                         pipes_dict[conv_id][6] = False
-                    if float(similar_score) > 0.98:
+                    if float(similar_score) > 0.9530:
                         pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                               log)
                         pipes_dict[conv_id][6] = True
@@ -122,7 +123,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     # service_name, last_msg
                     pipes_dict[conv_id] = [user_pipe, response_pipe, pipes_dict[conv_id][2], p, False, False, True,
                                            "", "", 0]
-                    pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）0-9]+",
+                    pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+",
                                                     "",
                                                     pipes_dict[conv_id][2])
                     similar_score, answer = 0, ""
@@ -141,15 +142,15 @@ async def main_logic(para, mod, link, similarity_dict):
                         # IR
                         options = get_related_title(pipes_dict[conv_id][2])
                         # todo: 待调 当前最低
-                        business_threshold = 0.804
+                        business_threshold = 0.8040
                         candidate_service = ""
                         max_score = 0
                         for o in options:
-                            lcs = longestCommonSubsequence(pipes_dict[conv_id][2], o) / len(o)
-                            if lcs < 0.2:
+                            lcs = longestCommonSubsequence(pipes_dict[conv_id][2], o)
+                            if lcs <= 2:
                                 continue
                             distance = lev(pipes_dict[conv_id][2], o, True, True)
-                            final_distance = sigmoid(lcs + distance)
+                            final_distance = sigmoid(lcs / len(o) + distance)
                             if max_score < final_distance:
                                 max_score = final_distance
                                 candidate_service = o
@@ -219,7 +220,8 @@ async def main_logic(para, mod, link, similarity_dict):
                                     log.info('process kill')
                                     pipes_dict[conv_id][3].join()
                                     pipes_dict[conv_id][8] = "请问还有其他问题吗，如果有请继续提问"
-                                    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
+                                    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log,
+                                                  end=True,
                                                   service_name=service_name)
             #
             else:
@@ -232,7 +234,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     pipes_dict[conv_id][2] = msg['content']['text']
                 similar_score, answer = 0, ""
                 if pipes_dict[conv_id][6] is True:
-                    pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）0-9]+", "",
+                    pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                     pipes_dict[conv_id][2])
                     similar_score, answer = get_faq(pipes_dict[conv_id][2])
                 # similar_score = 0.5
@@ -245,15 +247,15 @@ async def main_logic(para, mod, link, similarity_dict):
                         # IR
                         options = get_related_title(pipes_dict[conv_id][2])
                         # todo:待调 目前最低
-                        business_threshold = 0.804
+                        business_threshold = 0.8040
                         candidate_service = ""
                         max_score = 0
                         for o in options:
-                            lcs = longestCommonSubsequence(pipes_dict[conv_id][2], o) / len(o)
-                            if lcs < 0.2:
+                            lcs = longestCommonSubsequence(pipes_dict[conv_id][2], o)
+                            if lcs <= 2:
                                 continue
                             distance = lev(pipes_dict[conv_id][2], o, True, True)
-                            distance = sigmoid(distance + lcs)
+                            distance = sigmoid(distance + lcs / len(o))
                             if max_score < distance:
                                 max_score = distance
                                 candidate_service = o
@@ -302,6 +304,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             'text'] not in positive_list:
                             options = get_related_title(pipes_dict[conv_id][2])
                             pipes_dict[conv_id][4] = True
+                            pipes_dict[conv_id][9] += 1
                             messageSender(conv_id=conv_id, log=log, options=options, end=False)
                         else:
                             pipes_dict[conv_id][4] = True

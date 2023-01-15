@@ -16,3 +16,7 @@ pipe_dict中的参数
 5. all_finish 整体对话结束状态
 6. is_first 是否是第一句话
 7. service_name 当前对话事项名称
+8. last_msg 当前最后一条消息
+9. dialogue_retrieval_turn 对话检索轮次
+
+

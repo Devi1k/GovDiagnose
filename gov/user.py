@@ -99,6 +99,11 @@ class User(object):
             reward = self._reward_function()
             return user_action, reward, self.episode_over, self.dialogue_status
         else:
+            if _implicit_inform_slots == '':
+                if agent_act_type == "request":
+                    self._response_request(agent_action=agent_action)
+                elif agent_act_type == "inform":
+                    self._response_inform(agent_action=agent_action)
             user_action = self._assemble_user_action()
             reward = self._reward_function()
             return user_action, reward, self.episode_over, self.dialogue_status
