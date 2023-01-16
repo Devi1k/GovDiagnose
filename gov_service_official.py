@@ -320,8 +320,8 @@ async def main_logic(para, mod, link, similarity_dict):
                                                                    log=log,
                                                                    link=link)
 
-        except ConnectionClosed as e:
-            log.info(e)
+        except (Exception, ConnectionClosed) as e:
+            log.error(e, exc_info=True)
             continue
 
 
