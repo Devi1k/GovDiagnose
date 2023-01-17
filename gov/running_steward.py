@@ -11,7 +11,6 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
     in_pipe, out_pipe = pipe
     user = User(parameter=parameter, conv_id=conv_id)
     agent = agent
-    # agent = AgentDQN(parameter=parameter)
     dialogue_manager = DialogueManager(user=user, agent=agent, parameter=parameter, log=log,
                                        similarity_dict=similarity_dict)
     dialogue_manager.set_agent(agent=agent)

@@ -36,6 +36,9 @@ async def main_logic(para, mod, link, similarity_dict):
             # log.info(user_json)
             msg = user_json['msg']
             conv_id = msg['conv_id']
+            if 'content' in msg.keys():
+                log.info("user message:" + msg['content']['text']) if 'text' in msg['content'].keys() else log.info(
+                    "user message:" + msg['content']['service_name'])
             try:
                 if msg['content']['service_name'] is not None:
                     service_name = msg['content']['service_name']
@@ -143,7 +146,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             # IR
                             options = get_related_title(pipes_dict[conv_id][2])
                             # todo: 待调 当前最低
-                            business_threshold = 0.8040
+                            business_threshold = 0.8582
                             candidate_service = ""
                             max_score = 0
                             for o in options:
@@ -250,7 +253,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             # IR
                             options = get_related_title(pipes_dict[conv_id][2])
                             # todo:待调 目前最低
-                            business_threshold = 0.8040
+                            business_threshold = 0.8582
                             candidate_service = ""
                             max_score = 0
                             for o in options:

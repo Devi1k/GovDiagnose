@@ -215,4 +215,5 @@ if __name__ == '__main__':
     # question = "我想挂个牌匾需要办理什么业务？"
     # find_synonym(question, model, similarity_dict)
 
-    print(is_multi_round("我想挂个牌匾需要办理什么业务", "新车注册登记预选机动车号牌"))
+    print(is_multi_round("申请材料",
+                         "户外广告及临时悬挂、设置标语或者宣传品许可--户外广告设施许可（不含公交候车亭附属广告及公交车体广告设施）（市级权限委托市内六区实施）"))
