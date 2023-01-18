@@ -18,5 +18,6 @@ pipe_dict中的参数
 7. service_name 当前对话事项名称
 8. last_msg 当前最后一条消息
 9. dialogue_retrieval_turn 对话检索轮次
+10. history 用户query历史
 
 

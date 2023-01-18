@@ -1,16 +1,20 @@
+import json
 from json import JSONDecodeError
 
 import requests
 
 from utils.message_sender import messageSender
 
+with open('data/faq_recommend.json', 'r') as f:
+    recommend = json.load(f)
+
 
 def get_faq(first_utterance, service=""):
-    faq_path = "https://miner.picp.net/FAQ?First_utterance={}&Service_name={}"
+    faq_path = "https://miner.picp.net/FAQ?First_utterance={}"
     first_utterance = service + first_utterance
-    faq_res = requests.get(faq_path.format(first_utterance, service)).json()
-    similar_score, answer = faq_res['Similarity_score'], faq_res['answer']
-    return similar_score, answer
+    faq_res = requests.get(faq_path.format(first_utterance)).json()
+    similar_score, answer, service = faq_res['Similarity_score'], faq_res['answer'], faq_res['service']
+    return similar_score, answer, service
 
 
 def get_business(first_utterance):
@@ -79,7 +83,7 @@ def get_answer(first_utterance, service_name, log, intent_class=''):
         return "您询问的业务属于:" + service_name
 
 
-def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log):
+def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, service_name=""):
     user_pipe[0].close()
     response_pipe[1].close()
     user_pipe[1].close()
@@ -91,8 +95,13 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log):
     pipes_dict[conv_id][3].terminate()
     log.info('process kill')
     pipes_dict[conv_id][3].join()
-    last_msg = "请问还有其他问题吗，如果有请继续提问"
-    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=pipes_dict[conv_id][4])
+    recommend = get_recommend(service_name=pipes_dict[conv_id][7],
+                              utterance=pipes_dict[conv_id][2])
+    last_msg = recommend
+    pipes_dict[conv_id][2] = ""
+    messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
+                  service_name=service_name, options=recommend)
+    pipes_dict[conv_id][9] = 0
     return last_msg
 
 
@@ -110,13 +119,16 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
     messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=True)
     pipes_dict[conv_id][4] = True
     pipes_dict[conv_id][6] = True
-    pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
     log.info('process kill')
     pipes_dict[conv_id][3].join()
-    last_msg = "请问还有其他问题吗，如果有请继续提问"
-    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
-                  service_name=service_name)
+    recommend = get_recommend(service_name=pipes_dict[conv_id][7],
+                              utterance=pipes_dict[conv_id][2])
+    last_msg = recommend
+    pipes_dict[conv_id][2] = ""
+    messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
+                  service_name=service_name, options=recommend)
+    pipes_dict[conv_id][9] = 0
     return last_msg
 
 
@@ -125,3 +137,38 @@ def get_multi_res(first_utterance, service_name):
     business = get_business(first_utterance=first_utterance)
     answer = answer + '\n' + '(' + service_name + '——' + business + ')'
     return answer
+
+
+def get_recommend(service_name, utterance="", history=None):
+    if history is None:
+        history = []
+    level_list = ['1', '2', '3']
+    query_list = []
+    for level in level_list:
+        try:
+            query = recommend[service_name][level]
+        except KeyError:
+            continue
+        for q in query:
+            query_list.append(q)
+    utterance = service_name + utterance
+    if history is not None:
+        for h in history:
+            h = service_name + h
+            if h in query_list:
+                query_list.remove(utterance)
+    query_list.reverse()
+    res = []
+    # 1.按优先级固定写死
+    for q in query_list[-5:]:
+        res.append(q.replace(service_name, ''))
+    # 2.按相似度取问题（不涉及优先级）
+    # similarity_list = []
+    # for q in query_list:
+    #     score = ratio(utterance, q)
+    #     similarity_list.append(score)
+    # similarity_list = np.array(similarity_list)
+    # choice = sorted(np.argsort(similarity_list)[-5:])
+    # for c in choice:
+    #     res.append(query_list[c].replace(service_name, ''))
+    return res
