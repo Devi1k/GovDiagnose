@@ -1,5 +1,4 @@
 import asyncio
-import json
 import time
 from multiprocessing import Pipe, Process
 
@@ -92,9 +91,10 @@ async def main_logic(para, mod, link, similarity_dict):
                                                         "",
                                                         pipes_dict[conv_id][2])
                         if pipes_dict[conv_id][6] is True:
-                            similar_score, answer = get_faq(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
+                            similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2],
+                                                                          pipes_dict[conv_id][7])
                             pipes_dict[conv_id][6] = False
-                        if float(similar_score) > 0.9530:
+                        if float(similar_score) > 0.9459:
                             pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                                   log)
                             pipes_dict[conv_id][6] = True
@@ -132,7 +132,7 @@ async def main_logic(para, mod, link, similarity_dict):
                                                         pipes_dict[conv_id][2])
                         similar_score, answer = 0, ""
                         if pipes_dict[conv_id][6] is True:
-                            similar_score, answer = get_faq(pipes_dict[conv_id][2])
+                            similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
                         user_text = {'text': pipes_dict[conv_id][2]}
                         log.info(user_text)
                         if float(similar_score) > 0.8571:
@@ -146,7 +146,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             # IR
                             options = get_related_title(pipes_dict[conv_id][2])
                             # todo: 待调 当前最低
-                            business_threshold = 0.8582
+                            business_threshold = 0.9102
                             candidate_service = ""
                             max_score = 0
                             for o in options:
@@ -241,8 +241,7 @@ async def main_logic(para, mod, link, similarity_dict):
                     if pipes_dict[conv_id][6] is True:
                         pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                         pipes_dict[conv_id][2])
-                        similar_score, answer = get_faq(pipes_dict[conv_id][2])
-                    # similar_score = 0.5
+                        similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
                     if float(similar_score) > 0.8571:
                         pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                               log)
@@ -253,7 +252,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             # IR
                             options = get_related_title(pipes_dict[conv_id][2])
                             # todo:待调 目前最低
-                            business_threshold = 0.8582
+                            business_threshold = 0.9102
                             candidate_service = ""
                             max_score = 0
                             for o in options:

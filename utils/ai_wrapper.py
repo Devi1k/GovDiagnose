@@ -94,22 +94,26 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
     log.info('process kill')
+    last_msg = "请问还有其他问题吗，如果有请继续提问"
+    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][3].join()
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
                               utterance=pipes_dict[conv_id][2])
-    last_msg = recommend
+    # last_msg = recommend
     pipes_dict[conv_id][2] = ""
-    messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
-                  service_name=service_name, options=recommend)
+    # messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
+    #               service_name=service_name, options=recommend)
     pipes_dict[conv_id][9] = 0
     return last_msg
 
 
 def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class=''):
-    try:
-        answer = get_answer(pipes_dict[conv_id][2], service_name, log, intent_class)
-    except JSONDecodeError:
-        answer = "抱歉，无法回答当前问题"
+    similarity_score, answer, service = get_faq(first_utterance=pipes_dict[conv_id][2], service=service_name)
+    if float(similarity_score) < 0.85:
+        try:
+            answer = get_answer(pipes_dict[conv_id][2], service_name, log, intent_class)
+        except JSONDecodeError:
+            answer = "抱歉，无法回答当前问题"
     try:
         service_link = str(link[service_name])
     except KeyError:
@@ -124,10 +128,13 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
     pipes_dict[conv_id][3].join()
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
                               utterance=pipes_dict[conv_id][2])
-    last_msg = recommend
+    # last_msg = recommend
     pipes_dict[conv_id][2] = ""
-    messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
-                  service_name=service_name, options=recommend)
+    # messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
+    #               service_name=service_name, options=recommend)
+    last_msg = "请问还有其他问题吗，如果有请继续提问"
+    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
+                  service_name=service_name)
     pipes_dict[conv_id][9] = 0
     return last_msg
 
@@ -151,12 +158,13 @@ def get_recommend(service_name, utterance="", history=None):
             continue
         for q in query:
             query_list.append(q)
-    utterance = service_name + utterance
+    # utterance = service_name + utterance
+    # todo:如果问不一样的怎么办
     if history is not None:
         for h in history:
             h = service_name + h
             if h in query_list:
-                query_list.remove(utterance)
+                query_list.remove(h)
     query_list.reverse()
     res = []
     # 1.按优先级固定写死
