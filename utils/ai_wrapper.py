@@ -100,9 +100,9 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
                               utterance=pipes_dict[conv_id][2])
     # last_msg = recommend
-    pipes_dict[conv_id][2] = ""
     # messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
     #               service_name=service_name, options=recommend)
+    pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][9] = 0
     return last_msg
 
@@ -129,12 +129,12 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
                               utterance=pipes_dict[conv_id][2])
     # last_msg = recommend
-    pipes_dict[conv_id][2] = ""
     # messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
     #               service_name=service_name, options=recommend)
     last_msg = "请问还有其他问题吗，如果有请继续提问"
     messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
                   service_name=service_name)
+    pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][9] = 0
     return last_msg
 

@@ -135,7 +135,7 @@ async def main_logic(para, mod, link, similarity_dict):
                             similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
                         user_text = {'text': pipes_dict[conv_id][2]}
                         log.info(user_text)
-                        if float(similar_score) > 0.8571:
+                        if float(similar_score) > 0.9497:
                             pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                                   log)
                             # pipes_dict[conv_id][6] = True
@@ -172,11 +172,14 @@ async def main_logic(para, mod, link, similarity_dict):
                                                                        log=log,
                                                                        link=link)
                             else:
-                                if pipes_dict[conv_id][6]:
+                                if pipes_dict[conv_id][6] and len(options) > 0:
                                     pipes_dict[conv_id][6] = False
                                     pipes_dict[conv_id][9] += 1
                                     messageSender(conv_id=conv_id, log=log, options=options, end=False)
                                 else:
+                                    if pipes_dict[conv_id][6]:
+                                        pipes_dict[conv_id][6] = False
+                                        pipes_dict[conv_id][9] += 1
                                     try:
                                         user_pipe[0].send(user_text)
                                     except OSError:
@@ -242,7 +245,7 @@ async def main_logic(para, mod, link, similarity_dict):
                         pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                         pipes_dict[conv_id][2])
                         similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
-                    if float(similar_score) > 0.8571:
+                    if float(similar_score) > 0.9497:
                         pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                               log)
                         # pipes_dict[conv_id][6] = True
@@ -277,18 +280,22 @@ async def main_logic(para, mod, link, similarity_dict):
                                                                        log=log,
                                                                        link=link)
                                 continue
-                        if pipes_dict[conv_id][6]:
+                        if pipes_dict[conv_id][6] and len(options) > 0:
                             pipes_dict[conv_id][6] = False
                             pipes_dict[conv_id][9] += 1
                             messageSender(conv_id=conv_id, log=log, options=options, end=False)
                         else:
+                            if pipes_dict[conv_id][6]:
+                                pipes_dict[conv_id][6] = False
+                                pipes_dict[conv_id][9] += 1
                             if 'text' not in user_text.keys():
                                 user_text = {'text': pipes_dict[conv_id][2]}
                             try:
                                 user_pipe[0].send(user_text)
                             except OSError:
-                                messageSender(conv_id=conv_id, msg="会话结束", log=log)
-                                continue
+                                pass
+                                # messageSender(conv_id=conv_id, msg="会话结束", log=log)
+                                # continue
                             if user_text['text'] != pipes_dict[conv_id][2]:
                                 pipes_dict[conv_id][2] += user_text['text']
                             recv = response_pipe[1].recv()
@@ -308,9 +315,22 @@ async def main_logic(para, mod, link, similarity_dict):
                             elif pipes_dict[conv_id][4] is True and recv['action'] == 'request' and user_text[
                                 'text'] not in positive_list:
                                 options = get_related_title(pipes_dict[conv_id][2])
-                                pipes_dict[conv_id][4] = True
+                                # pipes_dict[conv_id][4] = True
                                 pipes_dict[conv_id][9] += 1
-                                messageSender(conv_id=conv_id, log=log, options=options, end=False)
+                                if len(options) > 0:
+                                    messageSender(conv_id=conv_id, log=log, options=options, end=False)
+                                else:
+                                    answer = "抱歉，无法回答当前问题"
+                                    pipes_dict[conv_id][6] = True
+                                    pipes_dict[conv_id][3].terminate()
+                                    log.info('process kill')
+                                    pipes_dict[conv_id][3].join()
+                                    pipes_dict[conv_id][2] = ""
+                                    pipes_dict[conv_id][9] = 0
+                                    messageSender(conv_id=conv_id, log=log, msg=answer, end=False)
+                                    pipes_dict[conv_id][8] = "请问还有其他问题吗，如果有请继续提问"
+                                    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log,
+                                                  end=True)
                             else:
                                 pipes_dict[conv_id][4] = True
                                 pipes_dict[conv_id][6] = True

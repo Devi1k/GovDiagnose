@@ -1,6 +1,7 @@
 # GovDiagnose
 
 ```shell
+ps -ef | grep gov_service_official.py | grep -v grep | awk '{print "kill -9 "$2}' | sh
 nohup python3 run_service.py > service.out 2>&1 &
 ```
 
