@@ -1,12 +1,11 @@
 # -*- coding:utf-8 -*-
 import json
 
-# import jieba
-import thulac
-
 import gov.dialogue_configuration as dialogue_configuration
 from gov.state_tracker import StateTracker
-from utils.word_match import replace_list, load_dict
+
+
+# import jieba
 
 
 class DialogueManager(object):
@@ -14,28 +13,15 @@ class DialogueManager(object):
         self.state_tracker = StateTracker(user=user, agent=agent, parameter=parameter)
         self.parameter = parameter
         self.inform_wrong_service_count = 0
-        self.stop_words = [i.strip() for i in open('data/baidu_stopwords.txt').readlines()]
-        self.thu = thulac.thulac(user_dict='./data/new_dict.txt', seg_only=True)
+        # self.stop_words = [i.strip() for i in open('data/baidu_stopwords.txt').readlines()]
+        # self.thu = thulac
         self.similarity_dict = similarity_dict
         self.log = log
 
-    def initialize(self, sentence, model, greedy_strategy, train_mode=1, epoch_index=None):
-
+    def initialize(self, explicit_inform_slots, greedy_strategy, train_mode=1, epoch_index=None):
         self.state_tracker.initialize()
         self.inform_wrong_service_count = 0
-        word_dict = load_dict('./data/new_dict.txt')
-        seg = self.thu.cut(sentence)
-        seg_list = []
-        for s in seg:
-            seg_list.append(s[0])
-        for i in range(len(seg_list) - 1, -1, -1):
-            if seg_list[i] in self.stop_words:
-                del seg_list[i]
-        self.log.info(seg_list)
-        explicit_inform_slots = replace_list(seg_list, word_dict, model=model, similarity_dict=self.similarity_dict)
-        for i in range(len(explicit_inform_slots) - 1, -1, -1):
-            if explicit_inform_slots[i] in self.stop_words:
-                del explicit_inform_slots[i]
+
         self.log.info(explicit_inform_slots)
         user_action = self.state_tracker.user.initialize(explicit_inform_slots)
         self.state_tracker.state_updater(user_action=user_action)
@@ -52,22 +38,22 @@ class DialogueManager(object):
     def set_agent(self, agent):
         self.state_tracker.set_agent(agent=agent)
 
-    def next(self, implicit, model, save_record, train_mode, agent_action, greedy_strategy):
-        implicit_inform_slots = ''
-        if implicit != '':
-            word_dict = load_dict('./data/new_dict.txt')
-            seg = self.thu.cut(implicit)
-            seg_list = []
-            for s in seg:
-                seg_list.append(s[0])
-            for i in range(len(seg_list) - 1, -1, -1):
-                if seg_list[i] in self.stop_words:
-                    del seg_list[i]
-            implicit_inform_slots = replace_list(seg_list, word_dict, model=model, similarity_dict=self.similarity_dict)
-            self.log.info(implicit_inform_slots)
-            for i in range(len(implicit_inform_slots) - 1, -1, -1):
-                if implicit_inform_slots[i] in self.stop_words:
-                    del implicit_inform_slots[i]
+    def next(self, implicit_inform_slots, save_record, train_mode, agent_action, greedy_strategy):
+        # implicit_inform_slots = ''
+        # if implicit != '':
+        #     word_dict = load_dict('./data/new_dict.txt')
+        #     seg = self.thu.cut(implicit)
+        #     seg_list = []
+        #     for s in seg:
+        #         seg_list.append(s[0])
+        #     for i in range(len(seg_list) - 1, -1, -1):
+        #         if seg_list[i] in self.stop_words:
+        #             del seg_list[i]
+        #     implicit_inform_slots = replace_list(seg_list, word_dict, model=model, similarity_dict=self.similarity_dict)
+        #     self.log.info(implicit_inform_slots)
+        #     for i in range(len(implicit_inform_slots) - 1, -1, -1):
+        #         if implicit_inform_slots[i] in self.stop_words:
+        #             del implicit_inform_slots[i]
         user_action, reward, episode_over, dialogue_status = self.state_tracker.user.next(implicit_inform_slots,
                                                                                           agent_action=agent_action,
                                                                                           turn=self.state_tracker.turn)

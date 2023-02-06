@@ -1,5 +1,4 @@
 import numbers
-import re
 import time
 
 # import jieba.analyse
@@ -134,18 +133,18 @@ def replace_list(seg_list, word_dict, similarity_dict, model):
     return list(new_list)
 
 
-def find_synonym(question, model, similarity_dict):
-    question = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "", question)
-    seg = thu.cut(question)
-    seg_list = []
-    for s in seg:
-        seg_list.append(s[0])
-    print(seg_list)
-    for i in range(len(seg_list) - 1, -1, -1):
-        if seg_list[i] in stopwords:
-            del seg_list[i]
-    new_seg_list = replace_list(seg_list, word_dict, model=model, similarity_dict=similarity_dict)
-    print("new seg: " + "/ ".join(new_seg_list))
+# def find_synonym(question, model, similarity_dict):
+#     question = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "", question)
+#     seg = thu.cut(question)
+#     seg_list = []
+#     for s in seg:
+#         seg_list.append(s[0])
+#     print(seg_list)
+#     for i in range(len(seg_list) - 1, -1, -1):
+#         if seg_list[i] in stopwords:
+#             del seg_list[i]
+#     new_seg_list = replace_list(seg_list, word_dict, model=model, similarity_dict=similarity_dict)
+#     print("new seg: " + "/ ".join(new_seg_list))
 
 
 def longestCommonSubsequence(text1: str, text2: str) -> int:

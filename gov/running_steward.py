@@ -7,7 +7,8 @@ from gov.dialogue_manager import DialogueManager
 from gov.user import User
 
 
-def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_id, train_mode=1):
+def simulation_epoch(pipe, agent, parameter, log, similarity_dict, conv_id, train_mode=1):
+    global participle
     in_pipe, out_pipe = pipe
     user = User(parameter=parameter, conv_id=conv_id)
     agent = agent
@@ -19,14 +20,14 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
     explicit = ""
     try:
         receive = in_pipe.recv()
-        explicit = receive['text']
+        explicit = receive
     except EOFError:
         episode_over = True
         pid = os.getpid()
         os.kill(pid, signal.SIGINT)
     # init_start = time.time()
 
-    agent_action = dialogue_manager.initialize(explicit, model, train_mode=parameter.get("train_mode"),
+    agent_action = dialogue_manager.initialize(explicit, train_mode=parameter.get("train_mode"),
                                                greedy_strategy=0)
     # init_end = time.time()
     # print("init:", init_end - init_start)
@@ -65,9 +66,10 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
             break
         # judge = receive['judge']
         judge = False
-        implicit = receive['text']
+        implicit = receive
         # print(implicit)
         if implicit in positive_list:
+
             judge = True
             with open(user.goal_set_path, 'r') as f:
                 goal_set = json.load(f)
@@ -81,8 +83,8 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
                 goal_set['user_action']['user_judge'] = False
             with open(user.goal_set_path, 'w') as f:
                 json.dump(goal_set, f)
-            # episode_over = True
-            # break
+                # episode_over = True
+                # break
         if agent_action['action'] == 'inform' and judge is True:
             # out_pipe.send("请问还有别的问题吗")
             episode_over = True
@@ -92,7 +94,7 @@ def simulation_epoch(pipe, agent, parameter, model, log, similarity_dict, conv_i
             out_pipe.send(msg)
             break
         # next_start = time.time()
-        reward, episode_over, dialogue_status, _agent_action = dialogue_manager.next(implicit, model,
+        reward, episode_over, dialogue_status, _agent_action = dialogue_manager.next(implicit,
                                                                                      save_record=True,
                                                                                      train_mode=train_mode,
                                                                                      greedy_strategy=0,
