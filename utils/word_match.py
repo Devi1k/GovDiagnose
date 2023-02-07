@@ -165,7 +165,8 @@ def is_multi_round(utterance, service_name):
     if service_name == "":
         return False, 0
     high_frequency_statement = ['我要预约', '我想预约', '我想在线预约', '我要办理', '我想办理', '我想在线办理',
-                                '我想评价', '我要评价', '我想在线评价']
+                                '我想评价', '我要评价', '我想在线评价', '申请材料是什么', '申请材料有什么',
+                                '办理流程是什么']
     if utterance in high_frequency_statement:
         return True, 0
     # 当前最低阈值

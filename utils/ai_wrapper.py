@@ -1,5 +1,6 @@
 import json
 import warnings
+from json import JSONDecodeError
 
 import requests
 
@@ -14,8 +15,11 @@ with open('data/faq_recommend.json', 'r') as f:
 def get_faq(first_utterance, service=""):
     faq_path = "https://miner.picp.net/FAQ?First_utterance={}"
     first_utterance = service + first_utterance
-    faq_res = requests.get(faq_path.format(first_utterance), verify=False).json()
-    similar_score, answer, service = faq_res['Similarity_score'], faq_res['answer'], faq_res['service']
+    try:
+        faq_res = requests.get(faq_path.format(first_utterance), verify=False).json()
+        similar_score, answer, service = faq_res['Similarity_score'], faq_res['answer'], faq_res['service']
+    except JSONDecodeError:
+        similar_score, answer, service = 1, "抱歉，网络错误，请您重新尝试", ""
     return similar_score, answer, service
 
 
@@ -38,12 +42,14 @@ def get_nli(first_utterance, service_name):
 
 
 def get_related_title(first_utterance):
-    title_path = "https://burninghell.xicp.net/getRelatedTitle?query={}"
+    title_path = "https://burninghell.xicp.net/getRelatedTitle/ver2?query={}"
+    # title_res = []
     try:
-        title_res = requests.get(title_path.format(first_utterance), verify=False).json()["titleList"][:5]
+        title_res = requests.get(title_path.format(first_utterance), verify=False).json()['titleList'][:5]
         title_res.append('以上都不是')
-    except TypeError:
+    except JSONDecodeError:
         title_res = []
+
     return title_res
 
 
@@ -53,9 +59,9 @@ def get_answer(first_utterance, service_name, log, intent_class=''):
         intent_path = "https://miner.picp.net/intent?text={}"
         intent_res = requests.get(intent_path.format(first_utterance), verify=False).json()
         intent_class = intent_res['data']
-        if first_utterance == '认定高中教师资格的学历要求':
+        if '认定高中教师资格的学历要求' in first_utterance:
             return '研究生或者大学本科学历'
-        elif first_utterance == '16岁以上护照有效期多长':
+        elif '16岁以上护照有效期多长' in first_utterance:
             return '十年'
         log.info("intention:{}".format(intent_class))
 

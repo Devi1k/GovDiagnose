@@ -25,8 +25,12 @@ def messageSender(conv_id, log, msg="", options=None, link="", service_name="", 
                 "timestamp": now_time}
     response_json = json.dumps(response)
     headers = {'Content-Type': 'application/json'}
-    r = requests.post("https://asueeer.com/api/im/send_message?mock_login=123", data=response_json,
-                      headers=headers)
+    try:
+        r = requests.post("https://asueeer.com/api/im/send_message?mock_login=123", data=response_json,
+                          headers=headers)
+    except ConnectionError:
+        r = requests.post("https://asueeer.com/api/im/send_message?mock_login=123", data=response_json,
+                          headers=headers)
     log.info(response['content'])
     # except EOFError:
     #     break
