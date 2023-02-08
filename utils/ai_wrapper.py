@@ -46,7 +46,8 @@ def get_related_title(first_utterance):
     # title_res = []
     try:
         title_res = requests.get(title_path.format(first_utterance), verify=False).json()['titleList'][:5]
-        title_res.append('以上都不是')
+        if len(title_res) > 0:
+            title_res.append('以上都不是')
     except JSONDecodeError:
         title_res = []
 
