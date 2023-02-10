@@ -102,6 +102,7 @@ async def main_logic(para, link, similarity_dict):
                             pipes_dict[conv_id][6] = True
                             continue
                         # Determine whether it is a multi-round conversation
+                        # todo：
                         multi, similarity = is_multi_round(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
                     if multi:
                         log.info("Same matter.")
@@ -247,6 +248,7 @@ async def main_logic(para, link, similarity_dict):
                 #
                 else:
                     user_pipe, response_pipe, *_ = pipes_dict[conv_id]
+                    # 为刷新页面准备
                     if 'content' not in msg.keys():
                         messageSender(conv_id=conv_id, msg=pipes_dict[conv_id][8], log=log)
                         continue
@@ -267,6 +269,7 @@ async def main_logic(para, link, similarity_dict):
                             # IR
                             options = get_related_title(pipes_dict[conv_id][2])
                             # todo:待调 目前最低
+                            # 若对话内容包含的事项足够明确
                             business_threshold = 0.9102
                             candidate_service = ""
                             max_score = 0
@@ -303,6 +306,7 @@ async def main_logic(para, link, similarity_dict):
                             if 'text' not in user_text.keys():
                                 user_text = {'text': pipes_dict[conv_id][2]}
                             try:
+                                # 做分词归一化
                                 sentence = user_text['text']
                                 if sentence not in positive_list:
                                     seg = thu.cut(sentence)
@@ -319,6 +323,8 @@ async def main_logic(para, link, similarity_dict):
                                             del inform_slots[i]
                                 else:
                                     inform_slots = sentence
+
+                                # 发给子进程诊断
                                 user_pipe[0].send(inform_slots)
                             except OSError:
                                 pass
