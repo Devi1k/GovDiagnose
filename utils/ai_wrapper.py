@@ -12,6 +12,7 @@ with open('data/faq_recommend.json', 'r') as f:
     recommend = json.load(f)
 
 
+# 常见问题回答
 def get_faq(first_utterance, service=""):
     faq_path = "https://miner.picp.net/FAQ?First_utterance={}"
     first_utterance = service + first_utterance
@@ -23,24 +24,28 @@ def get_faq(first_utterance, service=""):
     return similar_score, answer, service
 
 
+# 业务
 def get_business(first_utterance):
     business_path = "https://miner.picp.net/yewu?text={}"
     res = requests.get(business_path.format(first_utterance), verify=False).json()
     return res['type']
 
 
+# 文档检索
 def get_retrieval(first_utterance, service_name):
     ir_path = "https://burninghell.xicp.net/IR?serviceName={}&firstUtterance={}"
     ir_res = requests.get(ir_path.format(service_name, first_utterance), verify=False).json()['abs']
     return ir_res
 
 
+# 业务推理
 def get_nli(first_utterance, service_name):
     nli_path = "https://burninghell.xicp.net/zmytest?Service_name={}&First_utterance={}"
     nli_res = requests.get(nli_path.format(service_name, first_utterance), verify=False).text
     return nli_res
 
 
+# 进入对话后的检索事项
 def get_related_title(first_utterance):
     title_path = "https://burninghell.xicp.net/getRelatedTitle/ver2?query={}"
     # title_res = []
@@ -71,15 +76,18 @@ def get_answer(first_utterance, service_name, log, intent_class=''):
         log.info("QA: {}".format(answer))
         return answer
 
+    # 业务推理
     elif intent_class == "NLI":  # --NLI
         nli_res = get_nli(first_utterance, service_name)
         log.info("NLI:{} ".format(nli_res))
         return nli_res
 
+    # 文档检索
     elif intent_class == "IR":  # --IR
         ir_res = get_retrieval(first_utterance, service_name)
         log.info("IR: {}".format(ir_res))
         return ir_res
+
 
     else:  # --diagnose
         log.info("diagnosis: {}".format(service_name))
@@ -87,19 +95,26 @@ def get_answer(first_utterance, service_name, log, intent_class=''):
 
 
 def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, service_name=""):
+    # 子进程管道关闭
     user_pipe[0].close()
     response_pipe[1].close()
     user_pipe[1].close()
     response_pipe[0].close()
+
+    # 对话状态设置
     pipes_dict[conv_id][4] = True
     pipes_dict[conv_id][6] = True
+
     messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
+
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
     # log.info('process kill')
     last_msg = "请问还有其他问题吗，如果有请继续提问"
     messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][3].join()
+
+    # FAQ推荐 后续实现
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
                               utterance=pipes_dict[conv_id][2])
     # last_msg = recommend
