@@ -138,7 +138,7 @@ async def main_logic(para, link, similarity_dict):
                             similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
                         user_text = {'text': pipes_dict[conv_id][2]}
                         log.info(user_text)
-                        if float(similar_score) > 0.9412:
+                        if float(similar_score) > 0.9230:
                             pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                                   log)
                             # pipes_dict[conv_id][6] = True
@@ -259,7 +259,7 @@ async def main_logic(para, link, similarity_dict):
                         pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
                                                         pipes_dict[conv_id][2])
                         similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
-                    if float(similar_score) > 0.9412:
+                    if float(similar_score) > 0.9230:
                         pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                               log)
                         # pipes_dict[conv_id][6] = True
