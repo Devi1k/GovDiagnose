@@ -2,14 +2,18 @@ import json
 import warnings
 from json import JSONDecodeError
 
+import Levenshtein
 import requests
 
 from utils.message_sender import messageSender
 
 warnings.filterwarnings("ignore")
 
-with open('data/faq_recommend.json', 'r') as f:
+with open('../data/faq_recommend.json', 'r') as f:
     recommend = json.load(f)
+
+with open('../data/new_faq_recommend.json', 'r') as f:
+    new_recommend = json.load(f)
 
 
 # 常见问题回答
@@ -125,9 +129,33 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
     return last_msg
 
 
+def get_faq_from_service(first_utterance, service):
+    question_dict = new_recommend[service]
+    question_list = []
+    for k, v in question_dict.items():
+        for ques, document in v.items():
+            ques.replace(service, "")
+            question_list.append(ques)
+    answer = ""
+    max_score = 0
+    candidate_ques = ""
+    for q in question_list:
+        scoreT = Levenshtein.ratio(first_utterance, q)
+        if scoreT > max_score:
+            max_score = scoreT
+            candidate_ques = q
+    for k, v in question_dict.items():
+        try:
+            answer = v[candidate_ques]
+        except KeyError:
+            answer = v[service + candidate_ques]
+    return max_score, answer, service
+
+
 def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class=''):
-    similarity_score, answer, service = get_faq(first_utterance=pipes_dict[conv_id][2], service=service_name)
-    if float(similarity_score) < 0.85:
+    similarity_score, answer, service = get_faq_from_service(first_utterance=pipes_dict[conv_id][2],
+                                                             service=service_name)
+    if float(similarity_score) < 0.4:
         answer = get_answer(pipes_dict[conv_id][2], service_name, log, intent_class)
     try:
         service_link = str(link[service_name])
@@ -195,3 +223,8 @@ def get_recommend(service_name, utterance="", history=None):
     # for c in choice:
     #     res.append(query_list[c].replace(service_name, ''))
     return res
+
+
+if __name__ == '__main__':
+    get_faq_from_service("文化艺术类民办培训学校的法人有什么要求",
+                         "实施中等及中等以下学历教育、学前教育、自学考试助学和实施高等以下非学历文化教育的民办学校的筹设、设立、变更、延续与终止的许可-实施非学历文化教育、自学考试助学的教育机构的许可-筹设、设立")  # add assertion here
