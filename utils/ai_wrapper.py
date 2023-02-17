@@ -145,10 +145,9 @@ def get_faq_from_service(first_utterance, service):
             max_score = scoreT
             candidate_ques = q
     for k, v in question_dict.items():
-        try:
+        if candidate_ques in v.keys():
             answer = v[candidate_ques]
-        except KeyError:
-            answer = v[service + candidate_ques]
+            break
     return max_score, answer, service
 
 
