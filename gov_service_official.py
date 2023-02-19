@@ -1,5 +1,4 @@
 import asyncio
-import time
 from multiprocessing import Pipe, Process
 
 import gensim
@@ -68,7 +67,7 @@ async def main_logic(para, link, similarity_dict):
             try:
                 # Initialize the conversation
                 if conv_id not in pipes_dict:
-                    clean_log(log)
+                    clean_log()
                     user_pipe, response_pipe = Pipe(), Pipe()
                     p = Process(target=simulation_epoch,
                                 args=(
@@ -93,10 +92,11 @@ async def main_logic(para, link, similarity_dict):
                                                         "",
                                                         pipes_dict[conv_id][2])
                         if pipes_dict[conv_id][6] is True:
-                            similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2],
-                                                                          pipes_dict[conv_id][7])
+                            similar_score, answer, service_name = get_faq_from_service(
+                                first_utterance=pipes_dict[conv_id][2],
+                                service=pipes_dict[conv_id][7])
                             pipes_dict[conv_id][6] = False
-                        if float(similar_score) > 0.9459:
+                        if float(similar_score) > 0.4:
                             pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                                   log)
                             pipes_dict[conv_id][6] = True
@@ -260,6 +260,7 @@ async def main_logic(para, link, similarity_dict):
                                                         pipes_dict[conv_id][2])
                         similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
                     if float(similar_score) > 0.9230:
+                        pipes_dict[conv_id][7] = service_name
                         pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                               log)
                         # pipes_dict[conv_id][6] = True
