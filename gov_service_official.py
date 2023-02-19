@@ -67,7 +67,7 @@ async def main_logic(para, link, similarity_dict):
             try:
                 # Initialize the conversation
                 if conv_id not in pipes_dict:
-                    clean_log(log)
+                    clean_log()
                     user_pipe, response_pipe = Pipe(), Pipe()
                     p = Process(target=simulation_epoch,
                                 args=(
