@@ -1,4 +1,5 @@
 import json
+import os.path
 import warnings
 from json import JSONDecodeError
 
@@ -9,10 +10,12 @@ from utils.message_sender import messageSender
 
 warnings.filterwarnings("ignore")
 
-with open('../data/faq_recommend.json', 'r') as f:
+with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/faq_recommend.json'),
+          'r') as f:
     recommend = json.load(f)
 
-with open('../data/new_faq_recommend.json', 'r') as f:
+with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/new_faq_recommend.json'),
+          'r') as f:
     new_recommend = json.load(f)
 
 
@@ -131,11 +134,11 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
 
 def get_faq_from_service(first_utterance, service):
     question_dict = new_recommend[service]
-    question_list = []
+    question_list = set()
     for k, v in question_dict.items():
         for ques, document in v.items():
-            ques.replace(service, "")
-            question_list.append(ques)
+            ques = ques.replace(service, "")
+            question_list.add(ques)
     answer = ""
     max_score = 0
     candidate_ques = ""
@@ -145,8 +148,11 @@ def get_faq_from_service(first_utterance, service):
             max_score = scoreT
             candidate_ques = q
     for k, v in question_dict.items():
-        if candidate_ques in v.keys():
-            answer = v[candidate_ques]
+        if candidate_ques in v.keys() or (service + candidate_ques) in v.keys():
+            try:
+                answer = v[candidate_ques]
+            except KeyError:
+                answer = v[service + candidate_ques]
             break
     return max_score, answer, service
 

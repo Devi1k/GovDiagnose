@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+import time
 from logging.handlers import TimedRotatingFileHandler
 from time import strftime, gmtime
 
@@ -24,23 +25,23 @@ class Logger:
         return self.logger
 
 
-def clean_log(logger):
-    path = 'log/'
-    timestamp = strftime("%Y%m%d%H%M%S", gmtime())
-    today_m = int(timestamp[4:6])  # 今天的月份
-    today_y = int(timestamp[0:4])  # 今天的年份
-    logger.info('clean log')
+def clean_log():
+    path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
     for i in os.listdir(path):
-        if len(i) < 9:
+        if not i.startswith("goal_set_"):
             continue
-        file_path = path + i  # 生成日志文件的路径
-        file_m = int(i[14:16])  # 日志的月份
-        file_y = int(i[9:13])  # 日志的年份
-        # 对上个月的日志进行清理，即删除。
-        # print(file_path)
+        file_path = os.path.join(path, i)
+        timestamp = strftime("%Y%m%d%H%M%S", gmtime())
+        today_m = int(timestamp[4:6])  # 今天的月份
+        today_d = int(timestamp[6:8])  # 今天的日期
+        t = os.path.getmtime(file_path)
+        timeStruce = time.localtime(t)
+        times = time.strftime('%Y-%m-%d%H:%M:%S', timeStruce)
+        file_m = int(times[5:7])  # 日志的月份
+        file_d = int(times[8:10])  # 日志的日期
         if file_m < today_m:
             if os.path.exists(file_path):  # 判断生成的路径对不对，防止报错
                 os.remove(file_path)  # 删除文件
-        elif file_y < today_y:
+        elif file_d < today_d - 10:
             if os.path.exists(file_path):
                 os.remove(file_path)
