@@ -1,5 +1,6 @@
 import json
 import os.path
+import re
 import warnings
 from json import JSONDecodeError
 
@@ -117,16 +118,21 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][3].terminate()
     # log.info('process kill')
-    last_msg = "请问还有其他问题吗，如果有请继续提问"
-    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=pipes_dict[conv_id][4])
+    # last_msg = "请问还有其他问题吗，如果有请继续提问"
+    # messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][3].join()
 
     # FAQ推荐 后续实现
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
-                              utterance=pipes_dict[conv_id][2])
-    # last_msg = recommend
-    # messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
-    #               service_name=service_name, options=recommend)
+                              history=pipes_dict[conv_id][10])
+    if len(recommend) < 1:
+        recommend = "请问还有其他问题吗，如果有请继续提问"
+    last_msg = recommend
+    if isinstance(recommend, list):
+        messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
+                      service_name=service_name, options=last_msg)
+    else:
+        messageSender(conv_id=conv_id, msg=last_msg, log=log, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][9] = 0
     return last_msg
@@ -175,13 +181,15 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
     # log.info('process kill')
     pipes_dict[conv_id][3].join()
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
-                              utterance=pipes_dict[conv_id][2])
-    # last_msg = recommend
-    # messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
-    #               service_name=service_name, options=recommend)
-    last_msg = "请问还有其他问题吗，如果有请继续提问"
-    messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=True,
-                  service_name=service_name)
+                              history=pipes_dict[conv_id][10])
+    if len(recommend) < 1:
+        recommend = "请问还有其他问题吗，如果有请继续提问"
+    last_msg = recommend
+    if isinstance(recommend, list):
+        messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
+                      service_name=service_name, options=last_msg)
+    else:
+        messageSender(conv_id=conv_id, msg=last_msg, log=log, end=pipes_dict[conv_id][4])
     pipes_dict[conv_id][2] = ""
     pipes_dict[conv_id][9] = 0
     return last_msg
@@ -194,7 +202,7 @@ def get_multi_res(first_utterance, service_name):
     return answer
 
 
-def get_recommend(service_name, utterance="", history=None):
+def get_recommend(service_name, history=None):
     if history is None:
         history = []
     level_list = ['1', '2', '3']
@@ -205,29 +213,19 @@ def get_recommend(service_name, utterance="", history=None):
         except KeyError:
             continue
         for q in query:
+            q = q.replace(service_name, "")
+            q = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+",
+                       "",
+                       q)
             query_list.append(q)
-    # utterance = service_name + utterance
-    # todo:如果问不一样的怎么办
     if history is not None:
         for h in history:
-            h = service_name + h
-            if h in query_list:
-                query_list.remove(h)
-    query_list.reverse()
-    res = []
-    # 1.按优先级固定写死
-    for q in query_list[-5:]:
-        res.append(q.replace(service_name, ''))
-    # 2.按相似度取问题（不涉及优先级）
-    # similarity_list = []
-    # for q in query_list:
-    #     score = ratio(utterance, q)
-    #     similarity_list.append(score)
-    # similarity_list = np.array(similarity_list)
-    # choice = sorted(np.argsort(similarity_list)[-5:])
-    # for c in choice:
-    #     res.append(query_list[c].replace(service_name, ''))
-    return res
+            for i in range(len(query_list) - 1, -1, -1):
+                q = query_list[i]
+                scoreT = Levenshtein.ratio(h, q)
+                if scoreT > 0.38:
+                    query_list.remove(q)
+    return query_list[:5]
 
 
 if __name__ == '__main__':
