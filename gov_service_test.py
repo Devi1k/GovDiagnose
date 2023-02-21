@@ -22,7 +22,8 @@ heart = {"type": 10000, "msg": "heart_beat"}
 
 async def main_logic(para, link, similarity_dict):
     global first_utterance, service_name, conv_id, end_flag, \
-        start_time, end_time, pipes_dict, positive_list, stop_words, thu, word_dict, model
+        start_time, end_time, pipes_dict, positive_list, stop_words, \
+        thu, word_dict, model, blur_service
     address = 'wss://asueeer.com/ws?mock_login=123'
     async for websocket in websockets.connect(address, ping_interval=12000):
         try:
@@ -67,8 +68,8 @@ async def main_logic(para, link, similarity_dict):
                         pipes_dict[conv_id][10].append(pipes_dict[conv_id][2])
                         pipes_dict[conv_id][4] = True
                         pipes_dict[conv_id][6] = True
-                        similarity, answer, service_name = get_faq(first_utterance=pipes_dict[conv_id][2],
-                                                                   service=pipes_dict[conv_id][7])
+                        similarity, answer, service_name = get_faq_from_service(first_utterance=pipes_dict[conv_id][2],
+                                                                                service=pipes_dict[conv_id][7])
                         pipes_dict[conv_id][7] = service_name
                         messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
                         recommend = get_recommend(service_name=pipes_dict[conv_id][7],
@@ -121,7 +122,7 @@ async def main_logic(para, link, similarity_dict):
                                 first_utterance=pipes_dict[conv_id][2],
                                 service=pipes_dict[conv_id][7])
                             pipes_dict[conv_id][6] = False
-                        if float(similar_score) > 0.4:
+                        if float(similar_score) > 0.4211:
                             pipes_dict[conv_id][10].append(pipes_dict[conv_id][2])
                             pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                                   log)
@@ -138,20 +139,26 @@ async def main_logic(para, link, similarity_dict):
                         response_pipe[0].close()
                         pipes_dict[conv_id][4] = True
                         pipes_dict[conv_id][6] = True
-                        answer = get_multi_res(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
-                        messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
-                        recommend = get_recommend(service_name=pipes_dict[conv_id][7],
-                                                  history=pipes_dict[conv_id][10])
-                        if len(recommend) < 1:
-                            recommend = "请问还有其他问题吗，如果有请继续提问"
-                        pipes_dict[conv_id][8] = recommend
-                        if isinstance(recommend, list):
-                            messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
-                                          service_name=service_name, options=recommend)
+                        if pipes_dict[conv_id][7] not in blur_service.keys():
+                            answer = get_multi_res(pipes_dict[conv_id][2], pipes_dict[conv_id][7])
+                            messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
+                            recommend = get_recommend(service_name=pipes_dict[conv_id][7],
+                                                      history=pipes_dict[conv_id][10])
+                            if len(recommend) < 1:
+                                recommend = "请问还有其他问题吗，如果有请继续提问"
+                            pipes_dict[conv_id][8] = recommend
+                            if isinstance(recommend, list):
+                                messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
+                                              service_name=service_name, options=recommend)
+                            else:
+                                messageSender(conv_id=conv_id, msg=recommend, log=log, end=pipes_dict[conv_id][4])
+                            pipes_dict[conv_id][2] = ""
+                            pipes_dict[conv_id][9] = 0
                         else:
-                            messageSender(conv_id=conv_id, msg=recommend, log=log, end=pipes_dict[conv_id][4])
-                        pipes_dict[conv_id][2] = ""
-                        pipes_dict[conv_id][9] = 0
+                            options = get_related_title(pipes_dict[conv_id][7])
+                            pipes_dict[conv_id][9] += 2
+                            messageSender(conv_id=conv_id, msg="请选择与您相符的事项", log=log, options=options,
+                                          end=False)
                     else:
                         log.info("Different matter")
                         # Rediagnosis
@@ -305,6 +312,7 @@ async def main_logic(para, link, similarity_dict):
                         similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
                     if float(similar_score) > 0.9230:
                         pipes_dict[conv_id][7] = service_name
+                        pipes_dict[conv_id][10].append(pipes_dict[conv_id][2])
                         pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                               log)
                         # pipes_dict[conv_id][6] = True
@@ -440,6 +448,8 @@ if __name__ == '__main__':
     # last_msg = ""
     thu = thulac(user_dict='./data/new_dict.txt', seg_only=True)
     stop_words = [i.strip() for i in open('./data/baidu_stopwords.txt').readlines()]
+    with open('data/blur_service.json', 'r') as f:
+        blur_service = json.load(f)
     log.info('load model')
     model = gensim.models.Word2Vec.load('./data/wb.text.model')
     word_dict = load_dict('./data/new_dict.txt')
