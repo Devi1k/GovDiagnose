@@ -139,7 +139,10 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
 
 
 def get_faq_from_service(first_utterance, service):
-    question_dict = new_recommend[service]
+    try:
+        question_dict = new_recommend[service]
+    except KeyError:
+        return 0, "抱歉，无相关问题", service
     question_list = set()
     for k, v in question_dict.items():
         for ques, document in v.items():
@@ -166,7 +169,7 @@ def get_faq_from_service(first_utterance, service):
 def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class=''):
     similarity_score, answer, service = get_faq_from_service(first_utterance=pipes_dict[conv_id][2],
                                                              service=service_name)
-    if float(similarity_score) < 0.4:
+    if float(similarity_score) < 0.4211:
         answer = get_answer(pipes_dict[conv_id][2], service_name, log, intent_class)
     try:
         service_link = str(link[service_name])

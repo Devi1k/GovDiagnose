@@ -42,6 +42,6 @@ def clean_log():
         if file_m < today_m:
             if os.path.exists(file_path):  # 判断生成的路径对不对，防止报错
                 os.remove(file_path)  # 删除文件
-        elif file_d < today_d - 10:
+        elif file_d < today_d - 5:
             if os.path.exists(file_path):
                 os.remove(file_path)
