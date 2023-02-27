@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
   <component name="PublishConfigData" serverName="yanking@10.13.56.38:22 password" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" showNewOnTargetInSync="false">
+=======
+  <component name="PublishConfigData" serverName="yanking@10.13.56.38:22 password" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" showDifferentInSync="false" showNewOnSourceInSync="false">
+>>>>>>> 638e06d43aa7d46fdc0d670e7228ede2ed96c03d
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="yanking@10.13.56.38:22 password">
