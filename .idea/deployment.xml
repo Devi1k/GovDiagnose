@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="PublishConfigData" serverName="yanking@10.13.56.38:22 password" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" showDifferentInSync="false" showNewOnSourceInSync="false">
   <component name="PublishConfigData" serverName="yanking@10.13.56.38:22 password" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
@@ -13,3 +14,4 @@
     </serverData>
   </component>
 </project>
+
