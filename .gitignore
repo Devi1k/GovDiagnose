@@ -14,3 +14,4 @@ utils/test/__pycache__/*
 normal/__pycache__/*
 
 .README.md.swp
+service.out
