@@ -13,5 +13,6 @@ utils/__pycache__/*
 utils/test/__pycache__/*
 normal/__pycache__/*
 
-.README.md.swp
+.idea/*
 service.out
+.README.md.swp
