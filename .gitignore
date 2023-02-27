@@ -5,3 +5,9 @@
 /data/goal_set*
 
 .DS_Store
+gov/.DS_Store
+__pycache__/*
+conf/__pycache__/*
+gov/__pycache__/*
+utils/__pycache__/*
+normal/__pycache__/*
