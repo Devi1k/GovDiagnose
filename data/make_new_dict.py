@@ -14,7 +14,7 @@ def make_dict(requirement):
     requirement.remove(requirement[0])
     requirement.remove(requirement[0])
     for _r in requirement:
-        dict_list.add(_r + '\n')
+        dict_list.add(_r.strip() + '\n')
 
 
 for i in range(len(requirement_all)):

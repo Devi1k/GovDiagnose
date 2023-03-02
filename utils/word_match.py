@@ -1,8 +1,10 @@
 import numbers
+import os.path
 import time
 
 # import jieba.analyse
 import numpy as np
+from thulac import thulac
 
 from utils.ai_wrapper import get_related_title
 
@@ -165,8 +167,7 @@ def is_multi_round(utterance, service_name):
     if service_name == "":
         return False, 0
     high_frequency_statement = ['我要预约', '我想预约', '我想在线预约', '我要办理', '我想办理', '我想在线办理',
-                                '我想评价', '我要评价', '我想在线评价', '申请材料是什么', '申请材料有什么',
-                                '办理流程是什么']
+                                '我想评价', '我要评价', '我想在线评价']
     if utterance in high_frequency_statement:
         return True, 0
     # 当前最低阈值
@@ -201,19 +202,17 @@ def is_multi_round(utterance, service_name):
             return False, service_distance
 
 
-if __name__ == '__main__':
-    # log = Logger().getLogger()
-    # load_start = time.time()
-    # model = gensim.models.Word2Vec.load('../data/wb.text.model')
-    # stopwords = [i.strip() for i in open('../data/baidu_stopwords.txt').readlines()]
-    # word_dict = load_dict('../data/new_dict.txt')
-    # thu = thulac.thulac(user_dict='../data/new_dict.txt', seg_only=True)
-    # with open('../data/similar.json', 'r') as f:
-    #     similarity_dict = json.load(f)
-    # load_end = time.time()
-    # print("load:", load_end - load_start)
-    # question = "我想挂个牌匾需要办理什么业务？"
-    # find_synonym(question, model, similarity_dict)
-
-    print(is_multi_round("申请材料",
-                         "户外广告及临时悬挂、设置标语或者宣传品许可--户外广告设施许可（不含公交候车亭附属广告及公交车体广告设施）（市级权限委托市内六区实施）"))
+def cut_sentence_remove_stopwords(sentence):
+    thu = thulac(
+        user_dict=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/new_dict.txt'),
+        seg_only=True)
+    stop_words = [i.strip() for i in open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                                       'data/baidu_stopwords.txt')).readlines()]
+    seg = thu.cut(sentence)
+    seg_list = []
+    for s in seg:
+        seg_list.append(s[0])
+    for i in range(len(seg_list) - 1, -1, -1):
+        if seg_list[i] in stop_words:
+            del seg_list[i]
+    return seg_list

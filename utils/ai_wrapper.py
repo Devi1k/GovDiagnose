@@ -138,7 +138,14 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
     return last_msg
 
 
-def get_faq_from_service(first_utterance, service):
+def get_faq_from_service(first_utterance, service, history):
+    from utils.word_match import cut_sentence_remove_stopwords
+
+    utterance = first_utterance.replace("--", '-').replace(" ", "").replace(service, "")
+    seg_list = cut_sentence_remove_stopwords(sentence=utterance)
+    utterance = ''.join(seg_list)
+    utterance = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*]+", "",
+                       utterance)
     try:
         question_dict = new_recommend[service]
     except KeyError:
@@ -148,13 +155,33 @@ def get_faq_from_service(first_utterance, service):
         for ques, document in v.items():
             ques = ques.replace(service, "")
             question_list.add(ques)
+    question_list = list(question_list)
+    if history is not None:
+        for h in history:
+            for i in range(len(question_list) - 1, -1, -1):
+                q = question_list[i]
+                scoreT = Levenshtein.ratio(h, q)
+                if scoreT > 0.38:
+                    question_list.remove(q)
     answer = ""
     max_score = 0
     candidate_ques = ""
+    # first_utterance = first_utterance.replace(service, "")
+    max_num = 0
     for q in question_list:
-        scoreT = Levenshtein.ratio(first_utterance, q)
-        if scoreT > max_score:
+        _q = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*]+", "",
+                    q)
+        # if "申请条件" in q:
+        #     print(1)
+        num = 0
+
+        for s in seg_list:
+            if s in _q:
+                num += 1
+        scoreT = Levenshtein.ratio(utterance, _q)
+        if num >= max_num and scoreT > max_score:
             max_score = scoreT
+            max_num = num
             candidate_ques = q
     for k, v in question_dict.items():
         if candidate_ques in v.keys() or (service + candidate_ques) in v.keys():
@@ -168,8 +195,8 @@ def get_faq_from_service(first_utterance, service):
 
 def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class=''):
     similarity_score, answer, service = get_faq_from_service(first_utterance=pipes_dict[conv_id][2],
-                                                             service=service_name)
-    if float(similarity_score) < 0.4211:
+                                                             service=service_name, history=pipes_dict[conv_id][10])
+    if float(similarity_score) < 0.32:
         answer = get_answer(pipes_dict[conv_id][2], service_name, log, intent_class)
     try:
         service_link = str(link[service_name])
@@ -177,6 +204,7 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
         service_link = ""
     business = get_business(first_utterance=pipes_dict[conv_id][2])
     answer = answer + '\n' + '(' + service_name + '——' + business + ')'
+    pipes_dict[conv_id][10].append(pipes_dict[conv_id][2])
     messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=True)
     pipes_dict[conv_id][4] = True
     pipes_dict[conv_id][6] = True
@@ -217,7 +245,7 @@ def get_recommend(service_name, history=None):
             continue
         for q in query:
             q = q.replace(service_name, "")
-            q = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+",
+            q = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*]+",
                        "",
                        q)
             query_list.append(q)
@@ -229,8 +257,3 @@ def get_recommend(service_name, history=None):
                 if scoreT > 0.38:
                     query_list.remove(q)
     return query_list[:5]
-
-
-if __name__ == '__main__':
-    get_faq_from_service("文化艺术类民办培训学校的法人有什么要求",
-                         "实施中等及中等以下学历教育、学前教育、自学考试助学和实施高等以下非学历文化教育的民办学校的筹设、设立、变更、延续与终止的许可-实施非学历文化教育、自学考试助学的教育机构的许可-筹设、设立")  # add assertion here

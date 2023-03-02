@@ -3,7 +3,6 @@ from multiprocessing import Pipe, Process
 
 import gensim
 import websockets
-from thulac import thulac
 from websockets import ConnectionClosed
 
 from conf.config import get_config
@@ -12,7 +11,8 @@ from gov.running_steward import simulation_epoch
 from utils.ai_wrapper import *
 from utils.logger import *
 from utils.message_sender import messageSender
-from utils.word_match import is_multi_round, lev, longestCommonSubsequence, sigmoid, load_dict, replace_list
+from utils.word_match import is_multi_round, lev, longestCommonSubsequence, sigmoid, load_dict, replace_list, \
+    cut_sentence_remove_stopwords
 
 log = Logger().getLogger()
 count = 0
@@ -23,7 +23,7 @@ heart = {"type": 10000, "msg": "heart_beat"}
 async def main_logic(para, link, similarity_dict):
     global first_utterance, service_name, conv_id, end_flag, \
         start_time, end_time, pipes_dict, positive_list, stop_words, \
-        thu, word_dict, model, blur_service
+        word_dict, model, blur_service
     address = 'wss://asueeer.com/ws?mock_login=123'
     async for websocket in websockets.connect(address, ping_interval=12000):
         try:
@@ -64,12 +64,14 @@ async def main_logic(para, link, similarity_dict):
                         pipes_dict[conv_id][3].join()
                         continue
                     elif service_name != '以上都不是' and pipes_dict[conv_id][9] == 0:
-                        pipes_dict[conv_id][2] = service_name
+                        pipes_dict[conv_id][2] = service_name.replace("--", "-")
                         pipes_dict[conv_id][10].append(pipes_dict[conv_id][2])
                         pipes_dict[conv_id][4] = True
                         pipes_dict[conv_id][6] = True
-                        similarity, answer, service_name = get_faq_from_service(first_utterance=pipes_dict[conv_id][2],
-                                                                                service=pipes_dict[conv_id][7])
+
+                        similarity_score, answer, service_name = get_faq_from_service(
+                            first_utterance=pipes_dict[conv_id][2],
+                            service=pipes_dict[conv_id][7], history=pipes_dict[conv_id][10])
                         pipes_dict[conv_id][7] = service_name
                         messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
                         recommend = get_recommend(service_name=pipes_dict[conv_id][7],
@@ -111,18 +113,20 @@ async def main_logic(para, link, similarity_dict):
                     multi = True
                     if pipes_dict[conv_id][2] == "":
                         try:
-                            pipes_dict[conv_id][2] = msg['content']['text']
+                            pipes_dict[conv_id][2] = msg['content']['text'].replace("--", "-")
                         except KeyError:
-                            pipes_dict[conv_id][2] = msg['content']['service_name']
-                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+",
+                            pipes_dict[conv_id][2] = msg['content']['service_name'].replace("--", "-")
+                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*]+",
                                                         "",
                                                         pipes_dict[conv_id][2])
                         if pipes_dict[conv_id][6] is True:
-                            similar_score, answer, service_name = get_faq_from_service(
+                            similarity_score, answer, service_name = get_faq_from_service(
                                 first_utterance=pipes_dict[conv_id][2],
-                                service=pipes_dict[conv_id][7])
+                                service=pipes_dict[conv_id][7],
+                                history=pipes_dict[conv_id][10]
+                            )
                             pipes_dict[conv_id][6] = False
-                        if float(similar_score) > 0.4211:
+                        if float(similarity_score) > 0.32:
                             pipes_dict[conv_id][10].append(pipes_dict[conv_id][2])
                             pipes_dict[conv_id][8] = faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id,
                                                                   log)
@@ -171,9 +175,10 @@ async def main_logic(para, link, similarity_dict):
                         # service_name, last_msg
                         pipes_dict[conv_id] = [user_pipe, response_pipe, pipes_dict[conv_id][2], p, False, False, True,
                                                "", "", 0, []]
-                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+",
+
+                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*]+",
                                                         "",
-                                                        pipes_dict[conv_id][2])
+                                                        pipes_dict[conv_id][2].replace("--", "-"))
                         similar_score, answer = 0, ""
                         if pipes_dict[conv_id][6] is True:
                             similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
@@ -227,13 +232,7 @@ async def main_logic(para, link, similarity_dict):
                                         pipes_dict[conv_id][9] += 1
                                     try:
                                         sentence = user_text['text']
-                                        seg = thu.cut(sentence)
-                                        seg_list = []
-                                        for s in seg:
-                                            seg_list.append(s[0])
-                                        for i in range(len(seg_list) - 1, -1, -1):
-                                            if seg_list[i] in stop_words:
-                                                del seg_list[i]
+                                        seg_list = cut_sentence_remove_stopwords(sentence)
                                         inform_slots = replace_list(seg_list, word_dict, model=model,
                                                                     similarity_dict=similarity_dict)
                                         for i in range(len(inform_slots) - 1, -1, -1):
@@ -304,10 +303,10 @@ async def main_logic(para, link, similarity_dict):
                         messageSender(conv_id=conv_id, msg=pipes_dict[conv_id][8], log=log)
                         continue
                     if pipes_dict[conv_id][2] == "":
-                        pipes_dict[conv_id][2] = msg['content']['text']
+                        pipes_dict[conv_id][2] = msg['content']['text'].replace("--", "-")
                     similar_score, answer = 0, ""
                     if pipes_dict[conv_id][6] is True:
-                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+", "",
+                        pipes_dict[conv_id][2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*]+", "",
                                                         pipes_dict[conv_id][2])
                         similar_score, answer, service_name = get_faq(pipes_dict[conv_id][2])
                     if float(similar_score) > 0.9230:
@@ -362,13 +361,7 @@ async def main_logic(para, link, similarity_dict):
                                 # 做分词归一化
                                 sentence = user_text['text']
                                 if sentence not in positive_list:
-                                    seg = thu.cut(sentence)
-                                    seg_list = []
-                                    for s in seg:
-                                        seg_list.append(s[0])
-                                    for i in range(len(seg_list) - 1, -1, -1):
-                                        if seg_list[i] in stop_words:
-                                            del seg_list[i]
+                                    seg_list = cut_sentence_remove_stopwords(sentence)
                                     inform_slots = replace_list(seg_list, word_dict, model=model,
                                                                 similarity_dict=similarity_dict)
                                     for i in range(len(inform_slots) - 1, -1, -1):
@@ -446,8 +439,6 @@ if __name__ == '__main__':
     pipes_dict = {}
     first_utterance, service_name = "", ""
     # last_msg = ""
-    thu = thulac(user_dict='./data/new_dict.txt', seg_only=True)
-    stop_words = [i.strip() for i in open('./data/baidu_stopwords.txt').readlines()]
     with open('data/blur_service.json', 'r') as f:
         blur_service = json.load(f)
     log.info('load model')
