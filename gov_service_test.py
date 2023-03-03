@@ -1,5 +1,5 @@
 import asyncio
-from multiprocessing import Pipe, Process
+from multiprocessing import Pipe, Process, Queue
 
 import gensim
 import websockets
@@ -15,26 +15,44 @@ from utils.word_match import is_multi_round, lev, longestCommonSubsequence, sigm
     cut_sentence_remove_stopwords
 
 log = Logger().getLogger()
-count = 0
 
-heart = {"type": 10000, "msg": "heart_beat"}
+pipes_dict = {}
 
 
-async def main_logic(para, link, similarity_dict):
-    global first_utterance, service_name, conv_id, end_flag, \
-        start_time, end_time, pipes_dict, positive_list, stop_words, \
-        word_dict, model, blur_service
+async def main_logic(q):
+    global parameter, agent, link, similarity_dict, positive_list, \
+        stop_words, word_dict, model, blur_service
+
     address = 'wss://asueeer.com/ws?mock_login=123'
+    # process_list = [Process(target=process_msg, args=(
+    #     q, pipes_dict, agent, parameter, link, similarity_dict, positive_list, stop_words, word_dict, model,
+    #     blur_service,)) for i in range(5)]
+    # [task.start() for task in process_list]
+    p1 = Process(target=process_msg, args=(
+        q, agent, parameter, link, similarity_dict, positive_list, stop_words, word_dict, model,
+        blur_service,))
+    p1.start()
     async for websocket in websockets.connect(address, ping_interval=12000):
         try:
-            # log.info('wait message')
-            response = await websocket.recv()
-            # log.info(response)
+            log.info('wait message')
+
+            q.put(await websocket.recv())
+
+        except ConnectionClosed:
+            continue
+
+
+def process_msg(queue, agent, parameter, link, similarity_dict, positive_list, stop_words, word_dict, model,
+                blur_service):
+    # global pipes_dict
+    while True:
+
+        if not queue.empty():
+            response = queue.get()
             try:
                 user_json = json.loads(response)
             except JSONDecodeError:
                 continue
-            # log.info(user_json)
             msg = user_json['msg']
             conv_id = msg['conv_id']
             if 'content' in msg.keys():
@@ -59,9 +77,8 @@ async def main_logic(para, link, similarity_dict):
                                       end=pipes_dict[conv_id][4])
                         pipes_dict[conv_id][6] = True
                         pipes_dict[conv_id][2] = ""
-                        pipes_dict[conv_id][3].terminate()
+                        pipes_dict[conv_id][3].kill()
                         log.info('process kill')
-                        pipes_dict[conv_id][3].join()
                         continue
                     elif service_name != '以上都不是' and pipes_dict[conv_id][9] == 0:
                         pipes_dict[conv_id][2] = service_name.replace("--", "-")
@@ -96,7 +113,7 @@ async def main_logic(para, link, similarity_dict):
                     user_pipe, response_pipe = Pipe(), Pipe()
                     p = Process(target=simulation_epoch,
                                 args=(
-                                    (user_pipe[1], response_pipe[0]), agent, para, log, similarity_dict, conv_id))
+                                    (user_pipe[1], response_pipe[0]), agent, parameter, log, similarity_dict, conv_id))
                     p.start()
                     # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish,  first_utt,
                     # service_name, last_msg, dialogue_retrieval_turn
@@ -168,7 +185,7 @@ async def main_logic(para, link, similarity_dict):
                         # Rediagnosis
                         p = Process(target=simulation_epoch,
                                     args=(
-                                        (user_pipe[1], response_pipe[0]), agent, para, log, similarity_dict,
+                                        (user_pipe[1], response_pipe[0]), agent, parameter, log, similarity_dict,
                                         conv_id))
                         p.start()
                         # send_pipe, receive_pipe, first_utterance, process, single_finish, all_finish, first_utt,
@@ -278,9 +295,8 @@ async def main_logic(para, link, similarity_dict):
                                         messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link,
                                                       end=pipes_dict[conv_id][4])
                                         pipes_dict[conv_id][2] = ""
-                                        pipes_dict[conv_id][3].terminate()
+                                        pipes_dict[conv_id][3].kill()
                                         # log.info('process kill')
-                                        pipes_dict[conv_id][3].join()
                                         pipes_dict[conv_id][10].append(pipes_dict[conv_id][2])
                                         recommend = get_recommend(service_name=pipes_dict[conv_id][7],
                                                                   history=pipes_dict[conv_id][10])
@@ -402,9 +418,8 @@ async def main_logic(para, link, similarity_dict):
                                 else:
                                     answer = "抱歉，无法回答当前问题"
                                     pipes_dict[conv_id][6] = True
-                                    pipes_dict[conv_id][3].terminate()
+                                    pipes_dict[conv_id][3].kill()
                                     # log.info('process kill')
-                                    pipes_dict[conv_id][3].join()
                                     pipes_dict[conv_id][2] = ""
                                     pipes_dict[conv_id][9] = 0
                                     messageSender(conv_id=conv_id, log=log, msg=answer, end=False)
@@ -428,30 +443,28 @@ async def main_logic(para, link, similarity_dict):
             except Exception as e:
                 log.error(e, exc_info=True)
 
-        except ConnectionClosed:
-            continue
-
 
 if __name__ == '__main__':
-    start_time = time.time()
-    end_time = time.time()
-    end_flag = False
-    pipes_dict = {}
-    first_utterance, service_name = "", ""
+    q = Queue(maxsize=300)
     # last_msg = ""
+    # manager = Manager()
+    # pipes_dict = manager.dict()
     with open('data/blur_service.json', 'r') as f:
         blur_service = json.load(f)
-    log.info('load model')
     model = gensim.models.Word2Vec.load('./data/wb.text.model')
     word_dict = load_dict('./data/new_dict.txt')
-    config_file = './conf/settings.yaml'
-    parameter = get_config(config_file)
+    stop_words = [i.strip() for i in open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                       'data/baidu_stopwords.txt')).readlines()]
     positive_list = ['是的', '是', '没错', '对', '对的,', '嗯']
     link_file = 'data/link.json'
     with open(link_file, 'r') as f:
         link = json.load(f)
     # agent = AgentDQN(parameter=parameter)
-    agent = AgentRule(parameter=parameter)
     with open('data/similar.json', 'r') as f:
         similarity_dict = json.load(f)
-    asyncio.get_event_loop().run_until_complete(main_logic(parameter, link, similarity_dict))
+    config_file = './conf/settings.yaml'
+
+    parameter = get_config(config_file)
+
+    agent = AgentRule(parameter=parameter)
+    asyncio.get_event_loop().run_until_complete(main_logic(q))

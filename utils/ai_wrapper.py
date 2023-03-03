@@ -61,45 +61,48 @@ def get_related_title(first_utterance):
         title_res = requests.get(title_path.format(first_utterance), verify=False).json()['titleList'][:5]
         if len(title_res) > 0:
             title_res.append('以上都不是')
-    except JSONDecodeError:
+    except:
         title_res = []
 
     return title_res
 
 
 def get_answer(first_utterance, service_name, log, intent_class=''):
-    # --intention detection
-    if intent_class == '':
-        intent_path = "https://miner.picp.net/intent?text={}"
-        intent_res = requests.get(intent_path.format(first_utterance), verify=False).json()
-        intent_class = intent_res['data']
-        if '认定高中教师资格的学历要求' in first_utterance:
-            return '研究生或者大学本科学历'
-        elif '16岁以上护照有效期多长' in first_utterance:
-            return '十年'
-        log.info("intention:{}".format(intent_class))
+    try:
+        # --intention detection
+        if intent_class == '':
+            intent_path = "https://miner.picp.net/intent?text={}"
+            intent_res = requests.get(intent_path.format(first_utterance), verify=False).json()
+            intent_class = intent_res['data']
+            if '认定高中教师资格的学历要求' in first_utterance:
+                return '研究生或者大学本科学历'
+            elif '16岁以上护照有效期多长' in first_utterance:
+                return '十年'
+            log.info("intention:{}".format(intent_class))
 
-    if intent_class == "QA":  # --QA match
-        answer = get_retrieval(first_utterance, service_name)
-        log.info("QA: {}".format(answer))
-        return answer
+        if intent_class == "QA":  # --QA match
+            answer = get_retrieval(first_utterance, service_name)
+            log.info("QA: {}".format(answer))
+            return answer
 
-    # 业务推理
-    elif intent_class == "NLI":  # --NLI
-        nli_res = get_nli(first_utterance, service_name)
-        log.info("NLI:{} ".format(nli_res))
-        return nli_res
+        # 业务推理
+        elif intent_class == "NLI":  # --NLI
+            nli_res = get_nli(first_utterance, service_name)
+            log.info("NLI:{} ".format(nli_res))
+            return nli_res
 
-    # 文档检索
-    elif intent_class == "IR":  # --IR
-        ir_res = get_retrieval(first_utterance, service_name)
-        log.info("IR: {}".format(ir_res))
-        return ir_res
+        # 文档检索
+        elif intent_class == "IR":  # --IR
+            ir_res = get_retrieval(first_utterance, service_name)
+            log.info("IR: {}".format(ir_res))
+            return ir_res
 
 
-    else:  # --diagnose
-        log.info("diagnosis: {}".format(service_name))
-        return "您询问的业务属于:" + service_name
+        else:  # --diagnose
+            log.info("diagnosis: {}".format(service_name))
+            return "您询问的业务属于:" + service_name
+    except Exception:
+        pass
 
 
 def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, service_name=""):
@@ -116,11 +119,10 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
     messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
 
     pipes_dict[conv_id][2] = ""
-    pipes_dict[conv_id][3].terminate()
+    pipes_dict[conv_id][3].kill()
     # log.info('process kill')
     # last_msg = "请问还有其他问题吗，如果有请继续提问"
     # messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=pipes_dict[conv_id][4])
-    pipes_dict[conv_id][3].join()
 
     # FAQ推荐 后续实现
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
@@ -156,13 +158,6 @@ def get_faq_from_service(first_utterance, service, history):
             ques = ques.replace(service, "")
             question_list.add(ques)
     question_list = list(question_list)
-    if history is not None:
-        for h in history:
-            for i in range(len(question_list) - 1, -1, -1):
-                q = question_list[i]
-                scoreT = Levenshtein.ratio(h, q)
-                if scoreT > 0.38:
-                    question_list.remove(q)
     answer = ""
     max_score = 0
     candidate_ques = ""
@@ -208,9 +203,8 @@ def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class='')
     messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=True)
     pipes_dict[conv_id][4] = True
     pipes_dict[conv_id][6] = True
-    pipes_dict[conv_id][3].terminate()
+    pipes_dict[conv_id][3].kill()
     # log.info('process kill')
-    pipes_dict[conv_id][3].join()
     recommend = get_recommend(service_name=pipes_dict[conv_id][7],
                               history=pipes_dict[conv_id][10])
     if len(recommend) < 1:

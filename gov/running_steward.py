@@ -8,7 +8,6 @@ from gov.user import User
 
 
 def simulation_epoch(pipe, agent, parameter, log, similarity_dict, conv_id, train_mode=1):
-    global participle
     in_pipe, out_pipe = pipe
     user = User(parameter=parameter, conv_id=conv_id)
     agent = agent
