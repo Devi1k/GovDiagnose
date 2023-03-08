@@ -497,10 +497,10 @@ if __name__ == '__main__':
     agent = AgentRule(parameter=parameter)
     pipes_dict = mp.Manager().dict()
     q = mp.Manager().Queue(300)
-
+    process_count = mp.cpu_count() // 2
     consumer_list = [Process(target=process_msg, args=(
         q, pipes_dict, agent, parameter, link, similarity_dict, positive_list, stop_words, word_dict, model,
-        blur_service,)) for i in range(3)]
+        blur_service,)) for i in range(process_count)]
     producer = Process(target=task_start, args=(q,))
     producer.start()
     [c.start() for c in consumer_list]
