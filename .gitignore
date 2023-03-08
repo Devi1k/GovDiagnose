@@ -1,6 +1,7 @@
 /data/wb.text.model
 /data/wb.text.model.syn1neg.npy
 /data/wb.text.model.wv.vectors.npy
+/data/words.vector.gz
 /log/*
 /data/goal_set*
 
