@@ -23,7 +23,7 @@ def simulation_epoch(pipe, agent, parameter, log, similarity_dict, conv_id, trai
     except EOFError:
         episode_over = True
         pid = os.getpid()
-        os.kill(pid, signal.SIGINT)
+        os.kill(pid, signal.SIGKILL)
     # init_start = time.time()
 
     agent_action = dialogue_manager.initialize(explicit, train_mode=parameter.get("train_mode"),

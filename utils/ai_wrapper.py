@@ -1,6 +1,7 @@
 import json
 import os.path
 import re
+import signal
 import warnings
 from json import JSONDecodeError
 
@@ -105,7 +106,7 @@ def get_answer(first_utterance, service_name, log, intent_class=''):
         pass
 
 
-def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, service_name=""):
+def faq_diagnose(user_pipe, response_pipe, answer, dialogue_content, conv_id, log, service_name=""):
     # 子进程管道关闭
     user_pipe[0].close()
     response_pipe[1].close()
@@ -113,20 +114,21 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
     response_pipe[0].close()
 
     # 对话状态设置
-    pipes_dict[conv_id][4] = True
-    pipes_dict[conv_id][6] = True
+    dialogue_content[4] = True
+    dialogue_content[6] = True
 
-    messageSender(conv_id=conv_id, msg=answer, log=log, end=pipes_dict[conv_id][4])
+    messageSender(conv_id=conv_id, msg=answer, log=log, end=dialogue_content[4])
 
-    pipes_dict[conv_id][2] = ""
-    pipes_dict[conv_id][3].kill()
+    dialogue_content[2] = ""
+    # dialogue_content[3].kill()
+    os.kill(dialogue_content[3], signal.SIGKILL)
     # log.info('process kill')
     # last_msg = "请问还有其他问题吗，如果有请继续提问"
-    # messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=pipes_dict[conv_id][4])
+    # messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=dialogue_content[4])
 
     # FAQ推荐 后续实现
-    recommend = get_recommend(service_name=pipes_dict[conv_id][7],
-                              history=pipes_dict[conv_id][10])
+    recommend = get_recommend(service_name=dialogue_content[7],
+                              history=dialogue_content[10])
     if len(recommend) < 1:
         recommend = "请问还有其他问题吗，如果有请继续提问"
     last_msg = recommend
@@ -134,10 +136,11 @@ def faq_diagnose(user_pipe, response_pipe, answer, pipes_dict, conv_id, log, ser
         messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
                       service_name=service_name, options=last_msg)
     else:
-        messageSender(conv_id=conv_id, msg=last_msg, log=log, end=pipes_dict[conv_id][4])
-    pipes_dict[conv_id][2] = ""
-    pipes_dict[conv_id][9] = 0
-    return last_msg
+        messageSender(conv_id=conv_id, msg=last_msg, log=log, end=dialogue_content[4])
+    dialogue_content[2] = ""
+    dialogue_content[9] = 0
+    dialogue_content[8] = last_msg
+    return dialogue_content
 
 
 def get_faq_from_service(first_utterance, service, history):
@@ -188,36 +191,37 @@ def get_faq_from_service(first_utterance, service, history):
     return max_score, answer, service
 
 
-def return_answer(pipes_dict, conv_id, service_name, log, link, intent_class=''):
-    similarity_score, answer, service = get_faq_from_service(first_utterance=pipes_dict[conv_id][2],
-                                                             service=service_name, history=pipes_dict[conv_id][10])
+def return_answer(dialogue_content, conv_id, service_name, log, link, intent_class=''):
+    similarity_score, answer, service = get_faq_from_service(first_utterance=dialogue_content[2],
+                                                             service=service_name, history=dialogue_content[10])
     if float(similarity_score) < 0.32:
-        answer = get_answer(pipes_dict[conv_id][2], service_name, log, intent_class)
+        answer = get_answer(dialogue_content[2], service_name, log, intent_class)
     try:
         service_link = str(link[service_name])
     except KeyError:
         service_link = ""
-    business = get_business(first_utterance=pipes_dict[conv_id][2])
+    business = get_business(first_utterance=dialogue_content[2])
     answer = answer + '\n' + '(' + service_name + '——' + business + ')'
-    pipes_dict[conv_id][10].append(pipes_dict[conv_id][2])
+    dialogue_content[10].append(dialogue_content[2])
     messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link, end=True)
-    pipes_dict[conv_id][4] = True
-    pipes_dict[conv_id][6] = True
-    pipes_dict[conv_id][3].kill()
+    dialogue_content[4] = True
+    dialogue_content[6] = True
+    # pipes_dict[conv_id][3].kill()
+    os.kill(dialogue_content[3], signal.SIGKILL)
     # log.info('process kill')
-    recommend = get_recommend(service_name=pipes_dict[conv_id][7],
-                              history=pipes_dict[conv_id][10])
+    recommend = get_recommend(service_name=dialogue_content[7],
+                              history=dialogue_content[10])
     if len(recommend) < 1:
         recommend = "请问还有其他问题吗，如果有请继续提问"
-    last_msg = recommend
+    dialogue_content[8] = recommend
     if isinstance(recommend, list):
         messageSender(conv_id=conv_id, msg="大家都在问", log=log, end=True,
-                      service_name=service_name, options=last_msg)
+                      service_name=service_name, options=dialogue_content[8])
     else:
-        messageSender(conv_id=conv_id, msg=last_msg, log=log, end=pipes_dict[conv_id][4])
-    pipes_dict[conv_id][2] = ""
-    pipes_dict[conv_id][9] = 0
-    return last_msg
+        messageSender(conv_id=conv_id, msg=dialogue_content[8], log=log, end=dialogue_content[4])
+    dialogue_content[2] = ""
+    dialogue_content[9] = 0
+    return dialogue_content
 
 
 def get_multi_res(first_utterance, service_name):
