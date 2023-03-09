@@ -19,6 +19,9 @@ with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/new_faq_recommend.json'),
           'r') as f:
     new_recommend = json.load(f)
+with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/syn_service.json'),
+          'r') as f:
+    syn_service = json.load(f)
 
 
 # 常见问题回答
@@ -106,12 +109,12 @@ def get_answer(first_utterance, service_name, log, intent_class=''):
         pass
 
 
-def faq_diagnose(user_pipe, response_pipe, answer, dialogue_content, conv_id, log, service_name=""):
+def faq_diagnose(answer, dialogue_content, conv_id, log, service_name=""):
     # 子进程管道关闭
-    user_pipe[0].close()
-    response_pipe[1].close()
-    user_pipe[1].close()
-    response_pipe[0].close()
+    # user_pipe[0].close()
+    # response_pipe[1].close()
+    # user_pipe[1].close()
+    # response_pipe[0].close()
 
     # 对话状态设置
     dialogue_content[4] = True
@@ -121,7 +124,8 @@ def faq_diagnose(user_pipe, response_pipe, answer, dialogue_content, conv_id, lo
 
     dialogue_content[2] = ""
     # dialogue_content[3].kill()
-    os.kill(dialogue_content[3], signal.SIGKILL)
+    if dialogue_content[3] != 0:
+        os.kill(dialogue_content[3], signal.SIGKILL)
     # log.info('process kill')
     # last_msg = "请问还有其他问题吗，如果有请继续提问"
     # messageSender(conv_id=conv_id, msg="请问还有其他问题吗，如果有请继续提问", log=log, end=dialogue_content[4])
@@ -145,8 +149,13 @@ def faq_diagnose(user_pipe, response_pipe, answer, dialogue_content, conv_id, lo
 
 def get_faq_from_service(first_utterance, service, history):
     from utils.word_match import cut_sentence_remove_stopwords
-
-    utterance = first_utterance.replace("--", '-').replace(" ", "").replace(service, "")
+    if service in syn_service.keys():
+        syn_list = syn_service[service]
+        for s in syn_list:
+            if s in first_utterance:
+                first_utterance = first_utterance.replace(s, "")
+        first_utterance = first_utterance.replace(service, "")
+    utterance = first_utterance.replace("--", '-').replace(" ", "")
     seg_list = cut_sentence_remove_stopwords(sentence=utterance)
     utterance = ''.join(seg_list)
     utterance = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*]+", "",
@@ -207,7 +216,8 @@ def return_answer(dialogue_content, conv_id, service_name, log, link, intent_cla
     dialogue_content[4] = True
     dialogue_content[6] = True
     # pipes_dict[conv_id][3].kill()
-    os.kill(dialogue_content[3], signal.SIGKILL)
+    if dialogue_content[3] != 0:
+        os.kill(dialogue_content[3], signal.SIGKILL)
     # log.info('process kill')
     recommend = get_recommend(service_name=dialogue_content[7],
                               history=dialogue_content[10])

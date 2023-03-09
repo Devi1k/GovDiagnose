@@ -11,6 +11,8 @@ from datetime import datetime
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+from utils.logger import clean_log
+
 
 def run_diagnose():
     print("清除多余进程")
@@ -27,6 +29,7 @@ def run_regression():
     task_hour = 3
     task_minute = 00
     scheduler = BlockingScheduler()
+    scheduler.add_job(clean_log, 'cron', hour=task_hour, minute=task_minute, args=[])
     scheduler.add_job(run_diagnose, 'cron', hour=task_hour, minute=task_minute, args=[])
     try:
         scheduler.start()

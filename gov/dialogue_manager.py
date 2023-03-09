@@ -5,16 +5,11 @@ import gov.dialogue_configuration as dialogue_configuration
 from gov.state_tracker import StateTracker
 
 
-# import jieba
-
-
 class DialogueManager(object):
     def __init__(self, user, agent, parameter, log, similarity_dict):
         self.state_tracker = StateTracker(user=user, agent=agent, parameter=parameter)
         self.parameter = parameter
         self.inform_wrong_service_count = 0
-        # self.stop_words = [i.strip() for i in open('data/baidu_stopwords.txt').readlines()]
-        # self.thu = thulac
         self.similarity_dict = similarity_dict
         self.log = log
 
