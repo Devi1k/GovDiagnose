@@ -56,7 +56,7 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
             if msg['content']['service_name'] is not None:
                 service_name = msg['content']['service_name']
                 dialogue_content = pipes_dict[conv_id]
-                if service_name != '以上都不是' and dialogue_content[9] != 0:
+                if service_name != "以上都不是" and dialogue_content[9] != 0:
                     dialogue_content[7] = service_name
                     dialogue_content = return_answer(dialogue_content=dialogue_content, conv_id=conv_id,
                                                      service_name=service_name,
@@ -73,7 +73,8 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                     dialogue_content[6] = True
                     dialogue_content[2] = ""
                     # pipes_dict[conv_id][3].kill()
-                    os.kill(dialogue_content[3], signal.SIGKILL)
+                    if dialogue_content[3] != 0:
+                        os.kill(dialogue_content[3], signal.SIGKILL)
                     log.info('process kill')
                     pipes_dict[conv_id] = dialogue_content
                     continue
@@ -107,23 +108,19 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
         try:
             # Initialize the conversation
             if conv_id not in pipes_dict:
-                # todo:改定时
-                clean_log()
                 user_pipe, response_pipe = Pipe(), Pipe()
-
-                start_time = time.time()
-
                 log.info("new conv")
                 pipes_dict[conv_id] = [user_pipe, response_pipe, "", 0, False, False, True,
                                        "", "", 0, []]
-                log.info("Initial Dialogue " + str(time.time() - start_time))
             # Handle multiple rounds of dialogues  Continue to speak
             elif conv_id in pipes_dict and pipes_dict[conv_id][5] is False and pipes_dict[conv_id][4] is True:
                 log.info("continue to ask")
-                user_pipe, response_pipe = Pipe(), Pipe()
                 dialogue_content = pipes_dict[conv_id]
                 if 'content' not in msg.keys():
-                    messageSender(conv_id=conv_id, msg=dialogue_content[8], log=log)
+                    if isinstance(dialogue_content[8], list):
+                        messageSender(conv_id=conv_id, msg="大家都在问", options=dialogue_content[8], log=log)
+                    else:
+                        messageSender(conv_id=conv_id, msg=dialogue_content[8], log=log)
                     continue
                 multi = True
                 if dialogue_content[2] == "":
@@ -143,7 +140,7 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                         dialogue_content[6] = False
                     if float(similarity_score) > 0.32:
                         dialogue_content[10].append(dialogue_content[2])
-                        dialogue_content = faq_diagnose(user_pipe, response_pipe, answer, dialogue_content, conv_id,
+                        dialogue_content = faq_diagnose(answer, dialogue_content, conv_id,
                                                         log)
                         dialogue_content[6] = True
                         pipes_dict[conv_id] = dialogue_content
@@ -152,10 +149,10 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                     multi, similarity = is_multi_round(dialogue_content[2], dialogue_content[7])
                 if multi:
                     log.info("Same matter.")
-                    user_pipe[0].close()
-                    response_pipe[1].close()
-                    user_pipe[1].close()
-                    response_pipe[0].close()
+                    # user_pipe[0].close()
+                    # response_pipe[1].close()
+                    # user_pipe[1].close()
+                    # response_pipe[0].close()
                     dialogue_content[4] = True
                     dialogue_content[6] = True
                     if dialogue_content[7] not in blur_service.keys():
@@ -182,6 +179,7 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                 else:
                     log.info("Different matter")
                     # Rediagnosis
+                    user_pipe, response_pipe = Pipe(), Pipe()
                     p = Process(target=simulation_epoch,
                                 args=(
                                     (user_pipe[1], response_pipe[0]), agent, parameter, log, similarity_dict,
@@ -202,15 +200,12 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                     log.info(user_text)
                     if float(similar_score) > 0.9230:
                         dialogue_content[10].append(dialogue_content[2])
-                        dialogue_content = faq_diagnose(user_pipe, response_pipe, answer, dialogue_content, conv_id,
+                        dialogue_content = faq_diagnose(answer, dialogue_content, conv_id,
                                                         log)
                         pipes_dict[conv_id] = dialogue_content
-                        # pipes_dict[conv_id][6] = True
                     else:
                         # After initializing the session, send judgments and descriptions to the model (including
                         # subsequent judgments and supplementary descriptions).
-
-                        # IR
                         options = get_related_title(dialogue_content[2])
                         business_threshold = 0.9102
                         candidate_service = ""
@@ -227,8 +222,8 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                         if max_score > business_threshold:
                             dialogue_content[4] = True
                             dialogue_content[6] = True
-                            user_pipe[0].close()
-                            response_pipe[1].close()
+                            # user_pipe[0].close()
+                            # response_pipe[1].close()
                             # service_name = recv['service']
                             dialogue_content[7] = candidate_service
                             log.info("first_utterance: {}".format(dialogue_content[2]))
@@ -299,7 +294,8 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                                     messageSender(conv_id=conv_id, msg=answer, log=log, link=service_link,
                                                   end=dialogue_content[4])
                                     dialogue_content[2] = ""
-                                    os.kill(dialogue_content[3], signal.SIGKILL)
+                                    if dialogue_content[3] != 0:
+                                        os.kill(dialogue_content[3], signal.SIGKILL)
                                     log.info('process kill')
                                     dialogue_content[10].append(dialogue_content[2])
                                     recommend = get_recommend(service_name=dialogue_content[7],
@@ -319,17 +315,17 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
 
             #
             else:
-                # print(pipes_dict[conv_id])
                 dialogue_content = pipes_dict[conv_id]
                 user_pipe, response_pipe = dialogue_content[0], dialogue_content[1]
                 if 'content' not in msg.keys():
-                    messageSender(conv_id=conv_id, msg=dialogue_content[8], log=log)
+                    if isinstance(dialogue_content[8], list):
+                        messageSender(conv_id=conv_id, msg="大家都在问", options=dialogue_content[8], log=log)
+                    else:
+                        messageSender(conv_id=conv_id, msg=dialogue_content[8], log=log)
                     continue
                 if dialogue_content[2] == "":
                     dialogue_content[2] = msg['content']['text']
-                # print(dialogue_content)
 
-                log.info(dialogue_content[2])
                 similar_score, answer = 0, ""
                 if dialogue_content[6] is True:
                     dialogue_content[2] = re.sub("[\s++\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*]+", "",
@@ -338,7 +334,7 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                 if float(similar_score) > 0.9230:
                     dialogue_content[7] = service_name
                     dialogue_content[10].append(dialogue_content[2])
-                    dialogue_content = faq_diagnose(user_pipe, response_pipe, answer, dialogue_content, conv_id,
+                    dialogue_content = faq_diagnose(answer, dialogue_content, conv_id,
                                                     log)
                     pipes_dict[conv_id] = dialogue_content
                 else:
@@ -362,8 +358,8 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                         if max_score > business_threshold:
                             dialogue_content[4] = True
                             dialogue_content[6] = True
-                            user_pipe[0].close()
-                            response_pipe[1].close()
+                            # user_pipe[0].close()
+                            # response_pipe[1].close()
                             dialogue_content[7] = candidate_service
                             log.info("first_utterance: {}".format(dialogue_content[2]))
                             log.info("service_name: {}".format(candidate_service))
@@ -437,7 +433,8 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                                 answer = "抱歉，无法回答当前问题"
                                 dialogue_content[6] = True
                                 # pipes_dict[conv_id][3].kill()
-                                os.kill(dialogue_content[3], signal.SIGKILL)
+                                if dialogue_content[3] != 0:
+                                    os.kill(dialogue_content[3], signal.SIGKILL)
                                 # log.info('process kill')
                                 dialogue_content[2] = ""
                                 dialogue_content[9] = 0
@@ -449,8 +446,8 @@ def process_msg(queue, pipes_dict, agent, parameter, link, similarity_dict, posi
                         else:
                             dialogue_content[4] = True
                             dialogue_content[6] = True
-                            user_pipe[0].close()
-                            response_pipe[1].close()
+                            # user_pipe[0].close()
+                            # response_pipe[1].close()
                             service_name = recv['service']
                             dialogue_content[7] = service_name
                             dialogue_content[10].append(dialogue_content[2])
